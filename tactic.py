@@ -1,13 +1,13 @@
 import pygame
 import sys
 
-class Monster():
+class Tactic():
 
     def __init__(self, screen, ai_settings):
 
         self.screen = screen
 
-        self.image_raw = pygame.image.load('static/images/character/monster_01.jpg')
+        self.image_raw = pygame.image.load('static/images/character/tactic_01.jpg')
         self.image_size_x = ai_settings.card_size_x
         self.image_size_y = ai_settings.card_size_y
         self.image = pygame.transform.scale(self.image_raw,(self.image_size_x, self.image_size_y))
@@ -15,7 +15,7 @@ class Monster():
         self.screen_rect = self.screen.get_rect()
 
         self.rect.x = 500
-        self.rect.y = 500
+        self.rect.y = 400
 
-    def blitme(self):
-        self.screen.blit(self.image, self.rect)
+    def blitme(self, x, y):
+        self.screen.blit(self.image, (x,y))

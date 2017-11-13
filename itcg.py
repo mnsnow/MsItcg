@@ -1,9 +1,10 @@
 import sys
-import pygame
+import pygame, pygame.mixer
 from pygame.locals import *
 from settings import Settings
 from character import Character_1, Character_2
 from monster import Monster
+from tactic import Tactic
 
 
 def run_game():
@@ -14,9 +15,10 @@ def run_game():
     ai_settings = Settings()
     screen = pygame.display.set_mode((ai_settings.screen_width, ai_settings.screen_height))
 
-    character_1 = Character_1(screen)
-    character_2 = Character_2(screen)
-    monster = Monster(screen)
+    character_1 = Character_1(screen, ai_settings)
+    character_2 = Character_2(screen, ai_settings)
+    monster = Monster(screen, ai_settings)
+    tactic = Tactic(screen, ai_settings)
 
     mouse_x,mouse_y = pygame.mouse.get_pos()
 
@@ -39,7 +41,8 @@ def run_game():
         # Draw Characters
         character_1.blitme()
         character_2.blitme()
-        monster.blitme(mouse_x-50,mouse_y-50)
+        monster.blitme()
+        tactic.blitme(mouse_x-50,mouse_y-50)
 
         # Most recently draw screen visible
         pygame.display.flip()

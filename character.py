@@ -2,13 +2,13 @@ import pygame
 
 class Character_1():
 
-    def __init__(self, screen):
+    def __init__(self, screen, ai_settings):
 
         self.screen = screen
 
-        self.image_raw = pygame.image.load('static/images/character/character_1.jpg')
-        self.image_size_x = 220
-        self.image_size_y = 300
+        self.image_raw = pygame.image.load('static/images/character/character_01.jpg')
+        self.image_size_x = ai_settings.card_size_x
+        self.image_size_y = ai_settings.card_size_y
         self.image = pygame.transform.scale(self.image_raw,(self.image_size_x, self.image_size_y))
         self.rect = self.image.get_rect()
         self.screen_rect = self.screen.get_rect()
@@ -23,13 +23,13 @@ class Character_1():
 
 class Character_2():
 
-    def __init__(self, screen):
+    def __init__(self, screen, ai_settings):
 
         self.screen = screen
 
-        self.image_raw = pygame.image.load('static/images/character/character_2.jpg')
-        self.image_size_x = 220
-        self.image_size_y = 300
+        self.image_raw = pygame.image.load('static/images/character/character_02.jpg')
+        self.image_size_x = ai_settings.card_size_x
+        self.image_size_y = ai_settings.card_size_y
         self.image = pygame.transform.scale(self.image_raw,(self.image_size_x, self.image_size_y))
         self.rect = self.image.get_rect()
         self.screen_rect = self.screen.get_rect()
