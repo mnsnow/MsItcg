@@ -1,5 +1,6 @@
 import sys
 import pygame, pygame.mixer
+from pygame.sprite import Group
 import game_functions as gf
 
 from settings import Settings
@@ -8,9 +9,11 @@ from monster import Monster
 from tactic import Tactic
 from button import Button, Button_status
 
+
 def main():
 
     pygame.init()
+    clock = pygame.time.Clock()
     pygame.display.set_caption('Maplestory ITCG')
 
     ai_settings = Settings()
@@ -21,18 +24,21 @@ def main():
     monster = Monster(screen, ai_settings)
     tactic = Tactic(screen, ai_settings)
 
-    mouse_x,mouse_y = pygame.mouse.get_pos()
+
     button_status = Button_status()
+    buttons = []
+
 
 
     while True:
 
-        gf.check_events(screen, monster,button_status)
+        gf.check_events(screen, monster, buttons, button_status)
 
-        gf.update_screen(ai_settings, screen, character_1, character_2, monster, tactic, button_status)
+        gf.update_screen(ai_settings, screen, character_1, character_2, monster, tactic, buttons, button_status)
 
 
 
+        clock.tick(25)
 
 
 

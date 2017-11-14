@@ -63,6 +63,9 @@ class Button_status():
     def monster_initial_active(self):
         self.monster_initial = True
 
+    def monster_initial_deactive(self):
+        self.monster_initial = False
+
 
 
 
