@@ -14,8 +14,8 @@ class Tactic():
         self.rect = self.image.get_rect()
         self.screen_rect = self.screen.get_rect()
 
-        self.rect.x = 500
-        self.rect.y = 400
+        self.rect.x = 800
+        self.rect.y = 500
 
-    def blitme(self, x, y):
-        self.screen.blit(self.image, (x,y))
+    def blitme(self):
+        self.screen.blit(self.image, self.rect)

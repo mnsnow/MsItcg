@@ -1,13 +1,14 @@
 import sys
 import pygame, pygame.mixer
-from pygame.locals import *
+import game_functions as gf
+
 from settings import Settings
 from character import Character_1, Character_2
 from monster import Monster
 from tactic import Tactic
+from button import Button, Button_status
 
-
-def run_game():
+def main():
 
     pygame.init()
     pygame.display.set_caption('Maplestory ITCG')
@@ -21,34 +22,24 @@ def run_game():
     tactic = Tactic(screen, ai_settings)
 
     mouse_x,mouse_y = pygame.mouse.get_pos()
+    button_status = Button_status()
+
 
     while True:
 
+        gf.check_events(screen, monster,button_status)
 
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                sys.exit()
-            elif event.type == pygame.KEYDOWN and event.key == K_ESCAPE:
-                sys.exit()
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_x,mouse_y = pygame.mouse.get_pos()
-
-
-        # BG COLOR
-        screen.fill(ai_settings.bg_color)
-
-        # Draw Characters
-        character_1.blitme()
-        character_2.blitme()
-        monster.blitme()
-        tactic.blitme(mouse_x-50,mouse_y-50)
-
-        # Most recently draw screen visible
-        pygame.display.flip()
+        gf.update_screen(ai_settings, screen, character_1, character_2, monster, tactic, button_status)
 
 
 
 
 
-run_game()
+
+
+
+
+
+
+if __name__ == "__main__":
+    main()

@@ -14,7 +14,7 @@ class Monster():
         self.rect = self.image.get_rect()
         self.screen_rect = self.screen.get_rect()
 
-        self.rect.x = 500
+        self.rect.x = 200
         self.rect.y = 500
 
     def blitme(self):
