@@ -25,8 +25,9 @@ def check_events(ai_settings, screen, monster, buttons, button_status):
                     button_status.monster_handaction_active()
                 elif ai_settings.character_2_grid_rect.collidepoint(pygame.mouse.get_pos()):
                     print('level up action!')
-                elif ai_settings.battle_grid_rect.collidepoint(pygame.mouse.get_pos()):
+                elif ai_settings.battle_2_grid_rect.collidepoint(pygame.mouse.get_pos()):
                     button_status.monster_battleaction_active()
+                    print('hit')
 
 
 
@@ -48,7 +49,7 @@ def check_events(ai_settings, screen, monster, buttons, button_status):
                         elif button.text == 'Back':     # we need to decide button back is in which menu.
                             if ai_settings.monster_grid_rect.collidepoint(pygame.mouse.get_pos()):
                                 button_status.monster_handaction_deactive()
-                            elif ai_settings.battle_grid_rect.collidepoint(pygame.mouse.get_pos()):
+                            elif ai_settings.battle_2_grid_rect.collidepoint(pygame.mouse.get_pos()):
                                 button_status.monster_battleaction_deactive()
 
 
@@ -66,7 +67,15 @@ def update_screen(ai_settings, screen, character_1, character_2, monster, tactic
     # BG COLOR
     screen.fill(ai_settings.bg_color)
 
-    # Draw Characters
+    # Draw Grid system
+    screen.blit(ai_settings.monster_grid, ai_settings.monster_grid_rect)
+    screen.blit(ai_settings.tactic_grid, ai_settings.tactic_grid_rect)
+    screen.blit(ai_settings.character_1_grid, ai_settings.character_1_grid_rect)
+    screen.blit(ai_settings.character_2_grid, ai_settings.character_2_grid_rect)
+    screen.blit(ai_settings.battle_1_grid, ai_settings.battle_1_grid_rect)
+    screen.blit(ai_settings.battle_2_grid, ai_settings.battle_2_grid_rect)
+
+    # Draw other stuff
     character_1.blitme()
     character_2.blitme()
     monster.blitme()
@@ -83,7 +92,7 @@ def update_screen(ai_settings, screen, character_1, character_2, monster, tactic
 
 
 def monster_play(monster,button_status):
-    monster.rect.x = 500
+    monster.rect.x = 700
     monster.rect.y = 200
     button_status.monster_handaction_deactive()
 
@@ -118,10 +127,10 @@ def monster_button_handaction_display(screen, buttons):
 
 def monster_button_battleaction_display(screen, buttons):
     """Display monster battle action button"""
-    button1 = Button('Face!', (0,0,0),400, 200, 100, 50)
-    button2 = Button('Fight!', (0,0,0),400, 250, 100, 50)
-    button3 = Button('Skip', (0,0,0),400, 300, 100, 50)
-    button4 = Button('Back', (0,0,0),400, 350, 100, 50)
+    button1 = Button('Face!', (0,0,0),600, 200, 100, 50)
+    button2 = Button('Fight!', (0,0,0),600, 250, 100, 50)
+    button3 = Button('Skip', (0,0,0),600, 300, 100, 50)
+    button4 = Button('Back', (0,0,0),600, 350, 100, 50)
     button1.update()
     button2.update()
     button3.update()
