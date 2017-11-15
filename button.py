@@ -54,9 +54,10 @@ class Button():
 
 class Button_status():
     """ Control active status of all buttons"""
-    def __init__(self, monster_handaction=False):
+    def __init__(self, monster_handaction=False, monster_battleaction=False):
 
         self.monster_handaction = monster_handaction
+        self.monster_battleaction = monster_battleaction
 
 
 
@@ -65,6 +66,13 @@ class Button_status():
 
     def monster_handaction_deactive(self):
         self.monster_handaction = False
+
+
+    def monster_battleaction_active(self):
+        self.monster_battleaction = True
+
+    def monster_battleaction_deactive(self):
+        self.monster_battleaction = False
 
 
 

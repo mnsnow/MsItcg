@@ -32,7 +32,7 @@ def main():
 
     while True:
 
-        gf.check_events(screen, monster, buttons, button_status)
+        gf.check_events(ai_settings, screen, monster, buttons, button_status)
 
         gf.update_screen(ai_settings, screen, character_1, character_2, monster, tactic, buttons, button_status)
 
