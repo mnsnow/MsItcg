@@ -7,7 +7,7 @@ from monster import Monster
 from tactic import Tactic
 from button import Button, Button_status
 
-def check_events(ai_settings, screen, monster, buttons, button_status):
+def check_events(ai_settings, screen, monster, menu_buttons, buttons, button_status):
     """Check mouse and keyboard evetns"""
     for event in pygame.event.get():
 
@@ -29,9 +29,16 @@ def check_events(ai_settings, screen, monster, buttons, button_status):
                     button_status.monster_battleaction_active()
                     print('hit')
 
+            elif rect_union(menu_buttons).collidepoint(pygame.mouse.get_pos()):
+                for menu_button in menu_buttons:
+                    if menu_button.rect.collidepoint(pygame.mouse.get_pos()):
+                        if menu_button.text == 'Surrender':
+                            monster_play(monster,button_status)
+                        elif menu_button.text == 'Rules':
+                            monster_levelup(monster,button_status)
 
 
-            elif buttons:
+            elif rect_union(buttons).collidepoint(pygame.mouse.get_pos()):
                 for button in buttons:
                     if button.rect.collidepoint(pygame.mouse.get_pos()):
 
@@ -62,12 +69,13 @@ def check_events(ai_settings, screen, monster, buttons, button_status):
             print('0')
 
 
-def update_screen(ai_settings, screen, character_1, character_2, monster, tactic, buttons, button_status):
+def update_screen(ai_settings, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, button_status):
     """ Update images on the screen and flip to the new screen"""
     # BG COLOR
     screen.fill(ai_settings.bg_color)
 
     # Draw Grid system
+    screen.blit(ai_settings.menu_grid, ai_settings.menu_grid_rect)
     screen.blit(ai_settings.monster_grid, ai_settings.monster_grid_rect)
     screen.blit(ai_settings.tactic_grid, ai_settings.tactic_grid_rect)
     screen.blit(ai_settings.character_1_grid, ai_settings.character_1_grid_rect)
@@ -80,6 +88,11 @@ def update_screen(ai_settings, screen, character_1, character_2, monster, tactic
     character_2.blitme()
     monster.blitme()
     tactic.blitme()
+
+    for menu_button in menu_buttons:
+        menu_button.update()
+        menu_button.draw(screen)
+
     if button_status.monster_handaction:
         monster_button_handaction_display(screen, buttons)
     if button_status.monster_battleaction:
@@ -97,7 +110,7 @@ def monster_play(monster,button_status):
     button_status.monster_handaction_deactive()
 
 def monster_levelup(monster,button_status):
-    monster.rect.x = 900
+    monster.rect.x = 1050
     monster.rect.y = 250
     button_status.monster_handaction_deactive()
 
@@ -140,6 +153,21 @@ def monster_button_battleaction_display(screen, buttons):
     button3.draw(screen)
     button4.draw(screen)
     buttons.extend((button1, button2, button3, button4))
+
+
+
+def rect_union(class_list):
+    """Input a list of class objects, return a union of rects of those classes"""
+    if len(class_list) >= 1:
+        rect_list = []
+        for class_object in class_list:
+            rect_list.append(class_object.rect)
+        return rect_list[0].unionall(rect_list[1:])
+    else:
+        return Rect(0,0,0,0)
+
+
+
 
 
 

@@ -11,6 +11,15 @@ class Settings():
         self.bg_color = (100,3,3)
 
         #Screen Grid Seperation System (1200*800 only)
+        self.menu_grid_size = (800,30)
+        self.menu_grid_position = (200,0)
+        self.menu_grid = pygame.Surface(self.menu_grid_size)
+        self.menu_grid.fill((123,163,48))
+        self.menu_grid_rect = self.menu_grid.get_rect()
+        self.menu_grid.blit(self.menu_grid, self.menu_grid_rect)
+        self.menu_grid_rect.topleft = self.menu_grid_position
+
+
         self.monster_grid_size = (600,220)
         self.monster_grid_position = (0,580)
         self.monster_grid = pygame.Surface(self.monster_grid_size)
@@ -47,8 +56,8 @@ class Settings():
         self.character_2_grid_rect.topleft = self.character_2_grid_position
 
 
-        self.battle_1_grid_size = (400,580)
-        self.battle_1_grid_position = (200,0)
+        self.battle_1_grid_size = (400,550)
+        self.battle_1_grid_position = (200,30)
         self.battle_1_grid = pygame.Surface(self.battle_1_grid_size)
         self.battle_1_grid.fill((100,3,3))
         self.battle_1_grid_rect = self.battle_1_grid.get_rect()
@@ -56,8 +65,8 @@ class Settings():
         self.battle_1_grid_rect.topleft = self.battle_1_grid_position
 
 
-        self.battle_2_grid_size = (400,580)
-        self.battle_2_grid_position = (600,0)
+        self.battle_2_grid_size = (400,550)
+        self.battle_2_grid_position = (600,30)
         self.battle_2_grid = pygame.Surface(self.battle_2_grid_size)
         self.battle_2_grid.fill((100,101,3))
         self.battle_2_grid_rect = self.battle_2_grid.get_rect()
