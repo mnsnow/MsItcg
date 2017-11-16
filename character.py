@@ -13,8 +13,8 @@ class Character_1():
         self.rect = self.image.get_rect()
         self.screen_rect = self.screen.get_rect()
 
-        self.rect.x = 100
-        self.rect.y = 60
+        self.rect.x = 20
+        self.rect.y = 50
 
     def blitme(self):
         self.screen.blit(self.image, self.rect)
@@ -34,8 +34,8 @@ class Character_2():
         self.rect = self.image.get_rect()
         self.screen_rect = self.screen.get_rect()
 
-        self.rect.x = 1100 - self.image_size_x
-        self.rect.y = 60
+        self.rect.x = 1180 - self.image_size_x
+        self.rect.y = 50
 
     def blitme(self):
         self.screen.blit(self.image, self.rect)

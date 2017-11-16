@@ -15,7 +15,7 @@ class Monster():
         self.screen_rect = self.screen.get_rect()
 
         self.rect.x = 200
-        self.rect.y = 500
+        self.rect.y = 775-ai_settings.card_size_y
 
     def blitme(self):
         self.screen.blit(self.image, self.rect)
