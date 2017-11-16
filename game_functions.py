@@ -33,9 +33,9 @@ def check_events(ai_settings, screen, monster, menu_buttons, buttons, button_sta
                 for menu_button in menu_buttons:
                     if menu_button.rect.collidepoint(pygame.mouse.get_pos()):
                         if menu_button.text == 'Surrender':
-                            monster_play(monster,button_status)
+                            print('surrender')
                         elif menu_button.text == 'Rules':
-                            monster_levelup(monster,button_status)
+                            button_status.menu_rules_active()
 
 
             elif rect_union(buttons).collidepoint(pygame.mouse.get_pos()):
@@ -97,6 +97,9 @@ def update_screen(ai_settings, screen, character_1, character_2, monster, tactic
         monster_button_handaction_display(screen, buttons)
     if button_status.monster_battleaction:
         monster_button_battleaction_display(screen, buttons)
+    if button_status.menu_rules:
+        menu_rules_display(screen)
+
 
 
 
@@ -153,6 +156,14 @@ def monster_button_battleaction_display(screen, buttons):
     button3.draw(screen)
     button4.draw(screen)
     buttons.extend((button1, button2, button3, button4))
+
+
+def menu_rules_display(screen):
+    """What gonna happen after click on rules buttion in the menu bar"""
+    button = pygame.Surface((600,400))
+    button.fill((34,87,199))
+    screen.blit(button,Rect(300,200,600,400))
+
 
 
 
