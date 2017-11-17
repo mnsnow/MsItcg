@@ -3,9 +3,10 @@ import pygame
 
 class Screen_status():
     """ Control active status of all screens"""
-    def __init__(self, welcome_screen = True, battle_screen = False,):
+    def __init__(self, welcome_screen = True, build_deck_screen = False, battle_screen = False):
 
         self.welcome_screen = welcome_screen
+        self.build_deck_screen = build_deck_screen
         self.battle_screen = battle_screen
 
 
@@ -15,6 +16,13 @@ class Screen_status():
 
     def battle_screen_deactive(self):
         self.battle_screen = False
+
+
+    def build_deck_screen_active(self):
+        self.build_deck_screen = True
+
+    def build_deck_screen_deactive(self):
+        self.build_deck_screen = False
 
 
     def welcome_screen_active(self):
