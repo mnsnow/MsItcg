@@ -10,11 +10,12 @@ class Mouse_status():
 
 class Screen_status():
     """ Control active status of all screens"""
-    def __init__(self, welcome_screen = False, build_deck_screen = False, battle_screen = True):
+    def __init__(self, welcome_screen_display = True,welcome_screen_backend = True, build_deck_screen_display = False, battle_screen_display = False):
 
-        self.welcome_screen = welcome_screen
-        self.build_deck_screen = build_deck_screen
-        self.battle_screen = battle_screen
+        self.welcome_screen_display = welcome_screen_display
+        self.welcome_screen_backend = welcome_screen_backend
+        self.build_deck_screen_display = build_deck_screen_display
+        self.battle_screen_display = battle_screen_display
 
 
 

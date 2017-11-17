@@ -15,40 +15,55 @@ from display import Mouse_status, Screen_status, Button_status
 def check_events(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status):
     """Check mouse and keyboard events"""
 
-    if screen_status.welcome_screen:
+    if screen_status.welcome_screen_display:
         check_events_welcome_screen(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status)
 
-    if screen_status.build_deck_screen:
+    if screen_status.build_deck_screen_display:
         check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status)
 
-    if screen_status.battle_screen:
+    if screen_status.battle_screen_display:
         check_events_battle_screen(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status)
 
 def check_events_welcome_screen(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status):
     """ Check all events on the welcome screen"""
     for event in pygame.event.get():
-        if event.type == pygame.MOUSEBUTTONDOWN:
+        if event.type == pygame.QUIT:
+            sys.exit()
+
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                sys.exit()
+
+        elif event.type == pygame.MOUSEBUTTONDOWN:
             if rect_union(buttons).collidepoint(pygame.mouse.get_pos()):
                 for button in buttons:
                     if button.rect.collidepoint(pygame.mouse.get_pos()):
 
-                        if button.text == 'In':
-                            screen_status.welcome_screen = False
-                            screen_status.build_deck_screen = True
-                            screen_status.battle_screen = False
+                        if button.text == 'Play':
+                            welcome_screen_play(buttons, screen_status)
+                        elif button.text == 'Quit':
+                            welcome_screen_quit(buttons, screen_status)
+
 
 def check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status):
     """ Check all events on the build deck screen"""
     for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            sys.exit()
+
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                sys.exit()
+
         if event.type == pygame.MOUSEBUTTONDOWN:
             if rect_union(buttons).collidepoint(pygame.mouse.get_pos()):
                 for button in buttons:
                     if button.rect.collidepoint(pygame.mouse.get_pos()):
 
                         if button.text == 'Skip':
-                            screen_status.welcome_screen = False
-                            screen_status.build_deck_screen = False
-                            screen_status.battle_screen = True
+                            screen_status.welcome_screen_display = False
+                            screen_status.build_deck_screen_display = False
+                            screen_status.battle_screen_display = True
 
 def check_events_battle_screen(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status):
     """ Check all evetns on the battle screen"""
@@ -117,7 +132,7 @@ def check_events_battle_screen(ai_settings, screen, monster, menu_buttons, butto
 
         elif event.type == pygame.MOUSEBUTTONUP:
             if mouse_status.mousebuttondown_status == True:
-                mouse_status.mousebuttondown_status.deactive
+                mouse_status.mousebuttondown_status = False
             print('0')
 
 
@@ -127,33 +142,37 @@ def check_events_battle_screen(ai_settings, screen, monster, menu_buttons, butto
 def update_screen(ai_settings, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status):
     """ Update images on the screen and flip to the new screen"""
 
-    if screen_status.welcome_screen:
-        welcome_screen_update(screen, buttons)
+    if screen_status.welcome_screen_display:
+        welcome_screen_update(ai_settings,screen, buttons, screen_status)
 
-    if screen_status.build_deck_screen:
+    if screen_status.build_deck_screen_display:
         build_deck_screen_update(screen, buttons)
 
-    if screen_status.battle_screen:
+    if screen_status.battle_screen_display:
         battle_screen_update(ai_settings, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status)
 
 
     pygame.display.flip()
 
-def welcome_screen_update(screen, buttons):
+def welcome_screen_update(ai_settings,screen, buttons, screen_status):
     """ welcome screen update"""
-    button1 = Button('Play', '', (0,0,0),50, 600, 100, 50)
-    button2 = Button('In','', (0,0,0),50, 650, 100, 50)
-    button3 = Button('Back','', (0,0,0),50, 700, 100, 50)
+    screen.fill(ai_settings.bg_color)
+    button1 = Button('Welcome to Maplestory Itcg - Alpha', 'welcome_screen', (0,0,0),300, 100, 550, 200)
+    button2 = Button('Play','', (0,0,0),300, 350, 250, 100)
+    button3 = Button('Quit','', (0,0,0),600, 350, 250, 100)
     button1.update()
     button2.update()
     button3.update()
     button1.draw(screen)
     button2.draw(screen)
     button3.draw(screen)
-    buttons.extend((button1, button2, button3))
+    if screen_status.welcome_screen_backend:
+        buttons.extend((button1, button2, button3))
+        screen_status.welcome_screen_backend = False
 
 def build_deck_screen_update(screen, buttons):
     """ Build deck screen update"""
+    screen.fill((34,65,9))
     button1 = Button('Face!','', (0,0,0),600, 200, 100, 50)
     button2 = Button('Fight!','', (0,0,0),600, 250, 100, 50)
     button3 = Button('Skip', '', (0,0,0),600, 300, 100, 50)
@@ -200,6 +219,24 @@ def battle_screen_update(ai_settings, screen, character_1, character_2, monster,
         menu_rules_display(screen)
 
 
+
+
+#-----------------------------Welcome screen actions----------------------------------------------------
+def welcome_screen_play(buttons, screen_status):
+    """ What happen after click play button"""
+    screen_status.welcome_screen_display = False
+    screen_status.build_deck_screen_display = True
+    screen_status.battle_screen_display = False
+    bts = []
+    for button in buttons:
+        if button.group == 'welcome_screen':
+            bts.append(button)
+    for bt in bts:
+        buttons.remove(bt)
+    screen_status.welcome_screen_backend = True
+
+def welcome_screen_quit(buttons, screen_status):
+    print('quit!!!!')
 
 
 #-----------------------------Monster handaction----------------------------------------------------
