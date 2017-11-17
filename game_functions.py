@@ -45,7 +45,6 @@ def check_events_welcome_screen(ai_settings, screen, monster, menu_buttons, butt
                         elif button.text == 'Quit':
                             welcome_screen_quit(buttons, screen_status)
 
-
 def check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status):
     """ Check all events on the build deck screen"""
     for event in pygame.event.get():
@@ -151,7 +150,7 @@ def update_screen(ai_settings,grid, screen, character_1, character_2, monster, t
         welcome_screen_update(ai_settings,screen, buttons, screen_status)
 
     if screen_status.build_deck_screen_display:
-        build_deck_screen_update(ai_settings, screen, buttons, screen_status)
+        build_deck_screen_update(ai_settings, grid, screen, buttons, screen_status)
 
     if screen_status.battle_screen_display:
         battle_screen_update(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status)
@@ -175,22 +174,14 @@ def welcome_screen_update(ai_settings,screen, buttons, screen_status):
         buttons.extend((button1, button2, button3))
         screen_status.welcome_screen_backend = False
 
-def build_deck_screen_update(ai_settings, screen, buttons, screen_status):
+def build_deck_screen_update(ai_settings, grid, screen, buttons, screen_status):
     """ Build deck screen update"""
     screen.fill(ai_settings.bg_color)
-    button1 = Button('Back','build_deck_screen', (0,0,0),0, 0, 50, 50)
-    button2 = Button('Next','build_deck_screen', (0,0,0),1150, 0, 50, 50)
-    button3 = Button('Build your deck by picking 40 cards below: ', 'build_deck_screen', (0,0,0),300, 0, 600, 50)
-    button4 = Button('lll', 'build_deck_screen', (0,0,0),100, 650, 100, 50)
-    button1.update()
-    button2.update()
-    button3.update()
-    button4.update()
-    button1.draw(screen)
-    button2.draw(screen)
-    button3.draw(screen)
-    button4.draw(screen)
-    buttons.extend((button1, button2, button3, button4))
+
+    build_deck_screen_grid_display(grid, screen)
+
+    build_deck_screen_stable_button_display(screen, buttons,screen_status)
+
 
 def battle_screen_update(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status):
     """ Battle screen update"""
@@ -242,6 +233,31 @@ def welcome_screen_play(buttons, screen_status):
 
 def welcome_screen_quit(buttons, screen_status):
     print('quit!!!!')
+
+
+
+
+#-----------------------------Build deck screen actions----------------------------------------------------
+def build_deck_screen_grid_display(grid, screen):
+    """ Display grid system for build deck screen"""
+    screen.blit(grid.build_deck_screen_card_gallery_grid, grid.build_deck_screen_card_gallery_grid_rect)
+    screen.blit(grid.build_deck_screen_deck_grid, grid.build_deck_screen_deck_grid_rect)
+
+def build_deck_screen_stable_button_display(screen, buttons,screen_status):
+    """ Display all stable buttons for build deck screen"""
+    button1 = Button('Back','build_deck_screen', (0,0,0),0, 0, 50, 50)
+    button2 = Button('Next','build_deck_screen', (0,0,0),1150, 0, 50, 50)
+    button3 = Button('Build your deck by picking 40 cards below: ', 'build_deck_screen', (0,0,0),300, 0, 600, 50)
+    button4 = Button('lll', 'build_deck_screen', (0,0,0),100, 650, 100, 50)
+    button1.update()
+    button2.update()
+    button3.update()
+    button4.update()
+    button1.draw(screen)
+    button2.draw(screen)
+    button3.draw(screen)
+    button4.draw(screen)
+    buttons.extend((button1, button2, button3, button4))
 
 
 #-----------------------------Monster handaction----------------------------------------------------

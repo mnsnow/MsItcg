@@ -6,6 +6,28 @@ class Grid():
     def __init__(self):
 
 
+
+
+#------------------Building deck Screen----------------------------------------------------
+        self.build_deck_screen_card_gallery_grid_size = (1100,490)
+        self.build_deck_screen_card_gallery_grid_position = (50,60)
+        self.build_deck_screen_card_gallery_grid = pygame.Surface(self.build_deck_screen_card_gallery_grid_size)
+        self.build_deck_screen_card_gallery_grid.fill((123,163,48))
+        self.build_deck_screen_card_gallery_grid_rect = self.build_deck_screen_card_gallery_grid.get_rect()
+        self.build_deck_screen_card_gallery_grid.blit(self.build_deck_screen_card_gallery_grid, self.build_deck_screen_card_gallery_grid_rect)
+        self.build_deck_screen_card_gallery_grid_rect.topleft = self.build_deck_screen_card_gallery_grid_position
+
+        self.build_deck_screen_deck_grid_size = (1100,230)
+        self.build_deck_screen_deck_grid_position = (50,560)
+        self.build_deck_screen_deck_grid = pygame.Surface(self.build_deck_screen_deck_grid_size)
+        self.build_deck_screen_deck_grid.fill((222,13,78))
+        self.build_deck_screen_deck_grid_rect = self.build_deck_screen_deck_grid.get_rect()
+        self.build_deck_screen_deck_grid.blit(self.build_deck_screen_deck_grid, self.build_deck_screen_deck_grid_rect)
+        self.build_deck_screen_deck_grid_rect.topleft = self.build_deck_screen_deck_grid_position
+
+
+
+
 #------------------Battle Screen----------------------------------------------------
         #Battle Screen Grid Seperation System (1200*800 only)
         self.battle_screen_menu_grid_size = (800,30)
