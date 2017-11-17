@@ -10,6 +10,8 @@ from display import Mouse_status, Screen_status, Button_status
 
 
 
+
+#-----------------------------Check events----------------------------------------------------
 def check_events(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status):
     """Check mouse and keyboard events"""
 
@@ -21,8 +23,6 @@ def check_events(ai_settings, screen, monster, menu_buttons, buttons,mouse_statu
 
     if screen_status.battle_screen:
         check_events_battle_screen(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status)
-
-
 
 def check_events_welcome_screen(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status):
     """ Check all events on the welcome screen"""
@@ -37,7 +37,6 @@ def check_events_welcome_screen(ai_settings, screen, monster, menu_buttons, butt
                             screen_status.build_deck_screen = True
                             screen_status.battle_screen = False
 
-
 def check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status):
     """ Check all events on the build deck screen"""
     for event in pygame.event.get():
@@ -50,8 +49,6 @@ def check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, b
                             screen_status.welcome_screen = False
                             screen_status.build_deck_screen = False
                             screen_status.battle_screen = True
-
-
 
 def check_events_battle_screen(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status):
     """ Check all evetns on the battle screen"""
@@ -68,15 +65,15 @@ def check_events_battle_screen(ai_settings, screen, monster, menu_buttons, butto
             if mouse_status.mousebuttondown_status:
                 pass
             else:
-                mouse_status.mousebuttondown_status_active
+                mouse_status.mousebuttondown_status = True
 
                 if monster.rect.collidepoint(pygame.mouse.get_pos()):
                     if ai_settings.monster_grid_rect.collidepoint(pygame.mouse.get_pos()):
-                        button_status.monster_handaction_display_active()
+                        button_status.monster_handaction_display = True
                     elif ai_settings.character_2_grid_rect.collidepoint(pygame.mouse.get_pos()):
                         print('level up action!')
                     elif ai_settings.battle_2_grid_rect.collidepoint(pygame.mouse.get_pos()):
-                        button_status.monster_battleaction_display_active()
+                        button_status.monster_battleaction_display = True
                         print('hit')
 
                 elif rect_union(menu_buttons).collidepoint(pygame.mouse.get_pos()):
@@ -85,7 +82,7 @@ def check_events_battle_screen(ai_settings, screen, monster, menu_buttons, butto
                             if menu_button.text == 'Surrender':
                                 print('surrender')
                             elif menu_button.text == 'Rules':
-                                button_status.menu_rules_active()
+                                button_status.menu_rules = True
 
 
                 elif rect_union(buttons).collidepoint(pygame.mouse.get_pos()):
@@ -97,11 +94,11 @@ def check_events_battle_screen(ai_settings, screen, monster, menu_buttons, butto
                             elif button.text == 'Level up':
                                 monster_levelup(monster,buttons,button_status)
                             elif button.text == 'Face!':
-                                monster_face(monster,button_status)
+                                monster_face(monster,buttons,button_status)
                             elif button.text == 'Fight!':
-                                monster_fight(monster,button_status)
+                                monster_fight(monster,buttons,button_status)
                             elif button.text == 'Skip':
-                                monster_skip(monster,button_status)
+                                monster_skip(monster,buttons,button_status)
 
                             elif button.text == 'Back':     # we need to decide button back is in which menu.
                                 if ai_settings.monster_grid_rect.collidepoint(pygame.mouse.get_pos()):
@@ -109,7 +106,8 @@ def check_events_battle_screen(ai_settings, screen, monster, menu_buttons, butto
 
 
                                 elif ai_settings.battle_2_grid_rect.collidepoint(pygame.mouse.get_pos()):
-                                    button_status.monster_battleaction_display_deactive()
+                                    monster_battleaction_back(buttons, button_status)
+
 
 
 
@@ -125,6 +123,7 @@ def check_events_battle_screen(ai_settings, screen, monster, menu_buttons, butto
 
 
 
+#-----------------------------Update screens----------------------------------------------------
 def update_screen(ai_settings, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status):
     """ Update images on the screen and flip to the new screen"""
 
@@ -140,8 +139,6 @@ def update_screen(ai_settings, screen, character_1, character_2, monster, tactic
 
     pygame.display.flip()
 
-
-
 def welcome_screen_update(screen, buttons):
     """ welcome screen update"""
     button1 = Button('Play', '', (0,0,0),50, 600, 100, 50)
@@ -154,7 +151,6 @@ def welcome_screen_update(screen, buttons):
     button2.draw(screen)
     button3.draw(screen)
     buttons.extend((button1, button2, button3))
-
 
 def build_deck_screen_update(screen, buttons):
     """ Build deck screen update"""
@@ -171,7 +167,6 @@ def build_deck_screen_update(screen, buttons):
     button3.draw(screen)
     button4.draw(screen)
     buttons.extend((button1, button2, button3, button4))
-
 
 def battle_screen_update(ai_settings, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status):
     """ Battle screen update"""
@@ -200,60 +195,14 @@ def battle_screen_update(ai_settings, screen, character_1, character_2, monster,
     if button_status.monster_handaction_display:
         monster_button_handaction_display(screen, buttons, button_status)
     if button_status.monster_battleaction_display:
-        monster_button_battleaction_display(screen, buttons)
+        monster_button_battleaction_display(screen, buttons, button_status)
     if button_status.menu_rules:
         menu_rules_display(screen)
 
 
 
-def monster_play(monster,buttons,button_status):
-    monster.rect.x = 700
-    monster.rect.y = 200
-    button_status.monster_handaction_display_deactive()
-    bts = []
-    for button in buttons:
-        if button.group == 'monster_handaction':
-            bts.append(button)
-    for bt in bts:
-        buttons.remove(bt)
-    button_status.monster_handaction_backend = True
 
-
-def monster_levelup(monster,buttons,button_status):
-    monster.rect.x = 1050
-    monster.rect.y = 250
-    button_status.monster_handaction_display_deactive()
-    bts = []
-    for button in buttons:
-        if button.group == 'monster_handaction':
-            bts.append(button)
-    for bt in bts:
-        buttons.remove(bt)
-    button_status.monster_handaction_backend = True
-
-
-def monster_handaction_back(buttons, button_status):
-    button_status.monster_handaction_display_deactive()
-    bts = []
-    for button in buttons:
-        if button.group == 'monster_handaction':
-            bts.append(button)
-    for bt in bts:
-        buttons.remove(bt)
-    button_status.monster_handaction_backend = True
-
-
-
-def monster_face(monster,button_status):
-    print('face!!!')
-
-def monster_fight(monster,button_status):
-    print('fight!!')
-
-def monster_skip(monster,button_status):
-    print('skip turn')
-
-
+#-----------------------------Monster handaction----------------------------------------------------
 def monster_button_handaction_display(screen, buttons, button_status):
     """Display monster handaction button"""
     button1 = Button('Play','monster_handaction', (0,0,0),50, 600, 100, 50)
@@ -269,11 +218,45 @@ def monster_button_handaction_display(screen, buttons, button_status):
         buttons.extend((button1, button2, button3))
         button_status.monster_handaction_backend = False
 
-        print('handaction')
+def monster_play(monster,buttons,button_status):
+    monster.rect.x = 700
+    monster.rect.y = 200
+    button_status.monster_handaction_display = False
+    bts = []
+    for button in buttons:
+        if button.group == 'monster_handaction':
+            bts.append(button)
+    for bt in bts:
+        buttons.remove(bt)
+    button_status.monster_handaction_backend = True
+
+def monster_levelup(monster,buttons,button_status):
+    monster.rect.x = 1050
+    monster.rect.y = 250
+    button_status.monster_handaction_display = False
+    bts = []
+    for button in buttons:
+        if button.group == 'monster_handaction':
+            bts.append(button)
+    for bt in bts:
+        buttons.remove(bt)
+    button_status.monster_handaction_backend = True
+
+def monster_handaction_back(buttons, button_status):
+    button_status.monster_handaction_display = False
+    bts = []
+    for button in buttons:
+        if button.group == 'monster_handaction':
+            bts.append(button)
+    for bt in bts:
+        buttons.remove(bt)
+    button_status.monster_handaction_backend = True
 
 
 
-def monster_button_battleaction_display(screen, buttons):
+
+#-----------------------------Monster battle action----------------------------------------------------
+def monster_button_battleaction_display(screen, buttons, button_status):
     """Display monster battle action button"""
     button1 = Button('Face!','monster_battleaction', (0,0,0),600, 200, 100, 50)
     button2 = Button('Fight!', 'monster_battleaction', (0,0,0),600, 250, 100, 50)
@@ -287,9 +270,57 @@ def monster_button_battleaction_display(screen, buttons):
     button2.draw(screen)
     button3.draw(screen)
     button4.draw(screen)
-    buttons.extend((button1, button2, button3, button4))
+    if button_status.monster_battleaction_backend:
+        buttons.extend((button1, button2, button3, button4))
+        button_status.monster_battleaction_backend = False
+
+def monster_face(monster,buttons, button_status):
+    button_status.monster_battleaction_display = False
+    bts = []
+    for button in buttons:
+        if button.group == 'monster_battleaction':
+            bts.append(button)
+    for bt in bts:
+        buttons.remove(bt)
+    button_status.monster_battleaction_backend = True
+    print('face!!!')
+
+def monster_fight(monster,buttons,button_status):
+    button_status.monster_battleaction_display = False
+    bts = []
+    for button in buttons:
+        if button.group == 'monster_battleaction':
+            bts.append(button)
+    for bt in bts:
+        buttons.remove(bt)
+    button_status.monster_battleaction_backend = True
+    print('fight!!')
+
+def monster_skip(monster,buttons,button_status):
+    button_status.monster_battleaction_display = False
+    bts = []
+    for button in buttons:
+        if button.group == 'monster_battleaction':
+            bts.append(button)
+    for bt in bts:
+        buttons.remove(bt)
+    button_status.monster_battleaction_backend = True
+    print('skip turn')
+
+def monster_battleaction_back(buttons, button_status):
+    button_status.monster_battleaction_display = False
+    bts = []
+    for button in buttons:
+        if button.group == 'monster_battleaction':
+            bts.append(button)
+    for bt in bts:
+        buttons.remove(bt)
+    button_status.monster_battleaction_backend = True
 
 
+
+
+#-----------------------------Rules menu----------------------------------------------------
 def menu_rules_display(screen):
     """What gonna happen after click on rules buttion in the menu bar"""
     button = pygame.Surface((600,400))
@@ -299,6 +330,7 @@ def menu_rules_display(screen):
 
 
 
+#-----------------------------Tools----------------------------------------------------
 def rect_union(class_list):
     """Input a list of class objects, return a union of rects of those classes"""
     if len(class_list) >= 1:
