@@ -7,12 +7,13 @@ from monster import Monster
 from tactic import Tactic
 from button import Button
 from display import Mouse_status, Screen_status, Button_status
+from grid import Grid
 
 
 
 
 #-----------------------------Check events----------------------------------------------------
-def check_events(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status):
+def check_events(ai_settings,grid, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status):
     """Check mouse and keyboard events"""
 
     if screen_status.welcome_screen_display:
@@ -22,7 +23,7 @@ def check_events(ai_settings, screen, monster, menu_buttons, buttons,mouse_statu
         check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status)
 
     if screen_status.battle_screen_display:
-        check_events_battle_screen(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status)
+        check_events_battle_screen(ai_settings,grid, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status)
 
 def check_events_welcome_screen(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status):
     """ Check all events on the welcome screen"""
@@ -60,12 +61,16 @@ def check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, b
                 for button in buttons:
                     if button.rect.collidepoint(pygame.mouse.get_pos()):
 
-                        if button.text == 'Skip':
+                        if button.text == 'Next':
                             screen_status.welcome_screen_display = False
                             screen_status.build_deck_screen_display = False
                             screen_status.battle_screen_display = True
+                        if button.text == 'Back':
+                            screen_status.welcome_screen_display = True
+                            screen_status.build_deck_screen_display = False
+                            screen_status.battle_screen_display = False
 
-def check_events_battle_screen(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status):
+def check_events_battle_screen(ai_settings,grid, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status):
     """ Check all evetns on the battle screen"""
     for event in pygame.event.get():
 
@@ -83,11 +88,11 @@ def check_events_battle_screen(ai_settings, screen, monster, menu_buttons, butto
                 mouse_status.mousebuttondown_status = True
 
                 if monster.rect.collidepoint(pygame.mouse.get_pos()):
-                    if ai_settings.monster_grid_rect.collidepoint(pygame.mouse.get_pos()):
+                    if grid.battle_screen_monster_grid_rect.collidepoint(pygame.mouse.get_pos()):
                         button_status.monster_handaction_display = True
-                    elif ai_settings.character_2_grid_rect.collidepoint(pygame.mouse.get_pos()):
+                    elif grid.battle_screen_character_2_grid_rect.collidepoint(pygame.mouse.get_pos()):
                         print('level up action!')
-                    elif ai_settings.battle_2_grid_rect.collidepoint(pygame.mouse.get_pos()):
+                    elif grid.battle_screen_battle_2_grid_rect.collidepoint(pygame.mouse.get_pos()):
                         button_status.monster_battleaction_display = True
                         print('hit')
 
@@ -116,11 +121,11 @@ def check_events_battle_screen(ai_settings, screen, monster, menu_buttons, butto
                                 monster_skip(monster,buttons,button_status)
 
                             elif button.text == 'Back':     # we need to decide button back is in which menu.
-                                if ai_settings.monster_grid_rect.collidepoint(pygame.mouse.get_pos()):
+                                if grid.battle_screen_monster_grid_rect.collidepoint(pygame.mouse.get_pos()):
                                     monster_handaction_back(buttons, button_status)
 
 
-                                elif ai_settings.battle_2_grid_rect.collidepoint(pygame.mouse.get_pos()):
+                                elif grid.battle_screen_battle_2_grid_rect.collidepoint(pygame.mouse.get_pos()):
                                     monster_battleaction_back(buttons, button_status)
 
 
@@ -139,17 +144,17 @@ def check_events_battle_screen(ai_settings, screen, monster, menu_buttons, butto
 
 
 #-----------------------------Update screens----------------------------------------------------
-def update_screen(ai_settings, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status):
+def update_screen(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status):
     """ Update images on the screen and flip to the new screen"""
 
     if screen_status.welcome_screen_display:
         welcome_screen_update(ai_settings,screen, buttons, screen_status)
 
     if screen_status.build_deck_screen_display:
-        build_deck_screen_update(screen, buttons)
+        build_deck_screen_update(ai_settings, screen, buttons, screen_status)
 
     if screen_status.battle_screen_display:
-        battle_screen_update(ai_settings, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status)
+        battle_screen_update(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status)
 
 
     pygame.display.flip()
@@ -170,13 +175,13 @@ def welcome_screen_update(ai_settings,screen, buttons, screen_status):
         buttons.extend((button1, button2, button3))
         screen_status.welcome_screen_backend = False
 
-def build_deck_screen_update(screen, buttons):
+def build_deck_screen_update(ai_settings, screen, buttons, screen_status):
     """ Build deck screen update"""
-    screen.fill((34,65,9))
-    button1 = Button('Face!','', (0,0,0),600, 200, 100, 50)
-    button2 = Button('Fight!','', (0,0,0),600, 250, 100, 50)
-    button3 = Button('Skip', '', (0,0,0),600, 300, 100, 50)
-    button4 = Button('Back', '', (0,0,0),600, 350, 100, 50)
+    screen.fill(ai_settings.bg_color)
+    button1 = Button('Back','build_deck_screen', (0,0,0),0, 0, 50, 50)
+    button2 = Button('Next','build_deck_screen', (0,0,0),1150, 0, 50, 50)
+    button3 = Button('Build your deck by picking 40 cards below: ', 'build_deck_screen', (0,0,0),300, 0, 600, 50)
+    button4 = Button('lll', 'build_deck_screen', (0,0,0),100, 650, 100, 50)
     button1.update()
     button2.update()
     button3.update()
@@ -187,19 +192,19 @@ def build_deck_screen_update(screen, buttons):
     button4.draw(screen)
     buttons.extend((button1, button2, button3, button4))
 
-def battle_screen_update(ai_settings, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status):
+def battle_screen_update(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status):
     """ Battle screen update"""
     # BG COLOR
     screen.fill(ai_settings.bg_color)
 
     # Draw Grid system
-    screen.blit(ai_settings.menu_grid, ai_settings.menu_grid_rect)
-    screen.blit(ai_settings.monster_grid, ai_settings.monster_grid_rect)
-    screen.blit(ai_settings.tactic_grid, ai_settings.tactic_grid_rect)
-    screen.blit(ai_settings.character_1_grid, ai_settings.character_1_grid_rect)
-    screen.blit(ai_settings.character_2_grid, ai_settings.character_2_grid_rect)
-    screen.blit(ai_settings.battle_1_grid, ai_settings.battle_1_grid_rect)
-    screen.blit(ai_settings.battle_2_grid, ai_settings.battle_2_grid_rect)
+    screen.blit(grid.battle_screen_menu_grid, grid.battle_screen_menu_grid_rect)
+    screen.blit(grid.battle_screen_monster_grid, grid.battle_screen_monster_grid_rect)
+    screen.blit(grid.battle_screen_tactic_grid, grid.battle_screen_tactic_grid_rect)
+    screen.blit(grid.battle_screen_character_1_grid, grid.battle_screen_character_1_grid_rect)
+    screen.blit(grid.battle_screen_character_2_grid, grid.battle_screen_character_2_grid_rect)
+    screen.blit(grid.battle_screen_battle_1_grid, grid.battle_screen_battle_1_grid_rect)
+    screen.blit(grid.battle_screen_battle_2_grid, grid.battle_screen_battle_2_grid_rect)
 
     # Draw other stuff
     character_1.blitme()

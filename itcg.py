@@ -9,6 +9,7 @@ from monster import Monster
 from tactic import Tactic
 from button import Button
 from display import Mouse_status, Screen_status, Button_status
+from grid import Grid
 
 
 def main():
@@ -18,6 +19,7 @@ def main():
     pygame.display.set_caption('Maplestory ITCG')
 
     ai_settings = Settings()
+    grid = Grid()
     screen = pygame.display.set_mode((ai_settings.screen_width, ai_settings.screen_height))
 
     character_1 = Character_1(screen, ai_settings)
@@ -41,9 +43,9 @@ def main():
 
     while True:
 
-        gf.check_events(ai_settings, screen, monster,menu_buttons, buttons,mouse_status,screen_status, button_status)
+        gf.check_events(ai_settings,grid, screen, monster,menu_buttons, buttons,mouse_status,screen_status, button_status)
 
-        gf.update_screen(ai_settings, screen, character_1, character_2, monster, tactic, menu_buttons, buttons,screen_status, button_status)
+        gf.update_screen(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons,screen_status, button_status)
 
 
 
