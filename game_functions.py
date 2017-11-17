@@ -8,6 +8,8 @@ from tactic import Tactic
 from button import Button
 from display import Mouse_status, Screen_status, Button_status
 from grid import Grid
+from card import Card
+import card_database as cd
 
 
 
@@ -182,6 +184,8 @@ def build_deck_screen_update(ai_settings, grid, screen, buttons, screen_status):
 
     build_deck_screen_stable_button_display(screen, buttons,screen_status)
 
+    build_deck_screen_card_gallery_display(screen)
+
 
 def battle_screen_update(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status):
     """ Battle screen update"""
@@ -258,6 +262,18 @@ def build_deck_screen_stable_button_display(screen, buttons,screen_status):
     button3.draw(screen)
     button4.draw(screen)
     buttons.extend((button1, button2, button3, button4))
+
+def build_deck_screen_card_gallery_display(screen):
+    """Display Card Gallery"""
+    rect_position_x = 120
+    rect_position_y = 130
+    for card in cd.card_all():
+        card.rect.x = rect_position_x
+        card.rect.y = rect_position_y
+        screen.blit(card.image, card.rect)
+        rect_position_x += 150
+
+
 
 
 #-----------------------------Monster handaction----------------------------------------------------

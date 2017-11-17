@@ -7,7 +7,7 @@ class Tactic():
 
         self.screen = screen
 
-        self.image_raw = pygame.image.load('static/images/character/tactic_01.jpg')
+        self.image_raw = pygame.image.load('static/images/testing/tactic_01.jpg')
         self.image_size_x = ai_settings.card_size_x
         self.image_size_y = ai_settings.card_size_y
         self.image = pygame.transform.scale(self.image_raw,(self.image_size_x, self.image_size_y))

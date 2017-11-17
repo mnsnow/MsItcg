@@ -10,6 +10,7 @@ from tactic import Tactic
 from button import Button
 from display import Mouse_status, Screen_status, Button_status
 from grid import Grid
+from card import Card
 
 
 def main():

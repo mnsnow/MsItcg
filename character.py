@@ -6,7 +6,7 @@ class Character_1():
 
         self.screen = screen
 
-        self.image_raw = pygame.image.load('static/images/character/character_01.jpg')
+        self.image_raw = pygame.image.load('static/images/testing/character_01.jpg')
         self.image_size_x = ai_settings.card_size_x
         self.image_size_y = ai_settings.card_size_y
         self.image = pygame.transform.scale(self.image_raw,(self.image_size_x, self.image_size_y))
@@ -27,7 +27,7 @@ class Character_2():
 
         self.screen = screen
 
-        self.image_raw = pygame.image.load('static/images/character/character_02.jpg')
+        self.image_raw = pygame.image.load('static/images/testing/character_02.jpg')
         self.image_size_x = ai_settings.card_size_x
         self.image_size_y = ai_settings.card_size_y
         self.image = pygame.transform.scale(self.image_raw,(self.image_size_x, self.image_size_y))
