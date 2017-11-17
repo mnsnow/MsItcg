@@ -265,13 +265,23 @@ def build_deck_screen_stable_button_display(screen, buttons,screen_status):
 
 def build_deck_screen_card_gallery_display(screen):
     """Display Card Gallery"""
-    rect_position_x = 120
+    rect_position_x = 80
     rect_position_y = 130
+    row_number = 1
     for card in cd.card_all():
-        card.rect.x = rect_position_x
-        card.rect.y = rect_position_y
-        screen.blit(card.image, card.rect)
-        rect_position_x += 150
+        if row_number <= 7:
+            card.rect.x = rect_position_x
+            card.rect.y = rect_position_y
+            screen.blit(card.image, card.rect)
+            rect_position_x += 150
+            row_number += 1
+        elif row_number <= 14:
+            card.rect.x = rect_position_x - 1050
+            card.rect.y = rect_position_y + 200
+            screen.blit(card.image, card.rect)
+            rect_position_x += 150
+            row_number += 1
+
 
 
 
