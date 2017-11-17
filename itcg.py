@@ -7,7 +7,8 @@ from settings import Settings
 from character import Character_1, Character_2
 from monster import Monster
 from tactic import Tactic
-from button import Button, Button_status
+from button import Button
+from display import Screen_status, Button_status
 
 
 def main():
@@ -32,7 +33,7 @@ def main():
     ]
 
 
-
+    screen_status = Screen_status()
     button_status = Button_status()
     buttons = []
 
@@ -40,9 +41,9 @@ def main():
 
     while True:
 
-        gf.check_events(ai_settings, screen, monster,menu_buttons, buttons, button_status)
+        gf.check_events(ai_settings, screen, monster,menu_buttons, buttons,screen_status, button_status)
 
-        gf.update_screen(ai_settings, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, button_status)
+        gf.update_screen(ai_settings, screen, character_1, character_2, monster, tactic, menu_buttons, buttons,screen_status, button_status)
 
 
 

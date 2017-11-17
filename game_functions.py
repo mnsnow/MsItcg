@@ -5,10 +5,39 @@ from settings import Settings
 from character import Character_1, Character_2
 from monster import Monster
 from tactic import Tactic
-from button import Button, Button_status
+from button import Button
+from display import Screen_status, Button_status
 
-def check_events(ai_settings, screen, monster, menu_buttons, buttons, button_status):
-    """Check mouse and keyboard evetns"""
+
+
+def check_events(ai_settings, screen, monster, menu_buttons, buttons,screen_status, button_status):
+    """Check mouse and keyboard events"""
+
+    if screen_status.welcome_screen:
+
+        check_events_welcome_screen(ai_settings, screen, monster, menu_buttons, buttons,screen_status, button_status)
+
+    if screen_status.battle_screen:
+
+        check_events_battle_screen(ai_settings, screen, monster, menu_buttons, buttons,screen_status, button_status)
+
+
+
+def check_events_welcome_screen(ai_settings, screen, monster, menu_buttons, buttons,screen_status, button_status):
+    """ Check all events on the welcome screen"""
+    for event in pygame.event.get():
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if rect_union(buttons).collidepoint(pygame.mouse.get_pos()):
+                for button in buttons:
+                    if button.rect.collidepoint(pygame.mouse.get_pos()):
+
+                        if button.text == 'In':
+                            screen_status.welcome_screen = False
+                            screen_status.battle_screen = True
+
+
+def check_events_battle_screen(ai_settings, screen, monster, menu_buttons, buttons,screen_status, button_status):
+    """ Check all evetns on the battle screen"""
     for event in pygame.event.get():
 
         if event.type == pygame.QUIT:
@@ -69,42 +98,68 @@ def check_events(ai_settings, screen, monster, menu_buttons, buttons, button_sta
             print('0')
 
 
-def update_screen(ai_settings, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, button_status):
+
+
+def update_screen(ai_settings, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status):
     """ Update images on the screen and flip to the new screen"""
-    # BG COLOR
-    screen.fill(ai_settings.bg_color)
 
-    # Draw Grid system
-    screen.blit(ai_settings.menu_grid, ai_settings.menu_grid_rect)
-    screen.blit(ai_settings.monster_grid, ai_settings.monster_grid_rect)
-    screen.blit(ai_settings.tactic_grid, ai_settings.tactic_grid_rect)
-    screen.blit(ai_settings.character_1_grid, ai_settings.character_1_grid_rect)
-    screen.blit(ai_settings.character_2_grid, ai_settings.character_2_grid_rect)
-    screen.blit(ai_settings.battle_1_grid, ai_settings.battle_1_grid_rect)
-    screen.blit(ai_settings.battle_2_grid, ai_settings.battle_2_grid_rect)
+    if screen_status.welcome_screen:
+        welcome_screen_display(screen, buttons)
 
-    # Draw other stuff
-    character_1.blitme()
-    character_2.blitme()
-    monster.blitme()
-    tactic.blitme()
 
-    for menu_button in menu_buttons:
-        menu_button.update()
-        menu_button.draw(screen)
+    if screen_status.battle_screen:
+        # BG COLOR
+        screen.fill(ai_settings.bg_color)
 
-    if button_status.monster_handaction:
-        monster_button_handaction_display(screen, buttons)
-    if button_status.monster_battleaction:
-        monster_button_battleaction_display(screen, buttons)
-    if button_status.menu_rules:
-        menu_rules_display(screen)
+        # Draw Grid system
+        screen.blit(ai_settings.menu_grid, ai_settings.menu_grid_rect)
+        screen.blit(ai_settings.monster_grid, ai_settings.monster_grid_rect)
+        screen.blit(ai_settings.tactic_grid, ai_settings.tactic_grid_rect)
+        screen.blit(ai_settings.character_1_grid, ai_settings.character_1_grid_rect)
+        screen.blit(ai_settings.character_2_grid, ai_settings.character_2_grid_rect)
+        screen.blit(ai_settings.battle_1_grid, ai_settings.battle_1_grid_rect)
+        screen.blit(ai_settings.battle_2_grid, ai_settings.battle_2_grid_rect)
+
+        # Draw other stuff
+        character_1.blitme()
+        character_2.blitme()
+        monster.blitme()
+        tactic.blitme()
+
+        for menu_button in menu_buttons:
+            menu_button.update()
+            menu_button.draw(screen)
+
+        if button_status.monster_handaction:
+            monster_button_handaction_display(screen, buttons)
+        if button_status.monster_battleaction:
+            monster_button_battleaction_display(screen, buttons)
+        if button_status.menu_rules:
+            menu_rules_display(screen)
 
 
 
 
     # Most recently draw screen visible
     pygame.display.flip()
+
+
+
+def welcome_screen_display(screen, buttons):
+    """ Display the welcome screen"""
+    button1 = Button('Play', (0,0,0),50, 600, 100, 50)
+    button2 = Button('In', (0,0,0),50, 650, 100, 50)
+    button3 = Button('Back', (0,0,0),50, 700, 100, 50)
+    button1.update()
+    button2.update()
+    button3.update()
+    button1.draw(screen)
+    button2.draw(screen)
+    button3.draw(screen)
+    buttons.extend((button1, button2, button3))
+
+
+
 
 
 def monster_play(monster,button_status):
@@ -161,8 +216,8 @@ def monster_button_battleaction_display(screen, buttons):
 def menu_rules_display(screen):
     """What gonna happen after click on rules buttion in the menu bar"""
     button = pygame.Surface((600,400))
-    button.fill((34,87,199))
-    screen.blit(button,Rect(300,200,600,400))
+    button.fill((34,87,139))
+    screen.blit(button,Rect(100,300,600,400))
 
 
 
