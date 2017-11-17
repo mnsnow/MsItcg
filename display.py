@@ -1,9 +1,21 @@
 import sys
 import pygame
 
+class Mouse_status():
+    """ Control active status of mouse action"""
+    def __init__(self, mousebuttondown_status = False):
+        self.mousebuttondown_status = mousebuttondown_status
+
+    def mousebuttondown_status_active(self):
+        self.mousebuttondown_status = True
+
+    def mousebuttondown_status_deactive(self):
+        self.mousebuttondown_status = False
+
+
 class Screen_status():
     """ Control active status of all screens"""
-    def __init__(self, welcome_screen = True, build_deck_screen = False, battle_screen = False):
+    def __init__(self, welcome_screen = False, build_deck_screen = False, battle_screen = True):
 
         self.welcome_screen = welcome_screen
         self.build_deck_screen = build_deck_screen
@@ -37,25 +49,26 @@ class Screen_status():
 
 class Button_status():
     """ Control active status of all buttons"""
-    def __init__(self, monster_handaction=False, monster_battleaction=False, menu_rules=False):
+    def __init__(self, monster_handaction_display=False,monster_handaction_backend=True, monster_battleaction_display=False, menu_rules=False):
 
-        self.monster_handaction = monster_handaction
-        self.monster_battleaction = monster_battleaction
+        self.monster_handaction_display = monster_handaction_display
+        self.monster_handaction_backend = monster_handaction_backend
+        self.monster_battleaction_display = monster_battleaction_display
         self.menu_rules = menu_rules
 
 
-    def monster_handaction_active(self):
-        self.monster_handaction = True
+    def monster_handaction_display_active(self):
+        self.monster_handaction_display = True
 
-    def monster_handaction_deactive(self):
-        self.monster_handaction = False
+    def monster_handaction_display_deactive(self):
+        self.monster_handaction_display = False
 
 
-    def monster_battleaction_active(self):
-        self.monster_battleaction = True
+    def monster_battleaction_display_active(self):
+        self.monster_battleaction_display = True
 
-    def monster_battleaction_deactive(self):
-        self.monster_battleaction = False
+    def monster_battleaction_display_deactive(self):
+        self.monster_battleaction_display = False
 
     def menu_rules_active(self):
         self.menu_rules = True

@@ -3,12 +3,13 @@ import pygame
 
 class Button():
 
-    def __init__(self, text, color=(0, 0, 0), x=0, y=0, width=100, height=50):
+    def __init__(self, text, group, color=(0, 0, 0), x=0, y=0, width=100, height=50):
 
 
 
         self.text = text
         self.color = color
+        self.group = group
 
         self.image_normal = pygame.Surface((width, height))
         self.image_normal.fill(color)
