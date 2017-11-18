@@ -284,6 +284,13 @@ def build_deck_screen_stable_button_display(screen, buttons,screen_status,button
 
 def build_deck_screen_card_gallery_display(screen, buttons, screen_status, button_status):
     """Display Card Gallery"""
+    build_deck_screen_card_gallery_button_display(screen, buttons, screen_status, button_status)
+    build_deck_screen_card_gallery_card_display(screen, buttons, screen_status, button_status)
+
+
+
+def build_deck_screen_card_gallery_button_display(screen, buttons, screen_status, button_status):
+    """Display all buttons in the card gallery part"""
     button1 = Button('>>','build_deck_screen_card_gallery_stable', (0,0,0),1100, 300, 50, 50)
     button2 = Button('<<', 'build_deck_screen_card_gallery_stable' ,(0,0,0),50, 300, 50, 50)
     button3 = Button('page: ' + str(screen_status.build_deck_screen_card_gallery_page_id), 'build_deck_screen_card_gallery_stable' ,(0,0,0),560, 510, 80, 40)
@@ -299,6 +306,8 @@ def build_deck_screen_card_gallery_display(screen, buttons, screen_status, butto
         buttons.extend((button1,button2,button3))
         button_status.build_deck_screen_card_gallery_button_backend = False
 
+def build_deck_screen_card_gallery_card_display(screen, buttons, screen_status, button_status):
+    """Display all cards on card gallery"""
     rect_position_x = 100 #local variables for rect position for the first card in the card gallery
     rect_position_y = 130
     row_number = 1
@@ -317,10 +326,6 @@ def build_deck_screen_card_gallery_display(screen, buttons, screen_status, butto
             row_number += 1
             if row_number >= 15:
                 row_number = 1
-
-
-
-
 
 
 
