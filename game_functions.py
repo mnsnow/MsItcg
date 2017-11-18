@@ -15,14 +15,14 @@ import card_database_functions as cdf
 
 
 #-----------------------------Check events----------------------------------------------------
-def check_events(ai_settings,grid, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status):
+def check_events(ai_settings,grid, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status, card_database_filter):
     """Check mouse and keyboard events"""
 
     if screen_status.welcome_screen_display:
         check_events_welcome_screen(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status)
 
     if screen_status.build_deck_screen_display:
-        check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status)
+        check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status, card_database_filter)
 
     if screen_status.battle_screen_display:
         check_events_battle_screen(ai_settings,grid, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status)
@@ -47,7 +47,7 @@ def check_events_welcome_screen(ai_settings, screen, monster, menu_buttons, butt
                         elif button.text == 'Quit':
                             welcome_screen_quit(buttons, screen_status)
 
-def check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status):
+def check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status, card_database_filter):
     """ Check all events on the build deck screen"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -76,9 +76,19 @@ def check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, b
                                 screen_status.battle_screen_display = False
                             elif button.text == '>>':
                                 screen_status.build_deck_screen_card_gallery_page_id += 1
-
                             elif button.text == '<<':
                                 screen_status.build_deck_screen_card_gallery_page_id -= 1
+                            elif button.text == 'Bowman':
+                                card_database_filter.bowman = not card_database_filter.bowman
+                            elif button.text == 'Magician':
+                                card_database_filter.magician = not card_database_filter.magician
+                            elif button.text == 'Thief':
+                                card_database_filter.thief = not card_database_filter.thief
+                            elif button.text == 'Warrior':
+                                card_database_filter.warrior = not card_database_filter.warrior
+                            elif button.text == 'Jobless':
+                                card_database_filter.jobless = not card_database_filter.jobless
+
 
 
         # elif event.type == pygame.MOUSEMOTION:
@@ -163,14 +173,14 @@ def check_events_battle_screen(ai_settings,grid, screen, monster, menu_buttons, 
 
 
 #-----------------------------Update screens----------------------------------------------------
-def update_screen(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons,mouse_status, screen_status, button_status):
+def update_screen(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons,mouse_status, screen_status, button_status, card_database_filter):
     """ Update images on the screen and flip to the new screen"""
 
     if screen_status.welcome_screen_display:
         welcome_screen_update(ai_settings,screen, buttons, screen_status)
 
     if screen_status.build_deck_screen_display:
-        build_deck_screen_update(ai_settings, grid, screen, buttons,mouse_status, screen_status, button_status)
+        build_deck_screen_update(ai_settings, grid, screen, buttons,mouse_status, screen_status, button_status, card_database_filter)
 
     if screen_status.battle_screen_display:
         battle_screen_update(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status)
@@ -194,7 +204,7 @@ def welcome_screen_update(ai_settings,screen, buttons, screen_status):
         buttons.extend((button1, button2, button3))
         screen_status.welcome_screen_backend = False
 
-def build_deck_screen_update(ai_settings, grid, screen, buttons,mouse_status, screen_status, button_status):
+def build_deck_screen_update(ai_settings, grid, screen, buttons,mouse_status, screen_status, button_status, card_database_filter):
     """ Build deck screen update"""
     screen.fill(ai_settings.bg_color)
 
@@ -202,7 +212,7 @@ def build_deck_screen_update(ai_settings, grid, screen, buttons,mouse_status, sc
 
     build_deck_screen_stable_button_display(screen, buttons,screen_status, button_status)
 
-    build_deck_screen_card_gallery_display(screen,buttons, screen_status, button_status)
+    build_deck_screen_card_gallery_display(screen,buttons, screen_status, button_status, card_database_filter)
 
 def battle_screen_update(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status):
     """ Battle screen update"""
@@ -282,36 +292,78 @@ def build_deck_screen_stable_button_display(screen, buttons,screen_status,button
         buttons.extend((button1, button2, button3, button4))
         button_status.build_deck_screen_stable_button_backend = False
 
-def build_deck_screen_card_gallery_display(screen, buttons, screen_status, button_status):
+def build_deck_screen_card_gallery_display(screen, buttons, screen_status, button_status, card_database_filter):
     """Display Card Gallery"""
-    build_deck_screen_card_gallery_button_display(screen, buttons, screen_status, button_status)
-    build_deck_screen_card_gallery_card_display(screen, buttons, screen_status, button_status)
+    build_deck_screen_card_gallery_button_display(screen, buttons, screen_status, button_status, card_database_filter)
+    build_deck_screen_card_gallery_card_display(screen, buttons, screen_status, button_status, card_database_filter)
 
 
 
-def build_deck_screen_card_gallery_button_display(screen, buttons, screen_status, button_status):
+def build_deck_screen_card_gallery_button_display(screen, buttons, screen_status, button_status, card_database_filter):
     """Display all buttons in the card gallery part"""
     button1 = Button('>>','build_deck_screen_card_gallery_stable', (0,0,0),1100, 300, 50, 50)
-    button2 = Button('<<', 'build_deck_screen_card_gallery_stable' ,(0,0,0),50, 300, 50, 50)
-    button3 = Button('page: ' + str(screen_status.build_deck_screen_card_gallery_page_id), 'build_deck_screen_card_gallery_stable' ,(0,0,0),560, 510, 80, 40)
-    if screen_status.build_deck_screen_card_gallery_page_id != 100 :
+    if screen_status.build_deck_screen_card_gallery_page_id != 100:
         button1.update()
         button1.draw(screen)
+
+    button2 = Button('<<', 'build_deck_screen_card_gallery_stable' ,(0,0,0),50, 300, 50, 50)
     if screen_status.build_deck_screen_card_gallery_page_id != 1:
         button2.update()
         button2.draw(screen)
+# button3: page button to display the current page number for card gallery
+    button3 = Button('page: ' + str(screen_status.build_deck_screen_card_gallery_page_id), 'build_deck_screen_card_gallery_stable' ,(0,0,0),560, 510, 80, 40)
     button3.update()
     button3.draw(screen)
+# Class filter:
+    button4 = Button('Class filter: ','' ,(0,0,0),100, 70, 150, 50)
+    button4.update()
+    button4.draw(screen)
+# Bowman filter button
+    if card_database_filter.bowman:
+        button_bowman = Button('Bowman', '', (100,30,130),300,70,90,50)
+    else:
+        button_bowman = Button('Bowman', '', (0,0,0),300,70,90,50)
+    button_bowman.update()
+    button_bowman.draw(screen)
+# Magician filter button
+    if card_database_filter.magician:
+        button_magician = Button('Magician', '', (100,30,130),400,70,90,50)
+    else:
+        button_magician = Button('Magician', '', (0,0,0),400,70,90,50)
+    button_magician.update()
+    button_magician.draw(screen)
+# Thief filter button
+    if card_database_filter.thief:
+        button_thief = Button('Thief', '', (100,30,130),500,70,90,50)
+    else:
+        button_thief = Button('Thief', '', (0,0,0),500,70,90,50)
+    button_thief.update()
+    button_thief.draw(screen)
+# Warrior filter button
+    if card_database_filter.warrior:
+        button_warrior = Button('Warrior', '', (100,30,130),600,70,90,50)
+    else:
+        button_warrior = Button('Warrior', '', (0,0,0),600,70,90,50)
+    button_warrior.update()
+    button_warrior.draw(screen)
+# Jobless filter button
+    if card_database_filter.jobless:
+        button_jobless = Button('Jobless', '', (100,30,130),700,70,90,50)
+    else:
+        button_jobless = Button('Jobless', '', (0,0,0),700,70,90,50)
+    button_jobless.update()
+    button_jobless.draw(screen)
+
     if button_status.build_deck_screen_card_gallery_button_backend:
-        buttons.extend((button1,button2,button3))
+        buttons.extend((button1,button2,button3,button4,button_bowman,button_magician,button_thief,button_warrior,button_jobless))
         button_status.build_deck_screen_card_gallery_button_backend = False
 
-def build_deck_screen_card_gallery_card_display(screen, buttons, screen_status, button_status):
+def build_deck_screen_card_gallery_card_display(screen, buttons, screen_status, button_status, card_database_filter):
     """Display all cards on card gallery"""
     rect_position_x = 100 #local variables for rect position for the first card in the card gallery
     rect_position_y = 130
     row_number = 1
-    for card in cdf.card_all()[14*(screen_status.build_deck_screen_card_gallery_page_id - 1):14 * screen_status.build_deck_screen_card_gallery_page_id]:
+    for card in cdf.request_card_list(card_database_filter)[14*(screen_status.build_deck_screen_card_gallery_page_id - 1):14 * screen_status.build_deck_screen_card_gallery_page_id]:
         if row_number <= 7:
             card.rect.x = rect_position_x
             card.rect.y = rect_position_y
