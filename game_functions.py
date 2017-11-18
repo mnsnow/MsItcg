@@ -301,59 +301,61 @@ def build_deck_screen_card_gallery_display(screen, buttons, screen_status, butto
 
 def build_deck_screen_card_gallery_button_display(screen, buttons, screen_status, button_status, card_database_filter):
     """Display all buttons in the card gallery part"""
+    # Page forward button
     button1 = Button('>>','build_deck_screen_card_gallery_stable', (0,0,0),1100, 300, 50, 50)
-    if screen_status.build_deck_screen_card_gallery_page_id != 100:
+    if screen_status.build_deck_screen_card_gallery_page_id != ((len(cdf.request_card_list(card_database_filter)))//14) + 1: # Make sure on the last page no foreward button shows up
         button1.update()
         button1.draw(screen)
-
+    # Page backward button
     button2 = Button('<<', 'build_deck_screen_card_gallery_stable' ,(0,0,0),50, 300, 50, 50)
-    if screen_status.build_deck_screen_card_gallery_page_id != 1:
+    if screen_status.build_deck_screen_card_gallery_page_id != 1: # Make sure on the first page no backward button shows up
+        button1.update()
         button2.update()
         button2.draw(screen)
-# button3: page button to display the current page number for card gallery
+    # button3: page button to display the current page number for card gallery
     button3 = Button('page: ' + str(screen_status.build_deck_screen_card_gallery_page_id), 'build_deck_screen_card_gallery_stable' ,(0,0,0),560, 510, 80, 40)
     button3.update()
     button3.draw(screen)
-# Class filter:
+    # Class filter:
     button4 = Button('Class filter: ','' ,(0,0,0),100, 70, 150, 50)
     button4.update()
     button4.draw(screen)
-# Bowman filter button
+    # Bowman filter button
     if card_database_filter.bowman:
         button_bowman = Button('Bowman', '', (100,30,130),300,70,90,50)
     else:
         button_bowman = Button('Bowman', '', (0,0,0),300,70,90,50)
     button_bowman.update()
     button_bowman.draw(screen)
-# Magician filter button
+    # Magician filter button
     if card_database_filter.magician:
         button_magician = Button('Magician', '', (100,30,130),400,70,90,50)
     else:
         button_magician = Button('Magician', '', (0,0,0),400,70,90,50)
     button_magician.update()
     button_magician.draw(screen)
-# Thief filter button
+    # Thief filter button
     if card_database_filter.thief:
         button_thief = Button('Thief', '', (100,30,130),500,70,90,50)
     else:
         button_thief = Button('Thief', '', (0,0,0),500,70,90,50)
     button_thief.update()
     button_thief.draw(screen)
-# Warrior filter button
+    # Warrior filter button
     if card_database_filter.warrior:
         button_warrior = Button('Warrior', '', (100,30,130),600,70,90,50)
     else:
         button_warrior = Button('Warrior', '', (0,0,0),600,70,90,50)
     button_warrior.update()
     button_warrior.draw(screen)
-# Jobless filter button
+    # Jobless filter button
     if card_database_filter.jobless:
         button_jobless = Button('Jobless', '', (100,30,130),700,70,90,50)
     else:
         button_jobless = Button('Jobless', '', (0,0,0),700,70,90,50)
     button_jobless.update()
     button_jobless.draw(screen)
-
+    # Add all buttons to buttons list so that check_events function can detect mouse click on those buttons.
     if button_status.build_deck_screen_card_gallery_button_backend:
         buttons.extend((button1,button2,button3,button4,button_bowman,button_magician,button_thief,button_warrior,button_jobless))
         button_status.build_deck_screen_card_gallery_button_backend = False
@@ -363,6 +365,12 @@ def build_deck_screen_card_gallery_card_display(screen, buttons, screen_status, 
     rect_position_x = 100 #local variables for rect position for the first card in the card gallery
     rect_position_y = 130
     row_number = 1
+    # Check the page number to make sure if will not go negative or randomly large
+    if screen_status.build_deck_screen_card_gallery_page_id <= 0:
+        screen_status.build_deck_screen_card_gallery_page_id = 1
+    if screen_status.build_deck_screen_card_gallery_page_id >= ((len(cdf.request_card_list(card_database_filter)))//14) + 2:
+        screen_status.build_deck_screen_card_gallery_page_id = (len(cdf.request_card_list(card_database_filter)))//14 + 1
+    # Algorithm to draw all cards in request_card_list, 14 card per page.
     for card in cdf.request_card_list(card_database_filter)[14*(screen_status.build_deck_screen_card_gallery_page_id - 1):14 * screen_status.build_deck_screen_card_gallery_page_id]:
         if row_number <= 7:
             card.rect.x = rect_position_x
