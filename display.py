@@ -19,23 +19,26 @@ class Screen_status():
         self.build_deck_screen_card_gallery_page_id = build_deck_screen_card_gallery_page_id
         self.battle_screen_display = battle_screen_display
 
-    # def build_deck_screen_card_gallery_switch_page(self, build_deck_screen_card_gallery_page_id):
-    #     """ Control pages switching on card gallery part"""
-    #     self.build_deck_screen_card_gallery_page_id = build_deck_screen_card_gallery_page_id
-
-
-
-
-
 
 
 class Button_status():
     """ Control active status of all buttons"""
-    def __init__(self, monster_handaction_display=False,monster_handaction_backend=True,
+    def __init__(self, build_deck_screen_stable_button_backend = True, build_deck_screen_card_gallery_button_backend = True,
+    monster_handaction_display = False,monster_handaction_backend=True,
     monster_battleaction_display=False,monster_battleaction_backend=True, menu_rules=False):
 
+        self.build_deck_screen_stable_button_backend = build_deck_screen_stable_button_backend
+        self.build_deck_screen_card_gallery_button_backend = build_deck_screen_card_gallery_button_backend
         self.monster_handaction_display = monster_handaction_display
         self.monster_handaction_backend = monster_handaction_backend
         self.monster_battleaction_display = monster_battleaction_display
         self.monster_battleaction_backend = monster_battleaction_backend
         self.menu_rules = menu_rules
+
+
+
+
+
+
+
+#--------------
