@@ -297,15 +297,20 @@ def build_deck_screen_card_gallery_display(screen, buttons, screen_status, butto
     build_deck_screen_card_gallery_button_display(screen, buttons, screen_status, button_status, card_database_filter)
     build_deck_screen_card_gallery_card_display(screen, buttons, screen_status, button_status, card_database_filter)
 
-
-
 def build_deck_screen_card_gallery_button_display(screen, buttons, screen_status, button_status, card_database_filter):
     """Display all buttons in the card gallery part"""
     # Page forward button
     button1 = Button('>>','build_deck_screen_card_gallery_stable', (0,0,0),1100, 300, 50, 50)
-    if screen_status.build_deck_screen_card_gallery_page_id != ((len(cdf.request_card_list(card_database_filter)))//14) + 1: # Make sure on the last page no foreward button shows up
-        button1.update()
-        button1.draw(screen)
+    # Edge cases when len() = 14,28,42 ...
+    if len(cdf.request_card_list(card_database_filter)) % 14 == 0 and len(cdf.request_card_list(card_database_filter)) != 0:
+        if screen_status.build_deck_screen_card_gallery_page_id != ((len(cdf.request_card_list(card_database_filter)))//14): # Make sure on the last page no foreward button shows up
+            button1.update()
+            button1.draw(screen)
+    # Normal cases
+    else:
+        if screen_status.build_deck_screen_card_gallery_page_id != ((len(cdf.request_card_list(card_database_filter)))//14 + 1): # Make sure on the last page no foreward button shows up
+            button1.update()
+            button1.draw(screen)
     # Page backward button
     button2 = Button('<<', 'build_deck_screen_card_gallery_stable' ,(0,0,0),50, 300, 50, 50)
     if screen_status.build_deck_screen_card_gallery_page_id != 1: # Make sure on the first page no backward button shows up
@@ -368,8 +373,14 @@ def build_deck_screen_card_gallery_card_display(screen, buttons, screen_status, 
     # Check the page number to make sure if will not go negative or randomly large
     if screen_status.build_deck_screen_card_gallery_page_id <= 0:
         screen_status.build_deck_screen_card_gallery_page_id = 1
-    if screen_status.build_deck_screen_card_gallery_page_id >= ((len(cdf.request_card_list(card_database_filter)))//14) + 2:
-        screen_status.build_deck_screen_card_gallery_page_id = (len(cdf.request_card_list(card_database_filter)))//14 + 1
+    # Edge cases when len() = 14, 28, 42...
+    if len(cdf.request_card_list(card_database_filter)) % 14 == 0 and len(cdf.request_card_list(card_database_filter)) != 0:
+        if screen_status.build_deck_screen_card_gallery_page_id >= (len(cdf.request_card_list(card_database_filter)))//14 + 1:
+            screen_status.build_deck_screen_card_gallery_page_id = (len(cdf.request_card_list(card_database_filter)))//14 + 0
+
+    else:
+        if screen_status.build_deck_screen_card_gallery_page_id >= (len(cdf.request_card_list(card_database_filter)))//14 + 2:
+            screen_status.build_deck_screen_card_gallery_page_id = (len(cdf.request_card_list(card_database_filter)))//14 + 1
     # Algorithm to draw all cards in request_card_list, 14 card per page.
     for card in cdf.request_card_list(card_database_filter)[14*(screen_status.build_deck_screen_card_gallery_page_id - 1):14 * screen_status.build_deck_screen_card_gallery_page_id]:
         if row_number <= 7:
