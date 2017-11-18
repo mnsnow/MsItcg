@@ -46,7 +46,7 @@ def main():
 
         gf.check_events(ai_settings,grid, screen, monster,menu_buttons, buttons,mouse_status,screen_status, button_status)
 
-        gf.update_screen(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons,screen_status, button_status)
+        gf.update_screen(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons,mouse_status, screen_status, button_status)
 
 
 

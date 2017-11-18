@@ -48,7 +48,8 @@ attack='10',health='20',lv_type='buff a friend',lv_active_level='10',special_eff
 card_04_34 = Card(set_number='04',card_number='34',card_type='monster',job='thief',level='10',
 attack='20',health='10',lv_type='spawn-20',lv_active_level='20',special_effect='')
 
-
+card_04_55 = Card(set_number='04',card_number='55',card_type='monster',job='warrior',level='19',
+attack='10',health='10',lv_type='stick together',lv_active_level='50',special_effect='')
 
 
 #-----------------------Set 5--------------------------------------------

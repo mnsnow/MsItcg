@@ -11,12 +11,19 @@ class Mouse_status():
 class Screen_status():
     """ Control active status of all screens"""
     def __init__(self, welcome_screen_display = False,  build_deck_screen_display = True, battle_screen_display = False,
-        welcome_screen_backend = True):
+        build_deck_screen_card_gallery_page_id = 1, welcome_screen_backend = True):
 
         self.welcome_screen_display = welcome_screen_display
         self.welcome_screen_backend = welcome_screen_backend
         self.build_deck_screen_display = build_deck_screen_display
+        self.build_deck_screen_card_gallery_page_id = build_deck_screen_card_gallery_page_id
         self.battle_screen_display = battle_screen_display
+
+    # def build_deck_screen_card_gallery_switch_page(self, build_deck_screen_card_gallery_page_id):
+    #     """ Control pages switching on card gallery part"""
+    #     self.build_deck_screen_card_gallery_page_id = build_deck_screen_card_gallery_page_id
+
+
 
 
 

@@ -57,19 +57,39 @@ def check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, b
             if event.key == pygame.K_ESCAPE:
                 sys.exit()
 
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if rect_union(buttons).collidepoint(pygame.mouse.get_pos()):
-                for button in buttons:
-                    if button.rect.collidepoint(pygame.mouse.get_pos()):
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if mouse_status.mousebuttondown_status:
+                pass
+            else:
+                mouse_status.mousebuttondown_status = True
+                if rect_union(buttons).collidepoint(pygame.mouse.get_pos()):
+                    for button in buttons:
+                        if button.rect.collidepoint(pygame.mouse.get_pos()):
 
-                        if button.text == 'Next':
-                            screen_status.welcome_screen_display = False
-                            screen_status.build_deck_screen_display = False
-                            screen_status.battle_screen_display = True
-                        if button.text == 'Back':
-                            screen_status.welcome_screen_display = True
-                            screen_status.build_deck_screen_display = False
-                            screen_status.battle_screen_display = False
+                            if button.text == 'Next':
+                                screen_status.welcome_screen_display = False
+                                screen_status.build_deck_screen_display = False
+                                screen_status.battle_screen_display = True
+                            elif button.text == 'Back':
+                                screen_status.welcome_screen_display = True
+                                screen_status.build_deck_screen_display = False
+                                screen_status.battle_screen_display = False
+                            elif button.text == '>>':
+                                screen_status.build_deck_screen_card_gallery_page_id += 1
+                                break
+                            elif button.text == '<<':
+                                screen_status.build_deck_screen_card_gallery_page_id -= 1
+                                break
+
+        # elif event.type == pygame.MOUSEMOTION:
+        #     print(pygame.mouse.get_pos())
+
+
+        elif event.type == pygame.MOUSEBUTTONUP:
+            if mouse_status.mousebuttondown_status == True:
+                mouse_status.mousebuttondown_status = False
+
+
 
 def check_events_battle_screen(ai_settings,grid, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status):
     """ Check all evetns on the battle screen"""
@@ -115,7 +135,8 @@ def check_events_battle_screen(ai_settings,grid, screen, monster, menu_buttons, 
                             elif button.text == 'Level up':
                                 monster_levelup(monster,buttons,button_status)
                             elif button.text == 'Face!':
-                                monster_face(monster,buttons,button_status)
+                                #monster_face(monster,buttons,button_status)
+                                print('sssssss')
                             elif button.text == 'Fight!':
                                 monster_fight(monster,buttons,button_status)
                             elif button.text == 'Skip':
@@ -139,20 +160,20 @@ def check_events_battle_screen(ai_settings,grid, screen, monster, menu_buttons, 
         elif event.type == pygame.MOUSEBUTTONUP:
             if mouse_status.mousebuttondown_status == True:
                 mouse_status.mousebuttondown_status = False
-            print('0')
+
 
 
 
 
 #-----------------------------Update screens----------------------------------------------------
-def update_screen(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status):
+def update_screen(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons,mouse_status, screen_status, button_status):
     """ Update images on the screen and flip to the new screen"""
 
     if screen_status.welcome_screen_display:
         welcome_screen_update(ai_settings,screen, buttons, screen_status)
 
     if screen_status.build_deck_screen_display:
-        build_deck_screen_update(ai_settings, grid, screen, buttons, screen_status)
+        build_deck_screen_update(ai_settings, grid, screen, buttons,mouse_status, screen_status)
 
     if screen_status.battle_screen_display:
         battle_screen_update(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status)
@@ -176,7 +197,7 @@ def welcome_screen_update(ai_settings,screen, buttons, screen_status):
         buttons.extend((button1, button2, button3))
         screen_status.welcome_screen_backend = False
 
-def build_deck_screen_update(ai_settings, grid, screen, buttons, screen_status):
+def build_deck_screen_update(ai_settings, grid, screen, buttons,mouse_status, screen_status):
     """ Build deck screen update"""
     screen.fill(ai_settings.bg_color)
 
@@ -184,8 +205,7 @@ def build_deck_screen_update(ai_settings, grid, screen, buttons, screen_status):
 
     build_deck_screen_stable_button_display(screen, buttons,screen_status)
 
-    build_deck_screen_card_gallery_display(screen)
-
+    build_deck_screen_card_gallery_display(screen,buttons, screen_status)
 
 def battle_screen_update(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status):
     """ Battle screen update"""
@@ -263,24 +283,42 @@ def build_deck_screen_stable_button_display(screen, buttons,screen_status):
     button4.draw(screen)
     buttons.extend((button1, button2, button3, button4))
 
-def build_deck_screen_card_gallery_display(screen):
+def build_deck_screen_card_gallery_display(screen, buttons, screen_status):
     """Display Card Gallery"""
-    rect_position_x = 80
+    button1 = Button('>>','build_deck_screen_card_gallery_stable', (0,0,0),1100, 300, 50, 50)
+    button2 = Button('<<', 'build_deck_screen_card_gallery_stable' ,(0,0,0),50, 300, 50, 50)
+    button3 = Button('page: ' + str(screen_status.build_deck_screen_card_gallery_page_id), 'build_deck_screen_card_gallery_stable' ,(0,0,0),560, 510, 80, 40)
+    if screen_status.build_deck_screen_card_gallery_page_id != 100 :
+        button1.update()
+        button1.draw(screen)
+    if screen_status.build_deck_screen_card_gallery_page_id != 1:
+        button2.update()
+        button2.draw(screen)
+    button3.update()
+    button3.draw(screen)
+    buttons.extend((button1,button2,button3))
+
+    print(screen_status.build_deck_screen_card_gallery_page_id)
+    rect_position_x = 100 #local variables for rect position for the first card in the card gallery
     rect_position_y = 130
     row_number = 1
-    for card in cdf.card_all():
+    for card in cdf.card_all()[14*(screen_status.build_deck_screen_card_gallery_page_id - 1):14 * screen_status.build_deck_screen_card_gallery_page_id]:
         if row_number <= 7:
             card.rect.x = rect_position_x
             card.rect.y = rect_position_y
             screen.blit(card.image, card.rect)
-            rect_position_x += 150
+            rect_position_x += 145
             row_number += 1
         elif row_number <= 14:
-            card.rect.x = rect_position_x - 1050
+            card.rect.x = rect_position_x - 1015
             card.rect.y = rect_position_y + 200
             screen.blit(card.image, card.rect)
-            rect_position_x += 150
+            rect_position_x += 145
             row_number += 1
+            if row_number >= 15:
+                row_number = 1
+
+
 
 
 
