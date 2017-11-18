@@ -9,7 +9,7 @@ from button import Button
 from display import Mouse_status, Screen_status, Button_status
 from grid import Grid
 from card import Card
-import card_database as cd
+import card_database_functions as cdf
 
 
 
@@ -268,7 +268,7 @@ def build_deck_screen_card_gallery_display(screen):
     rect_position_x = 80
     rect_position_y = 130
     row_number = 1
-    for card in cd.card_all():
+    for card in cdf.card_all():
         if row_number <= 7:
             card.rect.x = rect_position_x
             card.rect.y = rect_position_y
