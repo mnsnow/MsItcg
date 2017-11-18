@@ -80,10 +80,6 @@ def check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, b
                             elif button.text == '<<':
                                 screen_status.build_deck_screen_card_gallery_page_id -= 1
 
-                        else:
-                            print(button.text)
-                            print(pygame.mouse.get_pos())
-
 
         # elif event.type == pygame.MOUSEMOTION:
         #     print(pygame.mouse.get_pos())
