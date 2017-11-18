@@ -85,8 +85,8 @@ def check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, b
                             print(pygame.mouse.get_pos())
 
 
-        elif event.type == pygame.MOUSEMOTION:
-            print(pygame.mouse.get_pos())
+        # elif event.type == pygame.MOUSEMOTION:
+        #     print(pygame.mouse.get_pos())
 
 
         elif event.type == pygame.MOUSEBUTTONUP:
@@ -155,8 +155,8 @@ def check_events_battle_screen(ai_settings,grid, screen, monster, menu_buttons, 
 
 
 
-        elif event.type == pygame.MOUSEMOTION:
-            print(pygame.mouse.get_pos())
+        # elif event.type == pygame.MOUSEMOTION:
+        #     print(pygame.mouse.get_pos())
 
         elif event.type == pygame.MOUSEBUTTONUP:
             if mouse_status.mousebuttondown_status == True:
