@@ -137,8 +137,7 @@ def check_events_battle_screen(ai_settings,grid, screen, monster, menu_buttons, 
                             elif button.text == 'Level up':
                                 monster_levelup(monster,buttons,button_status)
                             elif button.text == 'Face!':
-                                #monster_face(monster,buttons,button_status)
-                                print('sssssss')
+                                monster_face(monster,buttons,button_status)
                             elif button.text == 'Fight!':
                                 monster_fight(monster,buttons,button_status)
                             elif button.text == 'Skip':
