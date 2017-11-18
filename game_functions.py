@@ -214,6 +214,8 @@ def build_deck_screen_update(ai_settings, grid, screen, buttons,mouse_status, sc
 
     build_deck_screen_card_gallery_display(screen,buttons, screen_status, button_status, card_database_filter)
 
+    build_deck_screen_my_deck_display(screen,buttons, screen_status, button_status, card_database_filter)
+
 def battle_screen_update(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status):
     """ Battle screen update"""
     # BG COLOR
@@ -279,17 +281,14 @@ def build_deck_screen_stable_button_display(screen, buttons,screen_status,button
     button1 = Button('Back','build_deck_screen', (0,0,0),0, 0, 50, 50)
     button2 = Button('Next','build_deck_screen', (0,0,0),1150, 0, 50, 50)
     button3 = Button('Build your deck by picking 40 cards below: ', 'build_deck_screen', (0,0,0),300, 0, 600, 50)
-    button4 = Button('lll', 'build_deck_screen', (0,0,0),100, 650, 100, 50)
     button1.update()
     button2.update()
     button3.update()
-    button4.update()
     button1.draw(screen)
     button2.draw(screen)
     button3.draw(screen)
-    button4.draw(screen)
     if button_status.build_deck_screen_stable_button_backend:
-        buttons.extend((button1, button2, button3, button4))
+        buttons.extend((button1, button2, button3))
         button_status.build_deck_screen_stable_button_backend = False
 
 def build_deck_screen_card_gallery_display(screen, buttons, screen_status, button_status, card_database_filter):
@@ -318,7 +317,7 @@ def build_deck_screen_card_gallery_button_display(screen, buttons, screen_status
         button2.update()
         button2.draw(screen)
     # button3: page button to display the current page number for card gallery
-    button3 = Button('page: ' + str(screen_status.build_deck_screen_card_gallery_page_id), 'build_deck_screen_card_gallery_stable' ,(0,0,0),560, 510, 80, 40)
+    button3 = Button('page: ' + str(screen_status.build_deck_screen_card_gallery_page_id), 'build_deck_screen_card_gallery_stable' ,(123,163,48),560, 510, 80, 40)
     button3.update()
     button3.draw(screen)
     # Class filter:
@@ -398,6 +397,28 @@ def build_deck_screen_card_gallery_card_display(screen, buttons, screen_status, 
             if row_number >= 15:
                 row_number = 1
 
+
+def build_deck_screen_my_deck_display(screen,buttons, screen_status, button_status, card_database_filter):
+    """Display things on my deck portion"""
+
+    build_deck_screen_my_deck_button_display(screen,buttons, screen_status, button_status, card_database_filter)
+
+    build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button_status, card_database_filter)
+
+
+def build_deck_screen_my_deck_button_display(screen,buttons, screen_status, button_status, card_database_filter):
+    """Display buttons on my deck part of the screen"""
+    button1 = Button('Character: 0/1 ','' ,(222,13,78),50, 560, 150, 30)
+    button1.update()
+    button1.draw(screen)
+
+    button1 = Button('Deck: 0/40','' ,(222,13,78),580, 560, 150, 30)
+    button1.update()
+    button1.draw(screen)
+
+def build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button_status, card_database_filter):
+    """Display cards on my deck part of the screen"""
+    pass
 
 
 #-----------------------------Monster handaction----------------------------------------------------
