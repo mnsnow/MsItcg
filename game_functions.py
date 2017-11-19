@@ -129,6 +129,11 @@ def check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, b
                             card_database_filter.warrior = not card_database_filter.warrior
                         elif button.text == 'Jobless':
                             card_database_filter.jobless = not card_database_filter.jobless
+                        elif button.text == '>':
+                            screen_status.build_deck_screen_my_deck_page_id += 1
+                        elif button.text == '<':
+                            screen_status.build_deck_screen_my_deck_page_id -= 1
+
 
 
 
@@ -465,7 +470,7 @@ def build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button
     """Input user_card_list, drawing the card list propperly"""
     rect_position_x = 245 #local variables for rect position for the first card in the user deck
     rect_position_y = 580
-    row_number = 1
+    row_number = 0
     local_store_list = []
     #Clear duplicate amount
     for card_new in user_card_list:
@@ -486,13 +491,34 @@ def build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button
                 card_new.duplicate += 1
                 build_deck_screen_my_deck_duplicate_number_display(card_new, screen)
             else:
-                card_new.rect.x = rect_position_x
-                card_new.rect.y = rect_position_y
-                screen.blit(card_new.image, card_new.rect)
-                rect_position_x += 145
-                row_number += 1
-                local_store_list.append(card_new)
-                build_deck_screen_my_deck_duplicate_number_display(card_new, screen)
+
+                if screen_status.build_deck_screen_my_deck_page_id == 1:
+                    if row_number <= 5:
+                        card_new.rect.x = rect_position_x
+                        card_new.rect.y = rect_position_y
+                        screen.blit(card_new.image, card_new.rect)
+                        rect_position_x += 145
+                        row_number += 1
+                        local_store_list.append(card_new)
+                        build_deck_screen_my_deck_duplicate_number_display(card_new, screen)
+                    else:
+                        button_next = Button('>','', (0,0,0),1110,650, 30, 30)
+                        button_next.update()
+                        button_next.draw(screen)
+                        if button_status.build_deck_screen_my_deck_next_button_backend:
+                            buttons.append(button_next)
+                            button_status.build_deck_screen_my_deck_next_button_backend = False
+                elif screen_status.build_deck_screen_my_deck_page_id == 2:
+                    button_back = Button('<','', (0,0,0),210,650, 30, 30)
+                    button_back.update()
+                    button_back.draw(screen)
+                    if button_status.build_deck_screen_my_deck_back_button_backend:
+                        buttons.append(button_back)
+                        button_status.build_deck_screen_my_deck_back_button_backend = False
+                    row_number = 0
+                    rect_position_x = 245
+
+
 
 
 
