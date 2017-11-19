@@ -6,7 +6,7 @@ from character import Character_1, Character_2
 from monster import Monster
 from tactic import Tactic
 from button import Button
-from display import Mouse_status, Screen_status, Button_status
+from display import Screen_status, Button_status
 from grid import Grid
 from card import Card
 import card_database_functions as cdf
@@ -15,19 +15,19 @@ import card_database_functions as cdf
 
 
 #-----------------------------Check events----------------------------------------------------
-def check_events(ai_settings,grid, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status, card_database_filter, user_card_list):
+def check_events(ai_settings,grid, screen, monster, menu_buttons, buttons,screen_status, button_status, card_database_filter, user_card_list):
     """Check mouse and keyboard events"""
 
     if screen_status.welcome_screen_display:
-        check_events_welcome_screen(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status)
+        check_events_welcome_screen(ai_settings, screen, monster, menu_buttons, buttons,screen_status, button_status)
 
     if screen_status.build_deck_screen_display:
-        check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status, card_database_filter, user_card_list)
+        check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, buttons,screen_status, button_status, card_database_filter, user_card_list)
 
     if screen_status.battle_screen_display:
-        check_events_battle_screen(ai_settings,grid, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status)
+        check_events_battle_screen(ai_settings,grid, screen, monster, menu_buttons, buttons,screen_status, button_status)
 
-def check_events_welcome_screen(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status):
+def check_events_welcome_screen(ai_settings, screen, monster, menu_buttons, buttons,screen_status, button_status):
     """ Check all events on the welcome screen"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -47,10 +47,10 @@ def check_events_welcome_screen(ai_settings, screen, monster, menu_buttons, butt
                         elif button.text == 'Quit':
                             welcome_screen_quit(buttons, screen_status)
 
-def check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status, card_database_filter, user_card_list):
+def check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, buttons,screen_status, button_status, card_database_filter, user_card_list):
     """ Check all events on the build deck screen"""
     for event in pygame.event.get():
-        print(len(user_card_list))
+
         if event.type == pygame.QUIT:
             sys.exit()
 
@@ -164,7 +164,7 @@ def check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, b
         elif event.type == pygame.MOUSEBUTTONUP:
             pass
 
-def check_events_battle_screen(ai_settings,grid, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status):
+def check_events_battle_screen(ai_settings,grid, screen, monster, menu_buttons, buttons,screen_status, button_status):
     """ Check all evetns on the battle screen"""
     for event in pygame.event.get():
 
@@ -176,76 +176,69 @@ def check_events_battle_screen(ai_settings,grid, screen, monster, menu_buttons, 
 
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            if mouse_status.mousebuttondown_status:
-                pass
-            else:
-                mouse_status.mousebuttondown_status = True
 
-                if monster.rect.collidepoint(pygame.mouse.get_pos()):
-                    if grid.battle_screen_monster_grid_rect.collidepoint(pygame.mouse.get_pos()):
-                        button_status.monster_handaction_display = True
-                    elif grid.battle_screen_character_2_grid_rect.collidepoint(pygame.mouse.get_pos()):
-                        print('level up action!')
-                    elif grid.battle_screen_battle_2_grid_rect.collidepoint(pygame.mouse.get_pos()):
-                        button_status.monster_battleaction_display = True
-                        print('hit')
+            if monster.rect.collidepoint(pygame.mouse.get_pos()):
+                if grid.battle_screen_monster_grid_rect.collidepoint(pygame.mouse.get_pos()):
+                    button_status.monster_handaction_display = True
+                elif grid.battle_screen_character_2_grid_rect.collidepoint(pygame.mouse.get_pos()):
+                    print('level up action!')
+                elif grid.battle_screen_battle_2_grid_rect.collidepoint(pygame.mouse.get_pos()):
+                    button_status.monster_battleaction_display = True
+                    print('hit')
 
-                elif rect_union(menu_buttons).collidepoint(pygame.mouse.get_pos()):
-                    for menu_button in menu_buttons:
-                        if menu_button.rect.collidepoint(pygame.mouse.get_pos()):
-                            if menu_button.text == 'Surrender':
-                                print('surrender')
-                            elif menu_button.text == 'Rules':
-                                button_status.menu_rules = True
+            elif rect_union(menu_buttons).collidepoint(pygame.mouse.get_pos()):
+                for menu_button in menu_buttons:
+                    if menu_button.rect.collidepoint(pygame.mouse.get_pos()):
+                        if menu_button.text == 'Surrender':
+                            print('surrender')
+                        elif menu_button.text == 'Rules':
+                            button_status.menu_rules = True
 
 
-                elif rect_union(buttons).collidepoint(pygame.mouse.get_pos()):
-                    for button in buttons:
-                        if button.rect.collidepoint(pygame.mouse.get_pos()):
+            elif rect_union(buttons).collidepoint(pygame.mouse.get_pos()):
+                for button in buttons:
+                    if button.rect.collidepoint(pygame.mouse.get_pos()):
 
-                            if button.text == 'Play':
-                                monster_play(monster,buttons,button_status)
-                            elif button.text == 'Level up':
-                                monster_levelup(monster,buttons,button_status)
-                            elif button.text == 'Face!':
-                                monster_face(monster,buttons,button_status)
-                            elif button.text == 'Fight!':
-                                monster_fight(monster,buttons,button_status)
-                            elif button.text == 'Skip':
-                                monster_skip(monster,buttons,button_status)
+                        if button.text == 'Play':
+                            monster_play(monster,buttons,button_status)
+                        elif button.text == 'Level up':
+                            monster_levelup(monster,buttons,button_status)
+                        elif button.text == 'Face!':
+                            monster_face(monster,buttons,button_status)
+                        elif button.text == 'Fight!':
+                            monster_fight(monster,buttons,button_status)
+                        elif button.text == 'Skip':
+                            monster_skip(monster,buttons,button_status)
 
-                            elif button.text == 'Back':     # we need to decide button back is in which menu.
-                                if grid.battle_screen_monster_grid_rect.collidepoint(pygame.mouse.get_pos()):
-                                    monster_handaction_back(buttons, button_status)
+                        elif button.text == 'Back':     # we need to decide button back is in which menu.
+                            if grid.battle_screen_monster_grid_rect.collidepoint(pygame.mouse.get_pos()):
+                                monster_handaction_back(buttons, button_status)
 
-
-                                elif grid.battle_screen_battle_2_grid_rect.collidepoint(pygame.mouse.get_pos()):
-                                    monster_battleaction_back(buttons, button_status)
+                            elif grid.battle_screen_battle_2_grid_rect.collidepoint(pygame.mouse.get_pos()):
+                                monster_battleaction_back(buttons, button_status)
 
 
 
 
 
-        # elif event.type == pygame.MOUSEMOTION:
-        #     print(pygame.mouse.get_pos())
+        elif event.type == pygame.MOUSEMOTION:
+            pass
 
         elif event.type == pygame.MOUSEBUTTONUP:
-            if mouse_status.mousebuttondown_status == True:
-                mouse_status.mousebuttondown_status = False
-
+            pass
 
 
 
 
 #-----------------------------Update screens----------------------------------------------------
-def update_screen(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons,mouse_status, screen_status, button_status, card_database_filter, user_card_list):
+def update_screen(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status, card_database_filter, user_card_list):
     """ Update images on the screen and flip to the new screen"""
 
     if screen_status.welcome_screen_display:
         welcome_screen_update(ai_settings,screen, buttons, screen_status)
 
     if screen_status.build_deck_screen_display:
-        build_deck_screen_update(ai_settings, grid, screen, buttons,mouse_status, screen_status, button_status, card_database_filter, user_card_list)
+        build_deck_screen_update(ai_settings, grid, screen, buttons, screen_status, button_status, card_database_filter, user_card_list)
 
     if screen_status.battle_screen_display:
         battle_screen_update(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status)
@@ -269,7 +262,7 @@ def welcome_screen_update(ai_settings,screen, buttons, screen_status):
         buttons.extend((button1, button2, button3))
         screen_status.welcome_screen_backend = False
 
-def build_deck_screen_update(ai_settings, grid, screen, buttons,mouse_status, screen_status, button_status, card_database_filter, user_card_list):
+def build_deck_screen_update(ai_settings, grid, screen, buttons, screen_status, button_status, card_database_filter, user_card_list):
     """ Build deck screen update"""
     screen.fill(ai_settings.bg_color)
 
@@ -571,7 +564,7 @@ def build_deck_screen_my_deck_card_list_refine(user_card_list):
             else:
                 local_store_list.append(card_new)
 
-    return local_store_list
+    return sorted(local_store_list, key = lambda card: int(card.level))
 
 def build_deck_screen_my_deck_check_duplicate(card, local_store_list):
     """ Input a card and a list, check if that card is in the list"""

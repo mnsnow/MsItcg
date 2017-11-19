@@ -1,11 +1,6 @@
 import sys
 import pygame
 
-class Mouse_status():
-    """ Control active status of mouse action"""
-    def __init__(self, mousebuttondown_status = False):
-        self.mousebuttondown_status = mousebuttondown_status
-
 
 
 class Screen_status():

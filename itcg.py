@@ -8,7 +8,7 @@ from character import Character_1, Character_2
 from monster import Monster
 from tactic import Tactic
 from button import Button
-from display import Mouse_status, Screen_status, Button_status
+from display import Screen_status, Button_status
 from grid import Grid
 from card import Card
 import card_database_functions as cdf
@@ -36,7 +36,6 @@ def main():
         surrender_button,
     ]
 
-    mouse_status = Mouse_status()
     screen_status = Screen_status()
     button_status = Button_status()
     buttons = []
@@ -48,9 +47,9 @@ def main():
 
     while True:
 
-        gf.check_events(ai_settings,grid, screen, monster,menu_buttons, buttons,mouse_status,screen_status, button_status, card_database_filter, user_card_list)
+        gf.check_events(ai_settings,grid, screen, monster,menu_buttons, buttons,screen_status, button_status, card_database_filter, user_card_list)
 
-        gf.update_screen(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons,mouse_status, screen_status, button_status, card_database_filter, user_card_list)
+        gf.update_screen(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status, card_database_filter, user_card_list)
 
 
 
