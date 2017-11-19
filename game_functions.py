@@ -102,6 +102,25 @@ def check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, b
             if Rect(970,330,130,180).collidepoint(pygame.mouse.get_pos()):
                 build_deck_screen_add_card_to_deck('14',screen, screen_status,card_database_filter, user_card_list)
 
+            if Rect(245,600,130,180).collidepoint(pygame.mouse.get_pos()):
+                build_deck_screen_remove_card_from_deck('1',screen, screen_status,card_database_filter, user_card_list)
+
+            if Rect(390,600,130,180).collidepoint(pygame.mouse.get_pos()):
+                build_deck_screen_remove_card_from_deck('2',screen, screen_status,card_database_filter, user_card_list)
+
+            if Rect(535,600,130,180).collidepoint(pygame.mouse.get_pos()):
+                build_deck_screen_remove_card_from_deck('3',screen, screen_status,card_database_filter, user_card_list)
+
+            if Rect(680,600,130,180).collidepoint(pygame.mouse.get_pos()):
+                build_deck_screen_remove_card_from_deck('4',screen, screen_status,card_database_filter, user_card_list)
+
+            if Rect(825,600,130,180).collidepoint(pygame.mouse.get_pos()):
+                build_deck_screen_remove_card_from_deck('5',screen, screen_status,card_database_filter, user_card_list)
+
+            if Rect(970,600,130,180).collidepoint(pygame.mouse.get_pos()):
+                build_deck_screen_remove_card_from_deck('6',screen, screen_status,card_database_filter, user_card_list)
+
+
 
             elif rect_union(buttons).collidepoint(pygame.mouse.get_pos()):
                 for button in buttons:
@@ -485,27 +504,6 @@ def build_deck_screen_my_deck_button_display(screen,buttons, screen_status, butt
         buttons.extend((button3,button4))
         button_status.build_deck_screen_my_deck_button_backend = False
 
-def build_deck_screen_add_card_to_deck(card_gallery_position ,screen, screen_status,card_database_filter, user_card_list):
-    """Add card from gallery to user_card_list"""
-    user_card_list.append(cdf.request_card_list(card_database_filter)[14*(screen_status.build_deck_screen_card_gallery_page_id - 1)+(int(card_gallery_position)-1)])
-
-def build_deck_screen_my_deck_card_list_refine(user_card_list):
-    """Input user_card_list, return a refined version without duplicate and save duplicate number in class instance"""
-    local_store_list = []
-    for card_new in user_card_list:
-
-        if len(local_store_list) == 0:
-            local_store_list.append(card_new)
-        else:
-
-            if build_deck_screen_my_deck_check_duplicate(card_new, local_store_list):
-                card_new.duplicate += 1
-            else:
-                local_store_list.append(card_new)
-
-    return local_store_list
-
-
 def build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button_status, card_database_filter,user_card_list):
     """Input user_card_list, drawing the card list propperly"""
     #Clear duplicate amount each frame and render the refined list
@@ -541,6 +539,39 @@ def build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button
                 row_number = 1
 
 
+def build_deck_screen_add_card_to_deck(card_gallery_position ,screen, screen_status,card_database_filter, user_card_list):
+    """Add card from gallery to user_card_list"""
+    # Check to avoid errors when click on empty rect preventing adding card.
+    if len(cdf.request_card_list(card_database_filter)[14*(screen_status.build_deck_screen_card_gallery_page_id - 1):14 * screen_status.build_deck_screen_card_gallery_page_id]) >= int(card_gallery_position):
+        user_card_list.append(cdf.request_card_list(card_database_filter)[14*(screen_status.build_deck_screen_card_gallery_page_id - 1)+(int(card_gallery_position)-1)])
+    else:
+        pass
+
+def build_deck_screen_remove_card_from_deck(my_deck_position ,screen, screen_status,card_database_filter, user_card_list):
+    """ Input card position and user_card_list, remove one instance of that card from the user_card_list"""
+    local_store_list = build_deck_screen_my_deck_card_list_refine(user_card_list)
+    # Check to avoid errors when click on empty rect preventing removing card.
+    if len(local_store_list[6*(screen_status.build_deck_screen_my_deck_page_id - 1):6 * screen_status.build_deck_screen_my_deck_page_id]) >= int(my_deck_position):
+        user_card_list.remove(local_store_list[6*(screen_status.build_deck_screen_my_deck_page_id - 1)+(int(my_deck_position)-1)])
+    else:
+        pass
+
+
+def build_deck_screen_my_deck_card_list_refine(user_card_list):
+    """Input user_card_list, return a refined version without duplicate and save duplicate number in class instance"""
+    local_store_list = []
+    for card_new in user_card_list:
+
+        if len(local_store_list) == 0:
+            local_store_list.append(card_new)
+        else:
+
+            if build_deck_screen_my_deck_check_duplicate(card_new, local_store_list):
+                card_new.duplicate += 1
+            else:
+                local_store_list.append(card_new)
+
+    return local_store_list
 
 def build_deck_screen_my_deck_check_duplicate(card, local_store_list):
     """ Input a card and a list, check if that card is in the list"""
@@ -549,7 +580,6 @@ def build_deck_screen_my_deck_check_duplicate(card, local_store_list):
             return True
             break
     return False
-
 
 def build_deck_screen_my_deck_duplicate_number_display(card, screen):
     """Input Card instance, output how many copies of that card as a button above that card"""

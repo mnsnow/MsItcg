@@ -25,6 +25,8 @@ class Card():
         self.image = self.image_raw = pygame.image.load('static/images/monster/' + self.set_number + '_' + self.card_number + '.jpg')
         self.image = pygame.transform.scale(self.image_raw,(ai_settings.card_size_x, ai_settings.card_size_y))
         self.rect = self.image.get_rect()
+
+    #   Comment out since we don't want to input screen into this class
     #     self.screen_rect = self.screen.get_rect()
     #
     # def blitme(self):
