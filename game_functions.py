@@ -15,14 +15,14 @@ import card_database_functions as cdf
 
 
 #-----------------------------Check events----------------------------------------------------
-def check_events(ai_settings,grid, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status, card_database_filter):
+def check_events(ai_settings,grid, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status, card_database_filter, user_card_list):
     """Check mouse and keyboard events"""
 
     if screen_status.welcome_screen_display:
         check_events_welcome_screen(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status)
 
     if screen_status.build_deck_screen_display:
-        check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status, card_database_filter)
+        check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status, card_database_filter, user_card_list)
 
     if screen_status.battle_screen_display:
         check_events_battle_screen(ai_settings,grid, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status)
@@ -47,9 +47,10 @@ def check_events_welcome_screen(ai_settings, screen, monster, menu_buttons, butt
                         elif button.text == 'Quit':
                             welcome_screen_quit(buttons, screen_status)
 
-def check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status, card_database_filter):
+def check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status, card_database_filter, user_card_list):
     """ Check all events on the build deck screen"""
     for event in pygame.event.get():
+        print(len(user_card_list))
         if event.type == pygame.QUIT:
             sys.exit()
 
@@ -58,36 +59,45 @@ def check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, b
                 sys.exit()
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            # if mouse_status.mousebuttondown_status:
-            #     pass
-            # else:
-            #     mouse_status.mousebuttondown_status = True
-                if rect_union(buttons).collidepoint(pygame.mouse.get_pos()):
-                    for button in buttons:
-                        if button.rect.collidepoint(pygame.mouse.get_pos()):
 
-                            if button.text == 'Next':
-                                screen_status.welcome_screen_display = False
-                                screen_status.build_deck_screen_display = False
-                                screen_status.battle_screen_display = True
-                            elif button.text == 'Back':
-                                screen_status.welcome_screen_display = True
-                                screen_status.build_deck_screen_display = False
-                                screen_status.battle_screen_display = False
-                            elif button.text == '>>':
-                                screen_status.build_deck_screen_card_gallery_page_id += 1
-                            elif button.text == '<<':
-                                screen_status.build_deck_screen_card_gallery_page_id -= 1
-                            elif button.text == 'Bowman':
-                                card_database_filter.bowman = not card_database_filter.bowman
-                            elif button.text == 'Magician':
-                                card_database_filter.magician = not card_database_filter.magician
-                            elif button.text == 'Thief':
-                                card_database_filter.thief = not card_database_filter.thief
-                            elif button.text == 'Warrior':
-                                card_database_filter.warrior = not card_database_filter.warrior
-                            elif button.text == 'Jobless':
-                                card_database_filter.jobless = not card_database_filter.jobless
+            if Rect(100,130,130,180).collidepoint(pygame.mouse.get_pos()):
+                build_deck_screen_add_card_to_deck('1',screen, screen_status,card_database_filter, user_card_list)
+                build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button_status, card_database_filter, user_card_list)
+                print('works!!!')
+
+            if Rect(245,130,130,180).collidepoint(pygame.mouse.get_pos()):
+                build_deck_screen_add_card_to_deck('2',screen, screen_status,card_database_filter, user_card_list)
+                build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button_status, card_database_filter, user_card_list)
+                print('works!!!')
+
+
+            elif rect_union(buttons).collidepoint(pygame.mouse.get_pos()):
+                for button in buttons:
+                    if button.rect.collidepoint(pygame.mouse.get_pos()):
+
+                        if button.text == 'Next':
+                            screen_status.welcome_screen_display = False
+                            screen_status.build_deck_screen_display = False
+                            screen_status.battle_screen_display = True
+                        elif button.text == 'Back':
+                            screen_status.welcome_screen_display = True
+                            screen_status.build_deck_screen_display = False
+                            screen_status.battle_screen_display = False
+                        elif button.text == '>>':
+                            screen_status.build_deck_screen_card_gallery_page_id += 1
+                        elif button.text == '<<':
+                            screen_status.build_deck_screen_card_gallery_page_id -= 1
+                        elif button.text == 'Bowman':
+                            card_database_filter.bowman = not card_database_filter.bowman
+                        elif button.text == 'Magician':
+                            card_database_filter.magician = not card_database_filter.magician
+                        elif button.text == 'Thief':
+                            card_database_filter.thief = not card_database_filter.thief
+                        elif button.text == 'Warrior':
+                            card_database_filter.warrior = not card_database_filter.warrior
+                        elif button.text == 'Jobless':
+                            card_database_filter.jobless = not card_database_filter.jobless
+
 
 
 
@@ -96,8 +106,7 @@ def check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, b
 
 
         elif event.type == pygame.MOUSEBUTTONUP:
-            if mouse_status.mousebuttondown_status == True:
-                mouse_status.mousebuttondown_status = False
+            pass
 
 def check_events_battle_screen(ai_settings,grid, screen, monster, menu_buttons, buttons,mouse_status,screen_status, button_status):
     """ Check all evetns on the battle screen"""
@@ -173,14 +182,14 @@ def check_events_battle_screen(ai_settings,grid, screen, monster, menu_buttons, 
 
 
 #-----------------------------Update screens----------------------------------------------------
-def update_screen(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons,mouse_status, screen_status, button_status, card_database_filter):
+def update_screen(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons,mouse_status, screen_status, button_status, card_database_filter, user_card_list):
     """ Update images on the screen and flip to the new screen"""
 
     if screen_status.welcome_screen_display:
         welcome_screen_update(ai_settings,screen, buttons, screen_status)
 
     if screen_status.build_deck_screen_display:
-        build_deck_screen_update(ai_settings, grid, screen, buttons,mouse_status, screen_status, button_status, card_database_filter)
+        build_deck_screen_update(ai_settings, grid, screen, buttons,mouse_status, screen_status, button_status, card_database_filter, user_card_list)
 
     if screen_status.battle_screen_display:
         battle_screen_update(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status)
@@ -204,7 +213,7 @@ def welcome_screen_update(ai_settings,screen, buttons, screen_status):
         buttons.extend((button1, button2, button3))
         screen_status.welcome_screen_backend = False
 
-def build_deck_screen_update(ai_settings, grid, screen, buttons,mouse_status, screen_status, button_status, card_database_filter):
+def build_deck_screen_update(ai_settings, grid, screen, buttons,mouse_status, screen_status, button_status, card_database_filter, user_card_list):
     """ Build deck screen update"""
     screen.fill(ai_settings.bg_color)
 
@@ -214,7 +223,7 @@ def build_deck_screen_update(ai_settings, grid, screen, buttons,mouse_status, sc
 
     build_deck_screen_card_gallery_display(screen,buttons, screen_status, button_status, card_database_filter)
 
-    build_deck_screen_my_deck_display(screen,buttons, screen_status, button_status, card_database_filter)
+    build_deck_screen_my_deck_display(screen,buttons, screen_status, button_status, card_database_filter, user_card_list)
 
 def battle_screen_update(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status):
     """ Battle screen update"""
@@ -368,7 +377,7 @@ def build_deck_screen_card_gallery_card_display(screen, buttons, screen_status, 
     """Display all cards on card gallery"""
     rect_position_x = 100 #local variables for rect position for the first card in the card gallery
     rect_position_y = 130
-    row_number = 1
+    row_number = 1 # local variable to help keep track of position of card
     # Check the page number to make sure if will not go negative or randomly large
     if screen_status.build_deck_screen_card_gallery_page_id <= 0:
         screen_status.build_deck_screen_card_gallery_page_id = 1
@@ -397,14 +406,14 @@ def build_deck_screen_card_gallery_card_display(screen, buttons, screen_status, 
             if row_number >= 15:
                 row_number = 1
 
+# - - - - - - - - - - - - -
 
-def build_deck_screen_my_deck_display(screen,buttons, screen_status, button_status, card_database_filter):
+def build_deck_screen_my_deck_display(screen,buttons, screen_status, button_status, card_database_filter, user_card_list):
     """Display things on my deck portion"""
 
     build_deck_screen_my_deck_button_display(screen,buttons, screen_status, button_status, card_database_filter)
 
-    build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button_status, card_database_filter)
-
+    build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button_status, card_database_filter, user_card_list)
 
 def build_deck_screen_my_deck_button_display(screen,buttons, screen_status, button_status, card_database_filter):
     """Display buttons on my deck part of the screen"""
@@ -412,13 +421,41 @@ def build_deck_screen_my_deck_button_display(screen,buttons, screen_status, butt
     button1.update()
     button1.draw(screen)
 
-    button1 = Button('Deck: 0/40','' ,(222,13,78),580, 560, 150, 30)
-    button1.update()
-    button1.draw(screen)
+    button2 = Button('Deck: 0/40','' ,(222,13,78),580, 560, 150, 30)
+    button2.update()
+    button2.draw(screen)
 
-def build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button_status, card_database_filter):
-    """Display cards on my deck part of the screen"""
-    pass
+def build_deck_screen_add_card_to_deck(card_gallery_position ,screen, screen_status,card_database_filter, user_card_list):
+    """Add card from gallery to user_card_list"""
+    user_card_list.append(cdf.request_card_list(card_database_filter)[14*(screen_status.build_deck_screen_card_gallery_page_id - 1)+(int(card_gallery_position)-1)])
+
+def build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button_status, card_database_filter,user_card_list):
+    """Input user_card_list, drawing the card list propperly"""
+    rect_position_x = 245 #local variables for rect position for the first card in the user deck
+    rect_position_y = 580
+    row_number = 1
+    local_store_list = []
+    for card_new in user_card_list:
+        if len(local_store_list) == 0:
+            local_store_list.append(card_new)
+        else:
+            for card_old in local_store_list:
+                if card_new.set_number == card_old.set_number and card_new.card_number == card_old.card_number:
+                    card_old.duplicate += 1
+                    print('111')
+
+                else:
+                    card_new.rect.x = rect_position_x
+                    card_new.rect.y = rect_position_y
+                    screen.blit(card_new.image, card_new.rect)
+                    rect_position_x += 145
+                    row_number += 1
+                    local_store_list.append(card_new)
+                    print('222')
+
+
+
+
 
 
 #-----------------------------Monster handaction----------------------------------------------------

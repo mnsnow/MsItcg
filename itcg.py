@@ -41,15 +41,16 @@ def main():
     button_status = Button_status()
     buttons = []
     card_database_filter = cdf.Card_database_filter()
+    user_card_list = []
 
 
 
 
     while True:
 
-        gf.check_events(ai_settings,grid, screen, monster,menu_buttons, buttons,mouse_status,screen_status, button_status, card_database_filter)
+        gf.check_events(ai_settings,grid, screen, monster,menu_buttons, buttons,mouse_status,screen_status, button_status, card_database_filter, user_card_list)
 
-        gf.update_screen(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons,mouse_status, screen_status, button_status, card_database_filter)
+        gf.update_screen(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons,mouse_status, screen_status, button_status, card_database_filter, user_card_list)
 
 
 

@@ -27,7 +27,7 @@ class Card_database_filter():
 
 
 def request_card_list(card_database_filter, input_list = card_list):
-    """Return all card"""
+    """Return cards that user request"""
     req_list = []
 
     if (
