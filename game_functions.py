@@ -8,21 +8,20 @@ from tactic import Tactic
 from button import Button
 from display import Screen_status, Button_status
 from grid import Grid
-from card import Card
 import card_database_functions as cdf
 
 
 
 
 #-----------------------------Check events----------------------------------------------------
-def check_events(ai_settings,grid, screen, monster, menu_buttons, buttons,screen_status, button_status, card_database_filter, user_card_list):
+def check_events(ai_settings,grid, screen, monster, menu_buttons, buttons,screen_status, button_status, card_database_filter, user):
     """Check mouse and keyboard events"""
 
     if screen_status.welcome_screen_display:
         check_events_welcome_screen(ai_settings, screen, monster, menu_buttons, buttons,screen_status, button_status)
 
     if screen_status.build_deck_screen_display:
-        check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, buttons,screen_status, button_status, card_database_filter, user_card_list)
+        check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, buttons,screen_status, button_status, card_database_filter, user)
 
     if screen_status.battle_screen_display:
         check_events_battle_screen(ai_settings,grid, screen, monster, menu_buttons, buttons,screen_status, button_status)
@@ -47,7 +46,7 @@ def check_events_welcome_screen(ai_settings, screen, monster, menu_buttons, butt
                         elif button.text == 'Quit':
                             welcome_screen_quit(buttons, screen_status)
 
-def check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, buttons,screen_status, button_status, card_database_filter, user_card_list):
+def check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, buttons,screen_status, button_status, card_database_filter, user):
     """ Check all events on the build deck screen"""
     for event in pygame.event.get():
 
@@ -61,64 +60,64 @@ def check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, b
         elif event.type == pygame.MOUSEBUTTONDOWN:
 
             if Rect(100,130,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_add_card_to_deck('1',screen, screen_status,card_database_filter, user_card_list)
+                build_deck_screen_add_card_to_deck('1',screen, screen_status,card_database_filter, user)
 
             if Rect(245,130,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_add_card_to_deck('2',screen, screen_status,card_database_filter, user_card_list)
+                build_deck_screen_add_card_to_deck('2',screen, screen_status,card_database_filter, user)
 
             if Rect(390,130,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_add_card_to_deck('3',screen, screen_status,card_database_filter, user_card_list)
+                build_deck_screen_add_card_to_deck('3',screen, screen_status,card_database_filter, user)
 
             if Rect(535,130,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_add_card_to_deck('4',screen, screen_status,card_database_filter, user_card_list)
+                build_deck_screen_add_card_to_deck('4',screen, screen_status,card_database_filter, user)
 
             if Rect(680,130,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_add_card_to_deck('5',screen, screen_status,card_database_filter, user_card_list)
+                build_deck_screen_add_card_to_deck('5',screen, screen_status,card_database_filter, user)
 
             if Rect(825,130,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_add_card_to_deck('6',screen, screen_status,card_database_filter, user_card_list)
+                build_deck_screen_add_card_to_deck('6',screen, screen_status,card_database_filter, user)
 
             if Rect(970,130,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_add_card_to_deck('7',screen, screen_status,card_database_filter, user_card_list)
+                build_deck_screen_add_card_to_deck('7',screen, screen_status,card_database_filter, user)
 
             if Rect(100,330,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_add_card_to_deck('8',screen, screen_status,card_database_filter, user_card_list)
+                build_deck_screen_add_card_to_deck('8',screen, screen_status,card_database_filter, user)
 
             if Rect(245,330,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_add_card_to_deck('9',screen, screen_status,card_database_filter, user_card_list)
+                build_deck_screen_add_card_to_deck('9',screen, screen_status,card_database_filter, user)
 
             if Rect(390,330,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_add_card_to_deck('10',screen, screen_status,card_database_filter, user_card_list)
+                build_deck_screen_add_card_to_deck('10',screen, screen_status,card_database_filter, user)
 
             if Rect(535,330,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_add_card_to_deck('11',screen, screen_status,card_database_filter, user_card_list)
+                build_deck_screen_add_card_to_deck('11',screen, screen_status,card_database_filter, user)
 
             if Rect(680,330,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_add_card_to_deck('12',screen, screen_status,card_database_filter, user_card_list)
+                build_deck_screen_add_card_to_deck('12',screen, screen_status,card_database_filter, user)
 
             if Rect(825,330,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_add_card_to_deck('13',screen, screen_status,card_database_filter, user_card_list)
+                build_deck_screen_add_card_to_deck('13',screen, screen_status,card_database_filter, user)
 
             if Rect(970,330,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_add_card_to_deck('14',screen, screen_status,card_database_filter, user_card_list)
+                build_deck_screen_add_card_to_deck('14',screen, screen_status,card_database_filter, user)
 
             if Rect(245,600,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_remove_card_from_deck('1',screen, screen_status,card_database_filter, user_card_list)
+                build_deck_screen_remove_card_from_deck('1',screen, screen_status,card_database_filter, user)
 
             if Rect(390,600,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_remove_card_from_deck('2',screen, screen_status,card_database_filter, user_card_list)
+                build_deck_screen_remove_card_from_deck('2',screen, screen_status,card_database_filter, user)
 
             if Rect(535,600,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_remove_card_from_deck('3',screen, screen_status,card_database_filter, user_card_list)
+                build_deck_screen_remove_card_from_deck('3',screen, screen_status,card_database_filter, user)
 
             if Rect(680,600,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_remove_card_from_deck('4',screen, screen_status,card_database_filter, user_card_list)
+                build_deck_screen_remove_card_from_deck('4',screen, screen_status,card_database_filter, user)
 
             if Rect(825,600,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_remove_card_from_deck('5',screen, screen_status,card_database_filter, user_card_list)
+                build_deck_screen_remove_card_from_deck('5',screen, screen_status,card_database_filter, user)
 
             if Rect(970,600,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_remove_card_from_deck('6',screen, screen_status,card_database_filter, user_card_list)
+                build_deck_screen_remove_card_from_deck('6',screen, screen_status,card_database_filter, user)
 
 
 
@@ -231,14 +230,14 @@ def check_events_battle_screen(ai_settings,grid, screen, monster, menu_buttons, 
 
 
 #-----------------------------Update screens----------------------------------------------------
-def update_screen(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status, card_database_filter, user_card_list):
+def update_screen(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status, card_database_filter, user):
     """ Update images on the screen and flip to the new screen"""
 
     if screen_status.welcome_screen_display:
         welcome_screen_update(ai_settings,screen, buttons, screen_status)
 
     if screen_status.build_deck_screen_display:
-        build_deck_screen_update(ai_settings, grid, screen, buttons, screen_status, button_status, card_database_filter, user_card_list)
+        build_deck_screen_update(ai_settings, grid, screen, buttons, screen_status, button_status, card_database_filter, user)
 
     if screen_status.battle_screen_display:
         battle_screen_update(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status)
@@ -262,7 +261,7 @@ def welcome_screen_update(ai_settings,screen, buttons, screen_status):
         buttons.extend((button1, button2, button3))
         screen_status.welcome_screen_backend = False
 
-def build_deck_screen_update(ai_settings, grid, screen, buttons, screen_status, button_status, card_database_filter, user_card_list):
+def build_deck_screen_update(ai_settings, grid, screen, buttons, screen_status, button_status, card_database_filter, user):
     """ Build deck screen update"""
     screen.fill(ai_settings.bg_color)
 
@@ -272,7 +271,7 @@ def build_deck_screen_update(ai_settings, grid, screen, buttons, screen_status, 
 
     build_deck_screen_card_gallery_display(screen,buttons, screen_status, button_status, card_database_filter)
 
-    build_deck_screen_my_deck_display(screen,buttons, screen_status, button_status, card_database_filter, user_card_list)
+    build_deck_screen_my_deck_display(screen,buttons, screen_status, button_status, card_database_filter, user)
 
 def battle_screen_update(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status):
     """ Battle screen update"""
@@ -456,22 +455,22 @@ def build_deck_screen_card_gallery_card_display(screen, buttons, screen_status, 
 
 # - - - - - - - - - - - - -
 
-def build_deck_screen_my_deck_display(screen,buttons, screen_status, button_status, card_database_filter, user_card_list):
+def build_deck_screen_my_deck_display(screen,buttons, screen_status, button_status, card_database_filter, user):
     """Display things on my deck portion"""
 
-    build_deck_screen_my_deck_button_display(screen,buttons, screen_status, button_status, card_database_filter, user_card_list)
+    build_deck_screen_my_deck_button_display(screen,buttons, screen_status, button_status, card_database_filter, user)
 
-    build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button_status, card_database_filter, user_card_list)
+    build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button_status, card_database_filter, user)
 
-def build_deck_screen_my_deck_button_display(screen,buttons, screen_status, button_status, card_database_filter, user_card_list):
+def build_deck_screen_my_deck_button_display(screen,buttons, screen_status, button_status, card_database_filter, user):
     """Display buttons on my deck part of the screen"""
-    local_store_list = build_deck_screen_my_deck_card_list_refine(user_card_list)
+    local_store_list = build_deck_screen_my_deck_card_list_refine(user)
     #
     button1 = Button('Character: 0/1 ','' ,(222,13,78),50, 560, 150, 30)
     button1.update()
     button1.draw(screen)
     #
-    button2 = Button('Total: ' + str(len(user_card_list)) + '/40','' ,(222,13,78),595, 560, 150, 30)
+    button2 = Button('Total: ' + str(len(user.card_list)) + '/40','' ,(222,13,78),595, 560, 150, 30)
     button2.update()
     button2.draw(screen)
 
@@ -497,12 +496,12 @@ def build_deck_screen_my_deck_button_display(screen,buttons, screen_status, butt
         buttons.extend((button3,button4))
         button_status.build_deck_screen_my_deck_button_backend = False
 
-def build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button_status, card_database_filter,user_card_list):
-    """Input user_card_list, drawing the card list propperly"""
+def build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button_status, card_database_filter, user):
+    """Input user.card_list, drawing the card list propperly"""
     #Clear duplicate amount each frame and render the refined list
-    for card_new in user_card_list:
+    for card_new in user.card_list:
         card_new.duplicate = 1
-    local_store_list = build_deck_screen_my_deck_card_list_refine(user_card_list)
+    local_store_list = build_deck_screen_my_deck_card_list_refine(user)
     #use refined list to draw
     rect_position_x = 245 #local variables for rect position for the first card in the user deck
     rect_position_y = 600
@@ -532,28 +531,28 @@ def build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button
                 row_number = 1
 
 
-def build_deck_screen_add_card_to_deck(card_gallery_position ,screen, screen_status,card_database_filter, user_card_list):
-    """Add card from gallery to user_card_list"""
+def build_deck_screen_add_card_to_deck(card_gallery_position ,screen, screen_status,card_database_filter, user):
+    """Add card from gallery to user.card_list"""
     # Check to avoid errors when click on empty rect preventing adding card.
     if len(cdf.request_card_list(card_database_filter)[14*(screen_status.build_deck_screen_card_gallery_page_id - 1):14 * screen_status.build_deck_screen_card_gallery_page_id]) >= int(card_gallery_position):
-        user_card_list.append(cdf.request_card_list(card_database_filter)[14*(screen_status.build_deck_screen_card_gallery_page_id - 1)+(int(card_gallery_position)-1)])
+        user.card_list.append(cdf.request_card_list(card_database_filter)[14*(screen_status.build_deck_screen_card_gallery_page_id - 1)+(int(card_gallery_position)-1)])
     else:
         pass
 
-def build_deck_screen_remove_card_from_deck(my_deck_position ,screen, screen_status,card_database_filter, user_card_list):
-    """ Input card position and user_card_list, remove one instance of that card from the user_card_list"""
-    local_store_list = build_deck_screen_my_deck_card_list_refine(user_card_list)
+def build_deck_screen_remove_card_from_deck(my_deck_position ,screen, screen_status,card_database_filter, user):
+    """ Input card position and user.card_list, remove one instance of that card from the user.card_list"""
+    local_store_list = build_deck_screen_my_deck_card_list_refine(user)
     # Check to avoid errors when click on empty rect preventing removing card.
     if len(local_store_list[6*(screen_status.build_deck_screen_my_deck_page_id - 1):6 * screen_status.build_deck_screen_my_deck_page_id]) >= int(my_deck_position):
-        user_card_list.remove(local_store_list[6*(screen_status.build_deck_screen_my_deck_page_id - 1)+(int(my_deck_position)-1)])
+        user.card_list.remove(local_store_list[6*(screen_status.build_deck_screen_my_deck_page_id - 1)+(int(my_deck_position)-1)])
     else:
         pass
 
 
-def build_deck_screen_my_deck_card_list_refine(user_card_list):
-    """Input user_card_list, return a refined version without duplicate and save duplicate number in class instance"""
+def build_deck_screen_my_deck_card_list_refine(user):
+    """Input user.card_list, return a refined version without duplicate and save duplicate number in class instance"""
     local_store_list = []
-    for card_new in user_card_list:
+    for card_new in user.card_list:
 
         if len(local_store_list) == 0:
             local_store_list.append(card_new)

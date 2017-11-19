@@ -10,8 +10,8 @@ from tactic import Tactic
 from button import Button
 from display import Screen_status, Button_status
 from grid import Grid
-from card import Card
 import card_database_functions as cdf
+from user import User
 
 
 def main():
@@ -40,16 +40,17 @@ def main():
     button_status = Button_status()
     buttons = []
     card_database_filter = cdf.Card_database_filter()
-    user_card_list = []
+    user = User()
+
 
 
 
 
     while True:
 
-        gf.check_events(ai_settings,grid, screen, monster,menu_buttons, buttons,screen_status, button_status, card_database_filter, user_card_list)
+        gf.check_events(ai_settings,grid, screen, monster,menu_buttons, buttons,screen_status, button_status, card_database_filter, user)
 
-        gf.update_screen(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status, card_database_filter, user_card_list)
+        gf.update_screen(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status, card_database_filter, user)
 
 
 
