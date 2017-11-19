@@ -62,13 +62,45 @@ def check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, b
 
             if Rect(100,130,130,180).collidepoint(pygame.mouse.get_pos()):
                 build_deck_screen_add_card_to_deck('1',screen, screen_status,card_database_filter, user_card_list)
-                build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button_status, card_database_filter, user_card_list)
-                print('works!!!')
 
             if Rect(245,130,130,180).collidepoint(pygame.mouse.get_pos()):
                 build_deck_screen_add_card_to_deck('2',screen, screen_status,card_database_filter, user_card_list)
-                build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button_status, card_database_filter, user_card_list)
-                print('works!!!')
+
+            if Rect(390,130,130,180).collidepoint(pygame.mouse.get_pos()):
+                build_deck_screen_add_card_to_deck('3',screen, screen_status,card_database_filter, user_card_list)
+
+            if Rect(535,130,130,180).collidepoint(pygame.mouse.get_pos()):
+                build_deck_screen_add_card_to_deck('4',screen, screen_status,card_database_filter, user_card_list)
+
+            if Rect(680,130,130,180).collidepoint(pygame.mouse.get_pos()):
+                build_deck_screen_add_card_to_deck('5',screen, screen_status,card_database_filter, user_card_list)
+
+            if Rect(825,130,130,180).collidepoint(pygame.mouse.get_pos()):
+                build_deck_screen_add_card_to_deck('6',screen, screen_status,card_database_filter, user_card_list)
+
+            if Rect(970,130,130,180).collidepoint(pygame.mouse.get_pos()):
+                build_deck_screen_add_card_to_deck('7',screen, screen_status,card_database_filter, user_card_list)
+
+            if Rect(100,330,130,180).collidepoint(pygame.mouse.get_pos()):
+                build_deck_screen_add_card_to_deck('8',screen, screen_status,card_database_filter, user_card_list)
+
+            if Rect(245,330,130,180).collidepoint(pygame.mouse.get_pos()):
+                build_deck_screen_add_card_to_deck('9',screen, screen_status,card_database_filter, user_card_list)
+
+            if Rect(390,330,130,180).collidepoint(pygame.mouse.get_pos()):
+                build_deck_screen_add_card_to_deck('10',screen, screen_status,card_database_filter, user_card_list)
+
+            if Rect(535,330,130,180).collidepoint(pygame.mouse.get_pos()):
+                build_deck_screen_add_card_to_deck('11',screen, screen_status,card_database_filter, user_card_list)
+
+            if Rect(680,330,130,180).collidepoint(pygame.mouse.get_pos()):
+                build_deck_screen_add_card_to_deck('12',screen, screen_status,card_database_filter, user_card_list)
+
+            if Rect(825,330,130,180).collidepoint(pygame.mouse.get_pos()):
+                build_deck_screen_add_card_to_deck('13',screen, screen_status,card_database_filter, user_card_list)
+
+            if Rect(970,330,130,180).collidepoint(pygame.mouse.get_pos()):
+                build_deck_screen_add_card_to_deck('14',screen, screen_status,card_database_filter, user_card_list)
 
 
             elif rect_union(buttons).collidepoint(pygame.mouse.get_pos()):
@@ -438,10 +470,9 @@ def build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button
     #Clear duplicate amount
     for card_new in user_card_list:
         card_new.duplicate = 1
-
-
+    #Display cards in user_card_list:
     for card_new in user_card_list:
-        if len(local_store_list) == 0:
+        if len(local_store_list) == 0: #Edge case for the first card print
             local_store_list.append(card_new)
             card_new.rect.x = rect_position_x
             card_new.rect.y = rect_position_y
@@ -451,21 +482,27 @@ def build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button
             build_deck_screen_my_deck_duplicate_number_display(card_new, screen)
 
         else:
-            for card_old in local_store_list:
-                if card_new.set_number == card_old.set_number and card_new.card_number == card_old.card_number:
-                    card_old.duplicate += 1
-                    build_deck_screen_my_deck_duplicate_number_display(card_old, screen)
-                    print('pass')
+            if build_deck_screen_my_deck_check_duplicate(card_new, local_store_list): #Check if the next card is already printed
+                card_new.duplicate += 1
+                build_deck_screen_my_deck_duplicate_number_display(card_new, screen)
+            else:
+                card_new.rect.x = rect_position_x
+                card_new.rect.y = rect_position_y
+                screen.blit(card_new.image, card_new.rect)
+                rect_position_x += 145
+                row_number += 1
+                local_store_list.append(card_new)
+                build_deck_screen_my_deck_duplicate_number_display(card_new, screen)
 
-                else:
-                    card_new.rect.x = rect_position_x
-                    card_new.rect.y = rect_position_y
-                    screen.blit(card_new.image, card_new.rect)
-                    rect_position_x += 145
-                    row_number += 1
-                    local_store_list.append(card_new)
-                    build_deck_screen_my_deck_duplicate_number_display(card_new, screen)
 
+
+def build_deck_screen_my_deck_check_duplicate(card, local_store_list):
+    """ Input a card and a list, check if that card is in the list"""
+    for cd in local_store_list:
+        if card.set_number == cd.set_number and card.card_number == cd.card_number:
+            return True
+            break
+    return False
 
 
 def build_deck_screen_my_deck_duplicate_number_display(card, screen):
