@@ -435,14 +435,27 @@ def build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button
     rect_position_y = 580
     row_number = 1
     local_store_list = []
+    #Clear duplicate amount
+    for card_new in user_card_list:
+        card_new.duplicate = 1
+
+
     for card_new in user_card_list:
         if len(local_store_list) == 0:
             local_store_list.append(card_new)
+            card_new.rect.x = rect_position_x
+            card_new.rect.y = rect_position_y
+            screen.blit(card_new.image, card_new.rect)
+            rect_position_x += 145
+            row_number += 1
+            build_deck_screen_my_deck_duplicate_number_display(card_new, screen)
+
         else:
             for card_old in local_store_list:
                 if card_new.set_number == card_old.set_number and card_new.card_number == card_old.card_number:
                     card_old.duplicate += 1
-                    print('111')
+                    build_deck_screen_my_deck_duplicate_number_display(card_old, screen)
+                    print('pass')
 
                 else:
                     card_new.rect.x = rect_position_x
@@ -451,10 +464,15 @@ def build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button
                     rect_position_x += 145
                     row_number += 1
                     local_store_list.append(card_new)
-                    print('222')
+                    build_deck_screen_my_deck_duplicate_number_display(card_new, screen)
 
 
 
+def build_deck_screen_my_deck_duplicate_number_display(card, screen):
+    """Input Card instance, output how many copies of that card as a button above that card"""
+    button_dup = Button(str(card.duplicate) + 'x','', (0,0,0),card.rect.x,(card.rect.y - 50) , 50, 50)
+    button_dup.update()
+    button_dup.draw(screen)
 
 
 
