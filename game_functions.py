@@ -359,7 +359,6 @@ def build_deck_screen_card_gallery_button_display(screen, buttons, screen_status
     # Page backward button
     button2 = Button('<<', 'build_deck_screen_card_gallery_stable' ,(0,0,0),50, 300, 50, 50)
     if screen_status.build_deck_screen_card_gallery_page_id != 1: # Make sure on the first page no backward button shows up
-        button1.update()
         button2.update()
         button2.draw(screen)
     # button3: page button to display the current page number for card gallery
@@ -448,77 +447,98 @@ def build_deck_screen_card_gallery_card_display(screen, buttons, screen_status, 
 def build_deck_screen_my_deck_display(screen,buttons, screen_status, button_status, card_database_filter, user_card_list):
     """Display things on my deck portion"""
 
-    build_deck_screen_my_deck_button_display(screen,buttons, screen_status, button_status, card_database_filter)
+    build_deck_screen_my_deck_button_display(screen,buttons, screen_status, button_status, card_database_filter, user_card_list)
 
     build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button_status, card_database_filter, user_card_list)
 
-def build_deck_screen_my_deck_button_display(screen,buttons, screen_status, button_status, card_database_filter):
+def build_deck_screen_my_deck_button_display(screen,buttons, screen_status, button_status, card_database_filter, user_card_list):
     """Display buttons on my deck part of the screen"""
+    local_store_list = build_deck_screen_my_deck_card_list_refine(user_card_list)
+    #
     button1 = Button('Character: 0/1 ','' ,(222,13,78),50, 560, 150, 30)
     button1.update()
     button1.draw(screen)
-
-    button2 = Button('Deck: 0/40','' ,(222,13,78),580, 560, 150, 30)
+    #
+    button2 = Button('Total: ' + str(len(user_card_list)) + '/40','' ,(222,13,78),595, 560, 150, 30)
     button2.update()
     button2.draw(screen)
+
+    # Page forward button
+    button3 = Button('>','', (0,0,0),1110,650, 30, 30)
+    # Edge cases when len() = 14,28,42 ...
+    if len(local_store_list) % 6 == 0 and len(local_store_list) != 0:
+        if screen_status.build_deck_screen_my_deck_page_id != ((len(local_store_list))//6): # Make sure on the last page no foreward button shows up
+            button3.update()
+            button3.draw(screen)
+    # Normal cases
+    else:
+        if screen_status.build_deck_screen_my_deck_page_id != ((len(local_store_list))//6 + 1): # Make sure on the last page no foreward button shows up
+            button3.update()
+            button3.draw(screen)
+    # Page backward button
+    button4 = Button('<','', (0,0,0),210,650, 30, 30)
+    if screen_status.build_deck_screen_my_deck_page_id != 1: # Make sure on the first page no backward button shows up
+        button4.update()
+        button4.draw(screen)
+
+    if button_status.build_deck_screen_my_deck_button_backend:
+        buttons.extend((button3,button4))
+        button_status.build_deck_screen_my_deck_button_backend = False
 
 def build_deck_screen_add_card_to_deck(card_gallery_position ,screen, screen_status,card_database_filter, user_card_list):
     """Add card from gallery to user_card_list"""
     user_card_list.append(cdf.request_card_list(card_database_filter)[14*(screen_status.build_deck_screen_card_gallery_page_id - 1)+(int(card_gallery_position)-1)])
 
+def build_deck_screen_my_deck_card_list_refine(user_card_list):
+    """Input user_card_list, return a refined version without duplicate and save duplicate number in class instance"""
+    local_store_list = []
+    for card_new in user_card_list:
+
+        if len(local_store_list) == 0:
+            local_store_list.append(card_new)
+        else:
+
+            if build_deck_screen_my_deck_check_duplicate(card_new, local_store_list):
+                card_new.duplicate += 1
+            else:
+                local_store_list.append(card_new)
+
+    return local_store_list
+
+
 def build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button_status, card_database_filter,user_card_list):
     """Input user_card_list, drawing the card list propperly"""
-    rect_position_x = 245 #local variables for rect position for the first card in the user deck
-    rect_position_y = 580
-    row_number = 0
-    local_store_list = []
-    #Clear duplicate amount
+    #Clear duplicate amount each frame and render the refined list
     for card_new in user_card_list:
         card_new.duplicate = 1
-    #Display cards in user_card_list:
-    for card_new in user_card_list:
-        if len(local_store_list) == 0: #Edge case for the first card print
-            local_store_list.append(card_new)
-            card_new.rect.x = rect_position_x
-            card_new.rect.y = rect_position_y
-            screen.blit(card_new.image, card_new.rect)
+    local_store_list = build_deck_screen_my_deck_card_list_refine(user_card_list)
+    #use refined list to draw
+    rect_position_x = 245 #local variables for rect position for the first card in the user deck
+    rect_position_y = 600
+    row_number = 1
+    #Display cards in local_store_list:
+
+    if screen_status.build_deck_screen_my_deck_page_id <= 0:
+        screen_status.build_deck_screen_my_deck_page_id = 1
+    # Edge cases when len() = 6,12,18....
+    if len(local_store_list) % 6 == 0 and len(local_store_list) != 0:
+        if screen_status.build_deck_screen_my_deck_page_id >= (len(local_store_list))//6 + 1:
+            screen_status.build_deck_screen_my_deck_page_id = (len(local_store_list))//6 + 0
+
+    else:
+        if screen_status.build_deck_screen_my_deck_page_id >= (len(local_store_list))//6 + 2:
+            screen_status.build_deck_screen_my_deck_page_id = (len(local_store_list))//6 + 1
+    # Algorithm to draw all cards in local_store_list, 6 card per page.
+    for card in local_store_list[6*(screen_status.build_deck_screen_my_deck_page_id - 1):6 * screen_status.build_deck_screen_my_deck_page_id]:
+        if row_number <= 6:
+            card.rect.x = rect_position_x
+            card.rect.y = rect_position_y
+            screen.blit(card.image, card.rect)
             rect_position_x += 145
             row_number += 1
-            build_deck_screen_my_deck_duplicate_number_display(card_new, screen)
-
-        else:
-            if build_deck_screen_my_deck_check_duplicate(card_new, local_store_list): #Check if the next card is already printed
-                card_new.duplicate += 1
-                build_deck_screen_my_deck_duplicate_number_display(card_new, screen)
-            else:
-
-                if screen_status.build_deck_screen_my_deck_page_id == 1:
-                    if row_number <= 5:
-                        card_new.rect.x = rect_position_x
-                        card_new.rect.y = rect_position_y
-                        screen.blit(card_new.image, card_new.rect)
-                        rect_position_x += 145
-                        row_number += 1
-                        local_store_list.append(card_new)
-                        build_deck_screen_my_deck_duplicate_number_display(card_new, screen)
-                    else:
-                        button_next = Button('>','', (0,0,0),1110,650, 30, 30)
-                        button_next.update()
-                        button_next.draw(screen)
-                        if button_status.build_deck_screen_my_deck_next_button_backend:
-                            buttons.append(button_next)
-                            button_status.build_deck_screen_my_deck_next_button_backend = False
-                elif screen_status.build_deck_screen_my_deck_page_id == 2:
-                    button_back = Button('<','', (0,0,0),210,650, 30, 30)
-                    button_back.update()
-                    button_back.draw(screen)
-                    if button_status.build_deck_screen_my_deck_back_button_backend:
-                        buttons.append(button_back)
-                        button_status.build_deck_screen_my_deck_back_button_backend = False
-                    row_number = 0
-                    rect_position_x = 245
-
-
+            build_deck_screen_my_deck_duplicate_number_display(card, screen)
+            if row_number >= 7:
+                row_number = 1
 
 
 
@@ -533,7 +553,7 @@ def build_deck_screen_my_deck_check_duplicate(card, local_store_list):
 
 def build_deck_screen_my_deck_duplicate_number_display(card, screen):
     """Input Card instance, output how many copies of that card as a button above that card"""
-    button_dup = Button(str(card.duplicate) + 'x','', (0,0,0),card.rect.x,(card.rect.y - 50) , 50, 50)
+    button_dup = Button(str(card.duplicate) + 'x','', (222,13,78),(card.rect.x + 50),(card.rect.y - 30) , 30, 30)
     button_dup.update()
     button_dup.draw(screen)
 
