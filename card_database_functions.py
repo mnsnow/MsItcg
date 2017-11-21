@@ -50,7 +50,8 @@ card_list = [
 
 class Card_database_filter():
     """Contains filters for card database"""
-    def __init__(self, bowman = False, magician = False, thief = False, warrior = False, jobless = False ):
+    def __init__(self, character = False, bowman = False, magician = False, thief = False, warrior = False, jobless = False ):
+        self.character = character
         self.bowman = bowman
         self.magician = magician
         self.thief = thief
@@ -61,11 +62,13 @@ class Card_database_filter():
 
 
 
+
 def request_card_list(card_database_filter, input_list = card_list):
     """Return cards that user request"""
     req_list = []
 
     if (
+    card_database_filter.character == False and
     card_database_filter.bowman == False and
     card_database_filter.magician == False and
     card_database_filter.thief == False and
@@ -76,31 +79,76 @@ def request_card_list(card_database_filter, input_list = card_list):
         return input_list
 
     else:
+        # Character filter
+        if card_database_filter.character:
 
-        if card_database_filter.bowman:
-            for card in input_list:
-                if card.job == 'bowman':
-                    req_list.append(card)
+            if card_database_filter.bowman:
+                for card in input_list:
+                    if card.card_type == 'character' and card.job == 'bowman':
+                        req_list.append(card)
 
-        if card_database_filter.magician:
-            for card in input_list:
-                if card.job == 'magician':
-                    req_list.append(card)
 
-        if card_database_filter.thief:
-            for card in input_list:
-                if card.job == 'thief':
-                    req_list.append(card)
+            if card_database_filter.magician:
+                for card in input_list:
+                    if card.card_type == 'character' and card.job == 'magician':
+                        req_list.append(card)
 
-        if card_database_filter.warrior:
-            for card in input_list:
-                if card.job == 'warrior':
-                    req_list.append(card)
 
-        if card_database_filter.jobless:
-            for card in input_list:
-                if card.job == 'jobless':
-                    req_list.append(card)
+            if card_database_filter.thief:
+                for card in input_list:
+                    if card.card_type == 'character' and card.job == 'thief':
+                        req_list.append(card)
+
+            if card_database_filter.warrior:
+                for card in input_list:
+                    if card.card_type == 'character' and card.job == 'warrior':
+                        req_list.append(card)
+
+            if card_database_filter.jobless:
+                for card in input_list:
+                    if card.card_type == 'character' and card.job == 'jobless':
+                        req_list.append(card)
+
+            if (
+            card_database_filter.bowman == False and
+            card_database_filter.magician == False and
+            card_database_filter.thief == False and
+            card_database_filter.warrior == False and
+            card_database_filter.jobless == False
+            ):
+                for card in input_list:
+                    if card.card_type == 'character':
+                        req_list.append(card)
+
+
+            return req_list
+
+        # Other filter
+        else:
+            if card_database_filter.bowman:
+                for card in input_list:
+                    if card.job == 'bowman':
+                        req_list.append(card)
+
+            if card_database_filter.magician:
+                for card in input_list:
+                    if card.job == 'magician':
+                        req_list.append(card)
+
+            if card_database_filter.thief:
+                for card in input_list:
+                    if card.job == 'thief':
+                        req_list.append(card)
+
+            if card_database_filter.warrior:
+                for card in input_list:
+                    if card.job == 'warrior':
+                        req_list.append(card)
+
+            if card_database_filter.jobless:
+                for card in input_list:
+                    if card.job == 'jobless':
+                        req_list.append(card)
 
 
         return req_list

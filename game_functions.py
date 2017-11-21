@@ -137,6 +137,8 @@ def check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, b
                             screen_status.build_deck_screen_card_gallery_page_id += 1
                         elif button.text == '<<':
                             screen_status.build_deck_screen_card_gallery_page_id -= 1
+                        elif button.text == 'Character':
+                            card_database_filter.character = not card_database_filter.character
                         elif button.text == 'Bowman':
                             card_database_filter.bowman = not card_database_filter.bowman
                         elif button.text == 'Magician':
@@ -377,9 +379,16 @@ def build_deck_screen_card_gallery_button_display(screen, buttons, screen_status
     button3.update()
     button3.draw(screen)
     # Class filter:
-    button4 = Button('Class filter: ','' ,(0,0,0),100, 70, 150, 50)
+    button4 = Button('Filter: ','' ,(0,0,0),80, 70, 90, 50)
     button4.update()
     button4.draw(screen)
+    # Character filter button
+    if card_database_filter.character:
+        button_character = Button('Character', '', (100,30,130),200,70,90,50)
+    else:
+        button_character = Button('Character', '', (0,0,0),200,70,90,50)
+    button_character.update()
+    button_character.draw(screen)
     # Bowman filter button
     if card_database_filter.bowman:
         button_bowman = Button('Bowman', '', (100,30,130),300,70,90,50)
@@ -417,7 +426,7 @@ def build_deck_screen_card_gallery_button_display(screen, buttons, screen_status
     button_jobless.draw(screen)
     # Add all buttons to buttons list so that check_events function can detect mouse click on those buttons.
     if button_status.build_deck_screen_card_gallery_button_backend:
-        buttons.extend((button1,button2,button3,button4,button_bowman,button_magician,button_thief,button_warrior,button_jobless))
+        buttons.extend((button1,button2,button3,button4,button_character, button_bowman,button_magician,button_thief,button_warrior,button_jobless))
         button_status.build_deck_screen_card_gallery_button_backend = False
 
 def build_deck_screen_card_gallery_card_display(screen, buttons, screen_status, button_status, card_database_filter):
@@ -530,7 +539,6 @@ def build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button
             if row_number >= 7:
                 row_number = 1
 
-
 def build_deck_screen_add_card_to_deck(card_gallery_position ,screen, screen_status,card_database_filter, user):
     """Add card from gallery to user.card_list"""
     # Check to avoid errors when click on empty rect preventing adding card.
@@ -547,7 +555,6 @@ def build_deck_screen_remove_card_from_deck(my_deck_position ,screen, screen_sta
         user.card_list.remove(local_store_list[6*(screen_status.build_deck_screen_my_deck_page_id - 1)+(int(my_deck_position)-1)])
     else:
         pass
-
 
 def build_deck_screen_my_deck_card_list_refine(user):
     """Input user.card_list, return a refined version without duplicate and save duplicate number in class instance"""
