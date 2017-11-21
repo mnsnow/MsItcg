@@ -1,10 +1,8 @@
 import sys
+import random
 import pygame
 from pygame.locals import *
 from settings import Settings
-from character import Character_1, Character_2
-from monster import Monster
-from tactic import Tactic
 from button import Button
 from display import Screen_status, Button_status
 from grid import Grid
@@ -14,19 +12,19 @@ import card_database_functions as cdf
 
 
 #-----------------------------Check events----------------------------------------------------
-def check_events(ai_settings,grid, screen, monster, menu_buttons, buttons,screen_status, button_status, card_database_filter, user):
+def check_events(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user):
     """Check mouse and keyboard events"""
 
     if screen_status.welcome_screen_display:
-        check_events_welcome_screen(ai_settings, screen, monster, menu_buttons, buttons,screen_status, button_status)
+        check_events_welcome_screen(ai_settings, screen, buttons,screen_status, button_status)
 
     if screen_status.build_deck_screen_display:
-        check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, buttons,screen_status, button_status, card_database_filter, user)
+        check_events_build_deck_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user)
 
     if screen_status.battle_screen_display:
-        check_events_battle_screen(ai_settings,grid, screen, monster, menu_buttons, buttons,screen_status, button_status)
+        check_events_battle_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user)
 
-def check_events_welcome_screen(ai_settings, screen, monster, menu_buttons, buttons,screen_status, button_status):
+def check_events_welcome_screen(ai_settings, screen, buttons,screen_status, button_status):
     """ Check all events on the welcome screen"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -46,7 +44,7 @@ def check_events_welcome_screen(ai_settings, screen, monster, menu_buttons, butt
                         elif button.text == 'Quit':
                             welcome_screen_quit(buttons, screen_status)
 
-def check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, buttons,screen_status, button_status, card_database_filter, user):
+def check_events_build_deck_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user):
     """ Check all events on the build deck screen"""
     for event in pygame.event.get():
 
@@ -168,7 +166,7 @@ def check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, b
         elif event.type == pygame.MOUSEBUTTONUP:
             pass
 
-def check_events_battle_screen(ai_settings,grid, screen, monster, menu_buttons, buttons,screen_status, button_status):
+def check_events_battle_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user):
     """ Check all evetns on the battle screen"""
     for event in pygame.event.get():
 
@@ -181,47 +179,39 @@ def check_events_battle_screen(ai_settings,grid, screen, monster, menu_buttons, 
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
 
-            if monster.rect.collidepoint(pygame.mouse.get_pos()):
-                if grid.battle_screen_monster_grid_rect.collidepoint(pygame.mouse.get_pos()):
-                    button_status.monster_handaction_display = True
-                elif grid.battle_screen_character_2_grid_rect.collidepoint(pygame.mouse.get_pos()):
-                    print('level up action!')
-                elif grid.battle_screen_battle_2_grid_rect.collidepoint(pygame.mouse.get_pos()):
-                    button_status.monster_battleaction_display = True
-                    print('hit')
+            if Rect(100,610,130,180).collidepoint(pygame.mouse.get_pos()):
+                battle_screen_card_click_action('1',screen, screen_status,card_database_filter, user)
 
-            elif rect_union(menu_buttons).collidepoint(pygame.mouse.get_pos()):
-                for menu_button in menu_buttons:
-                    if menu_button.rect.collidepoint(pygame.mouse.get_pos()):
-                        if menu_button.text == 'Surrender':
-                            print('surrender')
-                        elif menu_button.text == 'Rules':
-                            button_status.menu_rules = True
+            if Rect(245,610,130,180).collidepoint(pygame.mouse.get_pos()):
+                battle_screen_card_click_action('2',screen, screen_status,card_database_filter, user)
 
+            if Rect(390,610,130,180).collidepoint(pygame.mouse.get_pos()):
+                battle_screen_card_click_action('3',screen, screen_status,card_database_filter, user)
+
+            if Rect(535,610,130,180).collidepoint(pygame.mouse.get_pos()):
+                battle_screen_card_click_action('4',screen, screen_status,card_database_filter, user)
+
+            if Rect(680,610,130,180).collidepoint(pygame.mouse.get_pos()):
+                battle_screen_card_click_action('5',screen, screen_status,card_database_filter, user)
+
+            if Rect(825,610,130,180).collidepoint(pygame.mouse.get_pos()):
+                battle_screen_card_click_action('6',screen, screen_status,card_database_filter, user)
+
+            if Rect(970,610,130,180).collidepoint(pygame.mouse.get_pos()):
+                battle_screen_card_click_action('7',screen, screen_status,card_database_filter, user)
 
             elif rect_union(buttons).collidepoint(pygame.mouse.get_pos()):
                 for button in buttons:
                     if button.rect.collidepoint(pygame.mouse.get_pos()):
 
-                        if button.text == 'Play':
-                            monster_play(monster,buttons,button_status)
-                        elif button.text == 'Level up':
-                            monster_levelup(monster,buttons,button_status)
-                        elif button.text == 'Face!':
-                            monster_face(monster,buttons,button_status)
-                        elif button.text == 'Fight!':
-                            monster_fight(monster,buttons,button_status)
-                        elif button.text == 'Skip':
-                            monster_skip(monster,buttons,button_status)
-
-                        elif button.text == 'Back':     # we need to decide button back is in which menu.
-                            if grid.battle_screen_monster_grid_rect.collidepoint(pygame.mouse.get_pos()):
-                                monster_handaction_back(buttons, button_status)
-
-                            elif grid.battle_screen_battle_2_grid_rect.collidepoint(pygame.mouse.get_pos()):
-                                monster_battleaction_back(buttons, button_status)
-
-
+                        if button.text == 'Back':
+                            screen_status.welcome_screen_display = False
+                            screen_status.build_deck_screen_display = True
+                            screen_status.battle_screen_display = False
+                        elif button.text == '>':
+                            screen_status.battle_screen_my_hand_page_id += 1
+                        elif button.text == '<':
+                            screen_status.battle_screen_my_hand_page_id -= 1
 
 
 
@@ -235,7 +225,7 @@ def check_events_battle_screen(ai_settings,grid, screen, monster, menu_buttons, 
 
 
 #-----------------------------Update screens----------------------------------------------------
-def update_screen(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status, card_database_filter, user):
+def update_screen(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user):
     """ Update images on the screen and flip to the new screen"""
 
     if screen_status.welcome_screen_display:
@@ -245,7 +235,7 @@ def update_screen(ai_settings,grid, screen, character_1, character_2, monster, t
         build_deck_screen_update(ai_settings, grid, screen, buttons, screen_status, button_status, card_database_filter, user)
 
     if screen_status.battle_screen_display:
-        battle_screen_update(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status)
+        battle_screen_update(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user)
 
 
     pygame.display.flip()
@@ -278,36 +268,17 @@ def build_deck_screen_update(ai_settings, grid, screen, buttons, screen_status, 
 
     build_deck_screen_my_deck_display(screen,buttons, screen_status, button_status, card_database_filter, user)
 
-def battle_screen_update(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status):
+def battle_screen_update(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user):
     """ Battle screen update"""
-    # BG COLOR
     screen.fill(ai_settings.bg_color)
 
-    # Draw Grid system
-    screen.blit(grid.battle_screen_menu_grid, grid.battle_screen_menu_grid_rect)
-    screen.blit(grid.battle_screen_monster_grid, grid.battle_screen_monster_grid_rect)
-    screen.blit(grid.battle_screen_tactic_grid, grid.battle_screen_tactic_grid_rect)
-    screen.blit(grid.battle_screen_character_1_grid, grid.battle_screen_character_1_grid_rect)
-    screen.blit(grid.battle_screen_character_2_grid, grid.battle_screen_character_2_grid_rect)
-    screen.blit(grid.battle_screen_battle_1_grid, grid.battle_screen_battle_1_grid_rect)
-    screen.blit(grid.battle_screen_battle_2_grid, grid.battle_screen_battle_2_grid_rect)
+    battle_screen_grid_display(grid, screen)
 
-    # Draw other stuff
-    character_1.blitme()
-    character_2.blitme()
-    monster.blitme()
-    tactic.blitme()
+    battle_screen_stable_button_display(screen, buttons,screen_status, button_status)
 
-    for menu_button in menu_buttons:
-        menu_button.update()
-        menu_button.draw(screen)
+    battle_screen_my_deck_card_display(screen,buttons, screen_status, button_status, card_database_filter, user)
 
-    if button_status.monster_handaction_display:
-        monster_button_handaction_display(screen, buttons, button_status)
-    if button_status.monster_battleaction_display:
-        monster_button_battleaction_display(screen, buttons, button_status)
-    if button_status.menu_rules:
-        menu_rules_display(screen, buttons)
+    battle_screen_my_hand_button_display(screen,buttons, screen_status, button_status, card_database_filter, user)
 
 
 
@@ -337,7 +308,6 @@ def build_deck_screen_grid_display(grid, screen):
     """ Display grid system for build deck screen"""
     screen.blit(grid.build_deck_screen_card_gallery_grid, grid.build_deck_screen_card_gallery_grid_rect)
     screen.blit(grid.build_deck_screen_deck_grid, grid.build_deck_screen_deck_grid_rect)
-
 
 def build_deck_screen_stable_button_display(screen, buttons,screen_status,button_status):
     """ Display all stable buttons for build deck screen"""
@@ -496,10 +466,10 @@ def build_deck_screen_my_deck_button_display(screen,buttons, screen_status, butt
     button1.update()
     button1.draw(screen)
     #card number display
-    if len(user.card_list) >= 40:
-        button2 = Button('Total: ' + str(len(user.card_list)) + '/40','' ,(122,113,178),595, 560, 150, 30)
+    if len(user.deck_list) >= 40:
+        button2 = Button('Total: ' + str(len(user.deck_list)) + '/40','' ,(122,113,178),595, 560, 150, 30)
     else:
-        button2 = Button('Total: ' + str(len(user.card_list)) + '/40','' ,(122,113,178),595, 560, 150, 30, font_color = (255,60,60))
+        button2 = Button('Total: ' + str(len(user.deck_list)) + '/40','' ,(122,113,178),595, 560, 150, 30, font_color = (255,60,60))
     button2.update()
     button2.draw(screen)
 
@@ -526,7 +496,7 @@ def build_deck_screen_my_deck_button_display(screen,buttons, screen_status, butt
         button_status.build_deck_screen_my_deck_button_backend = False
 
 def build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button_status, card_database_filter, user):
-    """Input user.card_list, drawing the card list propperly"""
+    """Input user.deck_list, drawing the card list propperly"""
     # Draw the character card
     if user.character_card == '':
         pass
@@ -535,7 +505,7 @@ def build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button
         user.character_card.rect.y = 600
         screen.blit(user.character_card.image, user.character_card.rect)
     #Clear duplicate amount each frame and render the refined list
-    for card_new in user.card_list:
+    for card_new in user.deck_list:
         card_new.duplicate = 1
     local_store_list = build_deck_screen_my_deck_card_list_refine(user)
     #use refined list to draw
@@ -567,29 +537,29 @@ def build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button
                 row_number = 1
 
 def build_deck_screen_add_card_to_deck(card_gallery_position ,screen, screen_status,card_database_filter, user):
-    """Add card from gallery to user.card_list"""
+    """Add card from gallery to user.deck_list"""
     # Check to avoid errors when click on empty rect preventing adding card.
     if len(cdf.request_card_list(card_database_filter)[14*(screen_status.build_deck_screen_card_gallery_page_id - 1):14 * screen_status.build_deck_screen_card_gallery_page_id]) >= int(card_gallery_position):
         if cdf.request_card_list(card_database_filter)[14*(screen_status.build_deck_screen_card_gallery_page_id - 1)+(int(card_gallery_position)-1)].card_type == 'character':
             user.character_card = cdf.request_card_list(card_database_filter)[14*(screen_status.build_deck_screen_card_gallery_page_id - 1)+(int(card_gallery_position)-1)]
         else:
-            user.card_list.append(cdf.request_card_list(card_database_filter)[14*(screen_status.build_deck_screen_card_gallery_page_id - 1)+(int(card_gallery_position)-1)])
+            user.deck_list.append(cdf.request_card_list(card_database_filter)[14*(screen_status.build_deck_screen_card_gallery_page_id - 1)+(int(card_gallery_position)-1)])
     else:
         pass
 
 def build_deck_screen_remove_card_from_deck(my_deck_position ,screen, screen_status,card_database_filter, user):
-    """ Input card position and user.card_list, remove one instance of that card from the user.card_list"""
+    """ Input card position and user.deck_list, remove one instance of that card from the user.deck_list"""
     local_store_list = build_deck_screen_my_deck_card_list_refine(user)
     # Check to avoid errors when click on empty rect preventing removing card.
     if len(local_store_list[6*(screen_status.build_deck_screen_my_deck_page_id - 1):6 * screen_status.build_deck_screen_my_deck_page_id]) >= int(my_deck_position):
-        user.card_list.remove(local_store_list[6*(screen_status.build_deck_screen_my_deck_page_id - 1)+(int(my_deck_position)-1)])
+        user.deck_list.remove(local_store_list[6*(screen_status.build_deck_screen_my_deck_page_id - 1)+(int(my_deck_position)-1)])
     else:
         pass
 
 def build_deck_screen_my_deck_card_list_refine(user):
-    """Input user.card_list, return a refined version without duplicate and save duplicate number in class instance"""
+    """Input user.deck_list, return a refined version without duplicate and save duplicate number in class instance"""
     local_store_list = []
-    for card_new in user.card_list:
+    for card_new in user.deck_list:
 
         if len(local_store_list) == 0:
             local_store_list.append(card_new)
@@ -621,7 +591,130 @@ def build_deck_screen_my_deck_duplicate_number_display(card, screen):
 
 
 
-#-----------------------------Monster handaction----------------------------------------------------
+
+#-----------------------------Battle Screen actions-------------------------------------------------
+def battle_screen_grid_display(grid, screen):
+    """ Display grid system on battle screen"""
+    screen.blit(grid.battle_screen_menu_grid, grid.battle_screen_menu_grid_rect)
+    screen.blit(grid.battle_screen_deck_grid, grid.battle_screen_deck_grid_rect)
+    screen.blit(grid.battle_screen_character_1_grid, grid.battle_screen_character_1_grid_rect)
+    screen.blit(grid.battle_screen_character_2_grid, grid.battle_screen_character_2_grid_rect)
+    screen.blit(grid.battle_screen_battle_1_grid, grid.battle_screen_battle_1_grid_rect)
+    screen.blit(grid.battle_screen_battle_2_grid, grid.battle_screen_battle_2_grid_rect)
+    screen.blit(grid.battle_screen_action_bar_grid, grid.battle_screen_action_bar_grid_rect)
+
+def battle_screen_stable_button_display(screen, buttons,screen_status, button_status):
+    """ Display all stable button on battle screen"""
+    button_action_bar_text = 'Welcome!'
+    if screen_status.battle_screen_action_indicator == 'p1':
+        button_action_bar_text = 'Round:1, Phase:1 -- Pick a card to level up your character'
+    if screen_status.battle_screen_action_indicator == 'p2':
+        button_action_bar_text = 'Round:1, Phase:2 -- Character actions'
+    if screen_status.battle_screen_action_indicator == 'p3':
+        button_action_bar_text = 'Round:1, Phase:3 -- Monster battle actions'
+    #
+    button_action_bar = Button(button_action_bar_text,'', (0,0,0),200, 550, 800, 30)
+    button_action_bar.update()
+    button_action_bar.draw(screen)
+    #
+    button1 = Button('Back','', (0,0,0),200, 0, 50, 30)
+    button1.update()
+    button1.draw(screen)
+    #
+    button2 = Button('Rules','', (0,0,0),400, 0, 100, 30)
+    button2.update()
+    button2.draw(screen)
+    #
+    button3 = Button('Surrender', '', (0,0,0),900, 0, 100, 30)
+    button3.update()
+    button3.draw(screen)
+    if button_status.battle_screen_stable_button_backend:
+        buttons.extend((button1, button2, button3))
+        button_status.battle_screen_stable_button_backend = False
+
+def battle_screen_my_deck_card_display(screen,buttons, screen_status, button_status, card_database_filter, user):
+    """ Display my deck on battle screen"""
+    rect_position_x = 100
+    rect_position_y = 610
+    row_number = 1
+    print(screen_status.battle_screen_my_hand_page_id)
+    if screen_status.battle_screen_action_indicator == 'p0':
+        user.deck_list = random.sample(user.deck_list, len(user.deck_list))
+        user.hand_list = user.deck_list[0:15]
+        for card_hand in user.hand_list:
+            card_hand.rect.x = rect_position_x
+            card_hand.rect.y = rect_position_y
+            screen.blit(card_hand.image, card_hand.rect)
+            rect_position_x += 145
+            screen_status.battle_screen_action_indicator = 'p1'
+
+    if screen_status.battle_screen_action_indicator == 'p1':
+        if screen_status.battle_screen_my_hand_page_id <= 0:
+            screen_status.battle_screen_my_hand_page_id = 1
+        # Edge cases when len() = 6,12,18....
+        if len(user.hand_list) % 7 == 0 and len(user.hand_list) != 0:
+            if screen_status.battle_screen_my_hand_page_id >= (len(user.hand_list))//7 + 1:
+                screen_status.battle_screen_my_hand_page_id = (len(user.hand_list))//7 + 0
+
+        else:
+            if screen_status.battle_screen_my_hand_page_id >= (len(user.hand_list))//7 + 2:
+                screen_status.battle_screen_my_hand_page_id = (len(user.hand_list))//7 + 1
+        # Algorithm to draw all cards in local_store_list, 6 card per page.
+        for card in user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1):7 * screen_status.battle_screen_my_hand_page_id]:
+            if row_number <= 7:
+                card.rect.x = rect_position_x
+                card.rect.y = rect_position_y
+                screen.blit(card.image, card.rect)
+                rect_position_x += 145
+                row_number += 1
+                if row_number >= 8:
+                    row_number = 1
+
+    if screen_status.battle_screen_action_indicator == 'p2':
+        for card_hand in user.hand_list:
+            card_hand.rect.x = rect_position_x
+            card_hand.rect.y = rect_position_y
+            screen.blit(card_hand.image, card_hand.rect)
+            rect_position_x += 145
+
+    if screen_status.battle_screen_action_indicator == 'p3':
+        for card_hand in user.hand_list:
+            card_hand.rect.x = rect_position_x
+            card_hand.rect.y = rect_position_y
+            screen.blit(card_hand.image, card_hand.rect)
+            rect_position_x += 145
+
+def battle_screen_my_hand_button_display(screen,buttons, screen_status, button_status, card_database_filter, user):
+    """ Display buttons in my hand on battle screen"""
+    # Page forward button
+    button1 = Button('>','', (0,0,0),1100, 660, 50, 50)
+    # Edge cases when len() = 14,28,42 ...
+    if len(user.hand_list) % 7 == 0 and len(user.hand_list) != 0:
+        if screen_status.battle_screen_my_hand_page_id != ((len(user.hand_list))//7): # Make sure on the last page no foreward button shows up
+            button1.update()
+            button1.draw(screen)
+    # Normal cases
+    else:
+        if screen_status.battle_screen_my_hand_page_id != ((len(user.hand_list))//7 + 1): # Make sure on the last page no foreward button shows up
+            button1.update()
+            button1.draw(screen)
+    # Page backward button
+    button2 = Button('<', '' ,(0,0,0),50, 660, 50, 50)
+    if screen_status.battle_screen_my_hand_page_id != 1: # Make sure on the first page no backward button shows up
+        button2.update()
+        button2.draw(screen)
+
+    if button_status.battle_screen_my_hand_page_change_button_backend:
+        buttons.extend((button1,button2))
+        button_status.battle_screen_my_hand_page_change_button_backend = False
+
+
+def battle_screen_card_click_action(hand_position,screen, screen_status,card_database_filter, user):
+    """ determind actions after click on card in hand"""
+    pass
+
+
+#-----------------------------Hand handaction----------------------------------------------------
 def monster_button_handaction_display(screen, buttons, button_status):
     """Display monster handaction button"""
     button1 = Button('Play','monster_handaction', (0,0,0),50, 600, 100, 50)
@@ -637,29 +730,6 @@ def monster_button_handaction_display(screen, buttons, button_status):
         buttons.extend((button1, button2, button3))
         button_status.monster_handaction_backend = False
 
-def monster_play(monster,buttons,button_status):
-    monster.rect.x = 700
-    monster.rect.y = 200
-    button_status.monster_handaction_display = False
-    bts = []
-    for button in buttons:
-        if button.group == 'monster_handaction':
-            bts.append(button)
-    for bt in bts:
-        buttons.remove(bt)
-    button_status.monster_handaction_backend = True
-
-def monster_levelup(monster,buttons,button_status):
-    monster.rect.x = 1050
-    monster.rect.y = 250
-    button_status.monster_handaction_display = False
-    bts = []
-    for button in buttons:
-        if button.group == 'monster_handaction':
-            bts.append(button)
-    for bt in bts:
-        buttons.remove(bt)
-    button_status.monster_handaction_backend = True
 
 def monster_handaction_back(buttons, button_status):
     button_status.monster_handaction_display = False
@@ -674,7 +744,7 @@ def monster_handaction_back(buttons, button_status):
 
 
 
-#-----------------------------Monster battle action----------------------------------------------------
+#----------------------------- Battle action----------------------------------------------------
 def monster_button_battleaction_display(screen, buttons, button_status):
     """Display monster battle action button"""
     button1 = Button('Face!','monster_battleaction', (0,0,0),600, 200, 100, 50)
@@ -693,39 +763,6 @@ def monster_button_battleaction_display(screen, buttons, button_status):
         buttons.extend((button1, button2, button3, button4))
         button_status.monster_battleaction_backend = False
 
-def monster_face(monster,buttons, button_status):
-    button_status.monster_battleaction_display = False
-    bts = []
-    for button in buttons:
-        if button.group == 'monster_battleaction':
-            bts.append(button)
-    for bt in bts:
-        buttons.remove(bt)
-    button_status.monster_battleaction_backend = True
-    print('face!!!')
-
-def monster_fight(monster,buttons,button_status):
-    button_status.monster_battleaction_display = False
-    bts = []
-    for button in buttons:
-        if button.group == 'monster_battleaction':
-            bts.append(button)
-    for bt in bts:
-        buttons.remove(bt)
-    button_status.monster_battleaction_backend = True
-    print('fight!!')
-
-def monster_skip(monster,buttons,button_status):
-    button_status.monster_battleaction_display = False
-    bts = []
-    for button in buttons:
-        if button.group == 'monster_battleaction':
-            bts.append(button)
-    for bt in bts:
-        buttons.remove(bt)
-    button_status.monster_battleaction_backend = True
-    print('skip turn')
-
 def monster_battleaction_back(buttons, button_status):
     button_status.monster_battleaction_display = False
     bts = []
@@ -735,17 +772,6 @@ def monster_battleaction_back(buttons, button_status):
     for bt in bts:
         buttons.remove(bt)
     button_status.monster_battleaction_backend = True
-
-
-
-
-#-----------------------------Rules menu----------------------------------------------------
-def menu_rules_display(screen, buttons,):
-    """Display rules buttion in the menu bar"""
-    button = pygame.Surface((600,400))
-    button.fill((34,87,139))
-    screen.blit(button,Rect(100,300,600,400))
-
 
 
 

@@ -4,9 +4,6 @@ from pygame.sprite import Group
 import game_functions as gf
 
 from settings import Settings
-from character import Character_1, Character_2
-from monster import Monster
-from tactic import Tactic
 from button import Button
 from display import Screen_status, Button_status
 from grid import Grid
@@ -24,17 +21,6 @@ def main():
     grid = Grid()
     screen = pygame.display.set_mode((ai_settings.screen_width, ai_settings.screen_height))
 
-    character_1 = Character_1(screen, ai_settings)
-    character_2 = Character_2(screen, ai_settings)
-    monster = Monster(screen, ai_settings)
-    tactic = Tactic(screen, ai_settings)
-
-    rule_button = Button('Rules','', (0,0,0),800, 0, 130, 30)
-    surrender_button = Button('Surrender','', (0,0,0),400, 0, 130, 30)
-    menu_buttons = [
-        rule_button,
-        surrender_button,
-    ]
 
     screen_status = Screen_status()
     button_status = Button_status()
@@ -48,9 +34,9 @@ def main():
 
     while True:
 
-        gf.check_events(ai_settings,grid, screen, monster,menu_buttons, buttons,screen_status, button_status, card_database_filter, user)
+        gf.check_events(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user)
 
-        gf.update_screen(ai_settings,grid, screen, character_1, character_2, monster, tactic, menu_buttons, buttons, screen_status, button_status, card_database_filter, user)
+        gf.update_screen(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user)
 
 
 
