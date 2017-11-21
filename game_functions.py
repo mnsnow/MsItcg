@@ -180,25 +180,25 @@ def check_events_battle_screen(ai_settings, screen, buttons,screen_status, butto
         elif event.type == pygame.MOUSEBUTTONDOWN:
 
             if Rect(100,610,130,180).collidepoint(pygame.mouse.get_pos()):
-                battle_screen_card_click_action('1',screen, screen_status,card_database_filter, user)
+                battle_screen_card_click_action('1',screen, screen_status,button_status,card_database_filter, user)
 
             if Rect(245,610,130,180).collidepoint(pygame.mouse.get_pos()):
-                battle_screen_card_click_action('2',screen, screen_status,card_database_filter, user)
+                battle_screen_card_click_action('2',screen, screen_status,button_status,card_database_filter, user)
 
             if Rect(390,610,130,180).collidepoint(pygame.mouse.get_pos()):
-                battle_screen_card_click_action('3',screen, screen_status,card_database_filter, user)
+                battle_screen_card_click_action('3',screen, screen_status,button_status,card_database_filter, user)
 
             if Rect(535,610,130,180).collidepoint(pygame.mouse.get_pos()):
-                battle_screen_card_click_action('4',screen, screen_status,card_database_filter, user)
+                battle_screen_card_click_action('4',screen, screen_status,button_status,card_database_filter, user)
 
             if Rect(680,610,130,180).collidepoint(pygame.mouse.get_pos()):
-                battle_screen_card_click_action('5',screen, screen_status,card_database_filter, user)
+                battle_screen_card_click_action('5',screen, screen_status,button_status,card_database_filter, user)
 
             if Rect(825,610,130,180).collidepoint(pygame.mouse.get_pos()):
-                battle_screen_card_click_action('6',screen, screen_status,card_database_filter, user)
+                battle_screen_card_click_action('6',screen, screen_status,button_status,card_database_filter, user)
 
             if Rect(970,610,130,180).collidepoint(pygame.mouse.get_pos()):
-                battle_screen_card_click_action('7',screen, screen_status,card_database_filter, user)
+                battle_screen_card_click_action('7',screen, screen_status,button_status,card_database_filter, user)
 
             elif rect_union(buttons).collidepoint(pygame.mouse.get_pos()):
                 for button in buttons:
@@ -210,8 +210,12 @@ def check_events_battle_screen(ai_settings, screen, buttons,screen_status, butto
                             screen_status.battle_screen_display = False
                         elif button.text == '>':
                             screen_status.battle_screen_my_hand_page_id += 1
+                            button_status.battle_screen_handaction_display = False
                         elif button.text == '<':
                             screen_status.battle_screen_my_hand_page_id -= 1
+                            button_status.battle_screen_handaction_display = False
+                        elif button.text == 'level up':
+                            print('frfr')
 
 
 
@@ -637,7 +641,6 @@ def battle_screen_my_deck_card_display(screen,buttons, screen_status, button_sta
     rect_position_x = 100
     rect_position_y = 610
     row_number = 1
-    print(screen_status.battle_screen_my_hand_page_id)
     if screen_status.battle_screen_action_indicator == 'p0':
         user.deck_list = random.sample(user.deck_list, len(user.deck_list))
         user.hand_list = user.deck_list[0:15]
@@ -703,15 +706,35 @@ def battle_screen_my_hand_button_display(screen,buttons, screen_status, button_s
     if screen_status.battle_screen_my_hand_page_id != 1: # Make sure on the first page no backward button shows up
         button2.update()
         button2.draw(screen)
-
+    #
     if button_status.battle_screen_my_hand_page_change_button_backend:
         buttons.extend((button1,button2))
         button_status.battle_screen_my_hand_page_change_button_backend = False
 
+    if button_status.battle_screen_handaction_display == True:
+        located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.battle_screen_handaction_display_position)-1)]
+        button_level_up = Button('level up','', (43,93,67),located_card.rect.x+15, located_card.rect.y-25, 100, 25)
+        button_level_up.update()
+        button_level_up.draw(screen)
+        if button_status.battle_screen_handaction_backend:
+            buttons.append(button_level_up)
+            button_status.battle_screen_handaction_backend = False
 
-def battle_screen_card_click_action(hand_position,screen, screen_status,card_database_filter, user):
+def battle_screen_card_click_action(hand_position,screen, screen_status,button_status,card_database_filter, user):
     """ determind actions after click on card in hand"""
-    pass
+    located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(hand_position)-1)]
+    # p1: level up
+    if screen_status.battle_screen_action_indicator == 'p1':
+        if len(user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1):7 * screen_status.battle_screen_my_hand_page_id]) >= int(hand_position):
+            button_status.battle_screen_handaction_display = True
+            button_status.battle_screen_handaction_display_position = hand_position
+        else:
+            pass
+        # battle_screen_character_level_up(located_card, screen,buttons, screen_status, button_status, card_database_filter, user)
+        # screen_status.battle_screen_action_indicator == 'p2'
+
+
+
 
 
 #-----------------------------Hand handaction----------------------------------------------------

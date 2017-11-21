@@ -34,8 +34,8 @@ class Button_status():
     build_deck_screen_my_deck_button_backend = True,
     battle_screen_stable_button_backend = True,
     battle_screen_my_hand_page_change_button_backend = True,
-    monster_handaction_display = False,monster_handaction_backend=True,
-    monster_battleaction_display=False,monster_battleaction_backend=True,):
+    battle_screen_handaction_display = False, battle_screen_handaction_display_position = '1',battle_screen_handaction_backend=True,
+    battle_screen_battleaction_display=False,battle_screen_battleaction_backend=True,):
 
         self.build_deck_screen_stable_button_backend = build_deck_screen_stable_button_backend
         self.build_deck_screen_card_gallery_button_backend = build_deck_screen_card_gallery_button_backend
@@ -44,10 +44,11 @@ class Button_status():
         self.battle_screen_stable_button_backend = battle_screen_stable_button_backend
         self.battle_screen_my_hand_page_change_button_backend = battle_screen_my_hand_page_change_button_backend
 
-        self.monster_handaction_display = monster_handaction_display
-        self.monster_handaction_backend = monster_handaction_backend
-        self.monster_battleaction_display = monster_battleaction_display
-        self.monster_battleaction_backend = monster_battleaction_backend
+        self.battle_screen_handaction_display = battle_screen_handaction_display
+        self.battle_screen_handaction_display_position = battle_screen_handaction_display_position
+        self.battle_screen_handaction_backend = battle_screen_handaction_backend
+        self.battle_screen_battleaction_display = battle_screen_battleaction_display
+        self.battle_screen_battleaction_backend = battle_screen_battleaction_backend
 
 
 
