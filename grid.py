@@ -47,7 +47,7 @@ class Grid():
         self.battle_screen_deck_grid_rect.topleft = self.battle_screen_deck_grid_position
 
         self.battle_screen_character_1_grid_size = (200,580)
-        self.battle_screen_character_1_grid_position = (0,0)
+        self.battle_screen_character_1_grid_position = (1000,0)
         self.battle_screen_character_1_grid = pygame.Surface(self.battle_screen_character_1_grid_size)
         self.battle_screen_character_1_grid.fill((92,13,78))
         self.battle_screen_character_1_grid_rect = self.battle_screen_character_1_grid.get_rect()
@@ -55,7 +55,7 @@ class Grid():
         self.battle_screen_character_1_grid_rect.topleft = self.battle_screen_character_1_grid_position
 
         self.battle_screen_character_2_grid_size = (200,580)
-        self.battle_screen_character_2_grid_position = (1000,0)
+        self.battle_screen_character_2_grid_position = (0,0)
         self.battle_screen_character_2_grid = pygame.Surface(self.battle_screen_character_2_grid_size)
         self.battle_screen_character_2_grid.fill((92,13,78))
         self.battle_screen_character_2_grid_rect = self.battle_screen_character_2_grid.get_rect()
@@ -63,7 +63,7 @@ class Grid():
         self.battle_screen_character_2_grid_rect.topleft = self.battle_screen_character_2_grid_position
 
         self.battle_screen_battle_1_grid_size = (400,520)
-        self.battle_screen_battle_1_grid_position = (200,30)
+        self.battle_screen_battle_1_grid_position = (600,30)
         self.battle_screen_battle_1_grid = pygame.Surface(self.battle_screen_battle_1_grid_size)
         self.battle_screen_battle_1_grid.fill((100,3,3))
         self.battle_screen_battle_1_grid_rect = self.battle_screen_battle_1_grid.get_rect()
@@ -71,7 +71,7 @@ class Grid():
         self.battle_screen_battle_1_grid_rect.topleft = self.battle_screen_battle_1_grid_position
 
         self.battle_screen_battle_2_grid_size = (400,520)
-        self.battle_screen_battle_2_grid_position = (600,30)
+        self.battle_screen_battle_2_grid_position = (200,30)
         self.battle_screen_battle_2_grid = pygame.Surface(self.battle_screen_battle_2_grid_size)
         self.battle_screen_battle_2_grid.fill((100,101,3))
         self.battle_screen_battle_2_grid_rect = self.battle_screen_battle_2_grid.get_rect()
