@@ -713,10 +713,15 @@ def battle_screen_my_hand_button_display(screen,buttons, screen_status, button_s
 
     if button_status.battle_screen_handaction_display == True:
         located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.battle_screen_handaction_display_position)-1)]
-        button_level_up = Button('level up','', (43,93,67),located_card.rect.x+15, located_card.rect.y-25, 100, 25)
+        button_level_up = Button('level up','battle_screen_handaction_level_up', (43,93,67),located_card.rect.x + 15, located_card.rect.y - 25, 100, 25)
         button_level_up.update()
         button_level_up.draw(screen)
         if button_status.battle_screen_handaction_backend:
+            bt = ''
+            for button in buttons:
+                if button.group == 'battle_screen_handaction_level_up':
+                    bt = button
+                    buttons.remove(bt)
             buttons.append(button_level_up)
             button_status.battle_screen_handaction_backend = False
 
@@ -728,6 +733,7 @@ def battle_screen_card_click_action(hand_position,screen, screen_status,button_s
         if len(user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1):7 * screen_status.battle_screen_my_hand_page_id]) >= int(hand_position):
             button_status.battle_screen_handaction_display = True
             button_status.battle_screen_handaction_display_position = hand_position
+            button_status.battle_screen_handaction_backend = True
         else:
             pass
         # battle_screen_character_level_up(located_card, screen,buttons, screen_status, button_status, card_database_filter, user)
