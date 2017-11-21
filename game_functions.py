@@ -126,9 +126,12 @@ def check_events_build_deck_screen(ai_settings, screen, monster, menu_buttons, b
                     if button.rect.collidepoint(pygame.mouse.get_pos()):
 
                         if button.text == 'Next':
-                            screen_status.welcome_screen_display = False
-                            screen_status.build_deck_screen_display = False
-                            screen_status.battle_screen_display = True
+                            if screen_status.build_deck_screen_to_battle_screen_all_clear:
+                                screen_status.welcome_screen_display = False
+                                screen_status.build_deck_screen_display = False
+                                screen_status.battle_screen_display = True
+                            else:
+                                build_deck_screen_to_battle_screen_error_display(screen,user)
                         elif button.text == 'Back':
                             screen_status.welcome_screen_display = True
                             screen_status.build_deck_screen_display = False
@@ -304,7 +307,7 @@ def battle_screen_update(ai_settings,grid, screen, character_1, character_2, mon
     if button_status.monster_battleaction_display:
         monster_button_battleaction_display(screen, buttons, button_status)
     if button_status.menu_rules:
-        menu_rules_display(screen)
+        menu_rules_display(screen, buttons)
 
 
 
@@ -335,20 +338,31 @@ def build_deck_screen_grid_display(grid, screen):
     screen.blit(grid.build_deck_screen_card_gallery_grid, grid.build_deck_screen_card_gallery_grid_rect)
     screen.blit(grid.build_deck_screen_deck_grid, grid.build_deck_screen_deck_grid_rect)
 
+
 def build_deck_screen_stable_button_display(screen, buttons,screen_status,button_status):
     """ Display all stable buttons for build deck screen"""
     button1 = Button('Back','build_deck_screen', (0,0,0),0, 0, 50, 50)
-    button2 = Button('Next','build_deck_screen', (0,0,0),1150, 0, 50, 50)
-    button3 = Button('Build your deck by picking 40 cards below: ', 'build_deck_screen', (0,0,0),300, 0, 600, 50)
     button1.update()
-    button2.update()
-    button3.update()
     button1.draw(screen)
+    button2 = Button('Next','build_deck_screen', (0,0,0),1150, 0, 50, 50)
+    button2.update()
     button2.draw(screen)
+    button3 = Button('Build your deck by picking 40 cards below: ', 'build_deck_screen', (0,0,0),300, 0, 600, 50)
+    button3.update()
     button3.draw(screen)
     if button_status.build_deck_screen_stable_button_backend:
         buttons.extend((button1, button2, button3))
         button_status.build_deck_screen_stable_button_backend = False
+
+def build_deck_screen_to_battle_screen_error_display(screen,user):
+    """ Display error message when entering battle screen with incomplete deck"""
+    button4 = Button('why?','', (0,0,0),510,350, 300, 300)
+    button4.update()
+    button4.draw(screen)
+    print('what!!!!')
+
+
+# - - - - - - - - - - - - -
 
 def build_deck_screen_card_gallery_display(screen, buttons, screen_status, button_status, card_database_filter):
     """Display Card Gallery"""
@@ -474,12 +488,18 @@ def build_deck_screen_my_deck_display(screen,buttons, screen_status, button_stat
 def build_deck_screen_my_deck_button_display(screen,buttons, screen_status, button_status, card_database_filter, user):
     """Display buttons on my deck part of the screen"""
     local_store_list = build_deck_screen_my_deck_card_list_refine(user)
-    #
-    button1 = Button('Character: 0/1 ','' ,(222,13,78),50, 560, 150, 30)
+    #character number display
+    if user.character_card == '':
+        button1 = Button('Character: 0/1','' ,(122,113,178),50, 560, 150, 30, font_color = (255,60,60))
+    else:
+        button1 = Button('Character: 1/1','' ,(122,113,178),50, 560, 150, 30)
     button1.update()
     button1.draw(screen)
-    #
-    button2 = Button('Total: ' + str(len(user.card_list)) + '/40','' ,(222,13,78),595, 560, 150, 30)
+    #card number display
+    if len(user.card_list) >= 40:
+        button2 = Button('Total: ' + str(len(user.card_list)) + '/40','' ,(122,113,178),595, 560, 150, 30)
+    else:
+        button2 = Button('Total: ' + str(len(user.card_list)) + '/40','' ,(122,113,178),595, 560, 150, 30, font_color = (255,60,60))
     button2.update()
     button2.draw(screen)
 
@@ -507,6 +527,13 @@ def build_deck_screen_my_deck_button_display(screen,buttons, screen_status, butt
 
 def build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button_status, card_database_filter, user):
     """Input user.card_list, drawing the card list propperly"""
+    # Draw the character card
+    if user.character_card == '':
+        pass
+    else:
+        user.character_card.rect.x = 65
+        user.character_card.rect.y = 600
+        screen.blit(user.character_card.image, user.character_card.rect)
     #Clear duplicate amount each frame and render the refined list
     for card_new in user.card_list:
         card_new.duplicate = 1
@@ -543,7 +570,10 @@ def build_deck_screen_add_card_to_deck(card_gallery_position ,screen, screen_sta
     """Add card from gallery to user.card_list"""
     # Check to avoid errors when click on empty rect preventing adding card.
     if len(cdf.request_card_list(card_database_filter)[14*(screen_status.build_deck_screen_card_gallery_page_id - 1):14 * screen_status.build_deck_screen_card_gallery_page_id]) >= int(card_gallery_position):
-        user.card_list.append(cdf.request_card_list(card_database_filter)[14*(screen_status.build_deck_screen_card_gallery_page_id - 1)+(int(card_gallery_position)-1)])
+        if cdf.request_card_list(card_database_filter)[14*(screen_status.build_deck_screen_card_gallery_page_id - 1)+(int(card_gallery_position)-1)].card_type == 'character':
+            user.character_card = cdf.request_card_list(card_database_filter)[14*(screen_status.build_deck_screen_card_gallery_page_id - 1)+(int(card_gallery_position)-1)]
+        else:
+            user.card_list.append(cdf.request_card_list(card_database_filter)[14*(screen_status.build_deck_screen_card_gallery_page_id - 1)+(int(card_gallery_position)-1)])
     else:
         pass
 
@@ -582,7 +612,10 @@ def build_deck_screen_my_deck_check_duplicate(card, local_store_list):
 
 def build_deck_screen_my_deck_duplicate_number_display(card, screen):
     """Input Card instance, output how many copies of that card as a button above that card"""
-    button_dup = Button(str(card.duplicate) + 'x','', (222,13,78),(card.rect.x + 50),(card.rect.y - 30) , 30, 30)
+    if card.duplicate <= 4:
+        button_dup = Button(str(card.duplicate) + 'x','', (122,113,178),(card.rect.x + 50),(card.rect.y - 30) , 30, 30)
+    else:
+        button_dup = Button(str(card.duplicate) + 'x','', (122,113,178),(card.rect.x + 50),(card.rect.y - 30) , 30, 30, font_color = (255,60,60))
     button_dup.update()
     button_dup.draw(screen)
 
@@ -707,11 +740,12 @@ def monster_battleaction_back(buttons, button_status):
 
 
 #-----------------------------Rules menu----------------------------------------------------
-def menu_rules_display(screen):
-    """What gonna happen after click on rules buttion in the menu bar"""
+def menu_rules_display(screen, buttons,):
+    """Display rules buttion in the menu bar"""
     button = pygame.Surface((600,400))
     button.fill((34,87,139))
     screen.blit(button,Rect(100,300,600,400))
+
 
 
 

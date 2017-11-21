@@ -20,7 +20,7 @@ class Grid():
         self.build_deck_screen_deck_grid_size = (1100,230)
         self.build_deck_screen_deck_grid_position = (50,560)
         self.build_deck_screen_deck_grid = pygame.Surface(self.build_deck_screen_deck_grid_size)
-        self.build_deck_screen_deck_grid.fill((222,13,78))
+        self.build_deck_screen_deck_grid.fill((122,113,178))
         self.build_deck_screen_deck_grid_rect = self.build_deck_screen_deck_grid.get_rect()
         self.build_deck_screen_deck_grid.blit(self.build_deck_screen_deck_grid, self.build_deck_screen_deck_grid_rect)
         self.build_deck_screen_deck_grid_rect.topleft = self.build_deck_screen_deck_grid_position

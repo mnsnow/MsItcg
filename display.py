@@ -5,14 +5,16 @@ import pygame
 
 class Screen_status():
     """ Control active status of all screens"""
-    def __init__(self, welcome_screen_display = False,  build_deck_screen_display = True, battle_screen_display = False,
-        build_deck_screen_card_gallery_page_id = 1,build_deck_screen_my_deck_page_id = 1, welcome_screen_backend = True):
+    def __init__(self, welcome_screen_display = False, welcome_screen_backend = True, build_deck_screen_display = True,
+        build_deck_screen_card_gallery_page_id = 1,build_deck_screen_my_deck_page_id = 1, build_deck_screen_to_battle_screen_all_clear = False,
+        battle_screen_display = False,):
 
         self.welcome_screen_display = welcome_screen_display
         self.welcome_screen_backend = welcome_screen_backend
         self.build_deck_screen_display = build_deck_screen_display
         self.build_deck_screen_card_gallery_page_id = build_deck_screen_card_gallery_page_id
         self.build_deck_screen_my_deck_page_id = build_deck_screen_my_deck_page_id
+        self.build_deck_screen_to_battle_screen_all_clear = build_deck_screen_to_battle_screen_all_clear
 
         self.battle_screen_display = battle_screen_display
 
