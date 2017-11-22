@@ -742,16 +742,11 @@ def battle_screen_character_1_card_display(screen,buttons, screen_status, button
             user.character_level_20_card.rect.y = 400
             screen.blit(user.character_level_20_card.image, user.character_level_20_card.rect)
 
-
-
-
 def battle_screen_character_1_button_display(screen,buttons, screen_status, button_status, card_database_filter, user):
     """ Display character 1 buttons"""
     button_basic_info = Button('Lv: ' + user.character_card.level + '  HP: ' + user.character_card.health,'', (0,0,0),1000, 5, 200, 30)
     button_basic_info.update()
     button_basic_info.draw(screen)
-
-
 
 def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, button_status, card_database_filter, user, position = ''):
     """ Action after click on my hand part"""
@@ -791,7 +786,6 @@ def monster_button_handaction_display(screen, buttons, button_status):
     if button_status.monster_handaction_backend:
         buttons.extend((button1, button2, button3))
         button_status.monster_handaction_backend = False
-
 
 def monster_handaction_back(buttons, button_status):
     button_status.monster_handaction_display = False
