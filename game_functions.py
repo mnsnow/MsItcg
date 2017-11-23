@@ -653,7 +653,7 @@ def battle_screen_my_hand_card_display(screen,buttons, screen_status, button_sta
             rect_position_x += 145
             screen_status.battle_screen_action_indicator = 'p1'
 
-    if screen_status.battle_screen_action_indicator == 'p1':
+    else:
         if screen_status.battle_screen_my_hand_page_id <= 0:
             screen_status.battle_screen_my_hand_page_id = 1
         # Edge cases when len() = 6,12,18....
@@ -675,19 +675,6 @@ def battle_screen_my_hand_card_display(screen,buttons, screen_status, button_sta
                 if row_number >= 8:
                     row_number = 1
 
-    if screen_status.battle_screen_action_indicator == 'p2':
-        for card_hand in user.hand_list:
-            card_hand.rect.x = rect_position_x
-            card_hand.rect.y = rect_position_y
-            screen.blit(card_hand.image, card_hand.rect)
-            rect_position_x += 145
-
-    if screen_status.battle_screen_action_indicator == 'p3':
-        for card_hand in user.hand_list:
-            card_hand.rect.x = rect_position_x
-            card_hand.rect.y = rect_position_y
-            screen.blit(card_hand.image, card_hand.rect)
-            rect_position_x += 145
 
 def battle_screen_my_hand_button_display(screen,buttons, screen_status, button_status, card_database_filter, user):
     """ Display buttons in my hand on battle screen"""
@@ -715,7 +702,7 @@ def battle_screen_my_hand_button_display(screen,buttons, screen_status, button_s
 
     if button_status.battle_screen_handaction_display == True:
         located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.battle_screen_handaction_display_position)-1)]
-        button_level_up = Button('level up','battle_screen_handaction_level_up', (43,93,67),located_card.rect.x + 15, located_card.rect.y - 25, 100, 25)
+        button_level_up = Button('level up','battle_screen_handaction_level_up', (43,93,67),located_card.rect.x+10, located_card.rect.y - 27, 115, 27)
         button_level_up.update()
         button_level_up.draw(screen)
         if button_status.battle_screen_handaction_backend:
@@ -734,13 +721,17 @@ def battle_screen_character_1_card_display(screen,buttons, screen_status, button
     screen.blit(user.character_card.image, user.character_card.rect)
     #
     if int(user.character_card.level) >= 10:
-            user.character_level_10_card.rect.x = 1050
-            user.character_level_10_card.rect.y = 200
-            screen.blit(user.character_level_10_card.image, user.character_level_10_card.rect)
+            user.character_level_10_card.bottom_rect.x = 1050
+            user.character_level_10_card.bottom_rect.y = 220
+            screen.blit(user.character_level_10_card.bottom_image, user.character_level_10_card.bottom_rect)
     if int(user.character_card.level) >= 20:
-            user.character_level_20_card.rect.x = 1050
-            user.character_level_20_card.rect.y = 400
-            screen.blit(user.character_level_20_card.image, user.character_level_20_card.rect)
+            user.character_level_20_card.bottom_rect.x = 1050
+            user.character_level_20_card.bottom_rect.y = 243
+            screen.blit(user.character_level_20_card.bottom_image, user.character_level_20_card.bottom_rect)
+    if int(user.character_card.level) >= 30:
+            user.character_level_30_card.bottom_rect.x = 1050
+            user.character_level_30_card.bottom_rect.y = 266
+            screen.blit(user.character_level_30_card.bottom_image, user.character_level_30_card.bottom_rect)
 
 def battle_screen_character_1_button_display(screen,buttons, screen_status, button_status, card_database_filter, user):
     """ Display character 1 buttons"""
@@ -764,9 +755,19 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
             user.character_level_10_card = located_card
         elif user.character_level_20_card == '':
             user.character_level_20_card = located_card
+        elif user.character_level_30_card == '':
+            user.character_level_30_card = located_card
         user.hand_list.remove(located_card)
         user.character_card.level = str(int(user.character_card.level) + 10)
         user.character_card.health = str(int(user.character_card.health) + 20)
+        screen_status.battle_screen_action_indicator = 'p2'
+        button_status.battle_screen_handaction_display = False
+        bt = ''
+        for button in buttons:
+            if button.group == 'battle_screen_handaction_level_up':
+                bt = button
+                buttons.remove(bt)
+
 
 
 

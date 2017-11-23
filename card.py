@@ -49,6 +49,10 @@ class Monster():
         self.image = pygame.transform.scale(self.image_raw,(ai_settings.card_size_x, ai_settings.card_size_y))
         self.rect = self.image.get_rect()
 
+        self.bottom_image = self.image_raw = pygame.image.load('static/images/monster/monster_bottom/' + self.set_number + '_' + self.card_number + '.jpg')
+        self.bottom_image = pygame.transform.scale(self.image_raw,(ai_settings.card_bottom_size_x, ai_settings.card_bottom_size_y))
+        self.bottom_rect = self.bottom_image.get_rect()
+
 
 
 
