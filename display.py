@@ -10,7 +10,7 @@ class Screen_status():
         # Other settings
         welcome_screen_backend = True,
         build_deck_screen_card_gallery_page_id = 1,build_deck_screen_my_deck_page_id = 1, build_deck_screen_to_battle_screen_all_clear = True,
-        battle_screen_action_indicator = 'p0', battle_screen_my_hand_page_id = 1,):
+        battle_screen_action_indicator = 'stage-0', battle_screen_my_hand_page_id = 1,):
 
         self.welcome_screen_display = welcome_screen_display
         self.welcome_screen_backend = welcome_screen_backend
@@ -32,6 +32,7 @@ class Button_status():
     build_deck_screen_stable_button_backend = True,
     build_deck_screen_card_gallery_button_backend = True,
     build_deck_screen_my_deck_button_backend = True,
+    battle_screen_instruction_bar_button_backend = True,
     battle_screen_stable_button_backend = True,
     battle_screen_my_hand_page_change_button_backend = True,
     battle_screen_handaction_display = False, battle_screen_handaction_display_position = '1',battle_screen_handaction_backend=True,
@@ -41,6 +42,7 @@ class Button_status():
         self.build_deck_screen_card_gallery_button_backend = build_deck_screen_card_gallery_button_backend
         self.build_deck_screen_my_deck_button_backend = build_deck_screen_my_deck_button_backend
 
+        self.battle_screen_instruction_bar_button_backend = battle_screen_instruction_bar_button_backend
         self.battle_screen_stable_button_backend = battle_screen_stable_button_backend
         self.battle_screen_my_hand_page_change_button_backend = battle_screen_my_hand_page_change_button_backend
 

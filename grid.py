@@ -78,13 +78,13 @@ class Grid():
         self.battle_screen_battle_2_grid.blit(self.battle_screen_battle_2_grid, self.battle_screen_battle_2_grid_rect)
         self.battle_screen_battle_2_grid_rect.topleft = self.battle_screen_battle_2_grid_position
 
-        self.battle_screen_action_bar_grid_size = (800,30)
-        self.battle_screen_action_bar_grid_position = (200,550)
-        self.battle_screen_action_bar_grid = pygame.Surface(self.battle_screen_action_bar_grid_size)
-        self.battle_screen_action_bar_grid.fill((0,0,0))
-        self.battle_screen_action_bar_grid_rect = self.battle_screen_action_bar_grid.get_rect()
-        self.battle_screen_action_bar_grid.blit(self.battle_screen_action_bar_grid, self.battle_screen_action_bar_grid_rect)
-        self.battle_screen_action_bar_grid_rect.topleft = self.battle_screen_action_bar_grid_position
+        self.battle_screen_instruction_bar_grid_size = (800,30)
+        self.battle_screen_instruction_bar_grid_position = (200,550)
+        self.battle_screen_instruction_bar_grid = pygame.Surface(self.battle_screen_instruction_bar_grid_size)
+        self.battle_screen_instruction_bar_grid.fill((0,0,0))
+        self.battle_screen_instruction_bar_grid_rect = self.battle_screen_instruction_bar_grid.get_rect()
+        self.battle_screen_instruction_bar_grid.blit(self.battle_screen_instruction_bar_grid, self.battle_screen_instruction_bar_grid_rect)
+        self.battle_screen_instruction_bar_grid_rect.topleft = self.battle_screen_instruction_bar_grid_position
 
 
 

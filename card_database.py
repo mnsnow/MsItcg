@@ -22,7 +22,7 @@ card_01_14 = Monster(set_number='01',card_number='14',card_type='monster',job='b
 attack='30',health='30',lv_type='',lv_active_level='one-time',special_effect='')
 
 card_01_16 = Character(set_number='01',card_number='16',card_type='character',job='bowman',level='0',
-health='200',skill_1_lv = '10', skill_1_type = '',skill_2_lv = '20', skill_2_type = '',skill_3_lv = '50', skill_3_type = '')
+health='200',skill_1_lv = '10', skill_1_type = 'Easy Shot',skill_2_lv = '20', skill_2_type = 'Quest',skill_3_lv = '50', skill_3_type = 'Tricky Shot')
 
 card_01_21 = Character(set_number='01',card_number='21',card_type='character',job='bowman',level='0',
 health='210',skill_1_lv = '10', skill_1_type = '',skill_2_lv = '10', skill_2_type = '',skill_3_lv = '60', skill_3_type = '')
