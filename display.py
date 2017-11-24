@@ -28,29 +28,22 @@ class Screen_status():
 
 class Button_status():
     """ Control active status of all buttons"""
-    def __init__(self,
-    build_deck_screen_stable_button_backend = True,
-    build_deck_screen_card_gallery_button_backend = True,
-    build_deck_screen_my_deck_button_backend = True,
-    battle_screen_instruction_bar_button_backend = True,
-    battle_screen_stable_button_backend = True,
-    battle_screen_my_hand_page_change_button_backend = True,
-    battle_screen_handaction_display = False, battle_screen_handaction_display_position = '1',battle_screen_handaction_backend=True,
-    battle_screen_battleaction_display=False,battle_screen_battleaction_backend=True,):
+    def __init__(self):
 
-        self.build_deck_screen_stable_button_backend = build_deck_screen_stable_button_backend
-        self.build_deck_screen_card_gallery_button_backend = build_deck_screen_card_gallery_button_backend
-        self.build_deck_screen_my_deck_button_backend = build_deck_screen_my_deck_button_backend
+        self.build_deck_screen_stable_button_backend = True
+        self.build_deck_screen_card_gallery_button_backend = True
+        self.build_deck_screen_my_deck_button_backend = True
 
-        self.battle_screen_instruction_bar_button_backend = battle_screen_instruction_bar_button_backend
-        self.battle_screen_stable_button_backend = battle_screen_stable_button_backend
-        self.battle_screen_my_hand_page_change_button_backend = battle_screen_my_hand_page_change_button_backend
+        self.battle_screen_instruction_bar_text = 'Welcome to Maplestory Itcg Alpha!'
+        self.battle_screen_instruction_bar_button_backend = True
+        self.battle_screen_stable_button_backend = True
+        self.battle_screen_my_hand_page_change_button_backend = True
 
-        self.battle_screen_handaction_display = battle_screen_handaction_display
-        self.battle_screen_handaction_display_position = battle_screen_handaction_display_position
-        self.battle_screen_handaction_backend = battle_screen_handaction_backend
-        self.battle_screen_battleaction_display = battle_screen_battleaction_display
-        self.battle_screen_battleaction_backend = battle_screen_battleaction_backend
+        self.battle_screen_handaction_display = False
+        self.battle_screen_handaction_display_position = '1'
+        self.battle_screen_handaction_backend = True
+        self.battle_screen_battleaction_display = False
+        self.battle_screen_battleaction_backend = True
 
 
 

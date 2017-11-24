@@ -9,6 +9,7 @@ from display import Screen_status, Button_status
 from grid import Grid
 import card_database_functions as cdf
 from user import User
+from action import Action
 
 
 def main():
@@ -27,6 +28,7 @@ def main():
     buttons = []
     card_database_filter = cdf.Card_database_filter()
     user = User()
+    action = Action()
 
 
 
@@ -34,7 +36,7 @@ def main():
 
     while True:
 
-        gf.check_events(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user)
+        gf.check_events(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action)
 
         gf.update_screen(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user)
 

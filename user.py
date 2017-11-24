@@ -5,23 +5,31 @@ from card import Monster, Character
 
 class User():
     """Contains informations of user's customatic informations"""
-    def __init__(self, deck_list = [
-    card_01_05, card_01_06, card_01_08,
-    card_01_11, card_01_13, card_01_14,
-    card_01_23, card_01_27,
-    card_01_31, card_01_34,
-    card_01_40,
-    card_01_53,
-    card_01_60, card_01_61, card_01_65, card_01_66, card_01_69,
-    card_01_70, card_01_71, card_01_76, card_01_77,
-    card_01_81, card_01_86, card_01_87,
-    card_01_90, card_01_93, card_01_95, card_01_96,
-    ], character_card = card_01_16, hand_list = [], monster_in_play_list = []):
+    def __init__(self):
 
-        self.deck_list = deck_list
-        self.character_card = character_card
-        self.hand_list = hand_list
-        self.monster_in_play_list = monster_in_play_list
+        self.deck_list = [
+            card_01_05, card_01_06, card_01_08,
+            card_01_11, card_01_13, card_01_14,
+            card_01_23, card_01_27,
+            card_01_31, card_01_34,
+            card_01_40,
+            card_01_53,
+            card_01_60, card_01_61, card_01_65, card_01_66, card_01_69,
+            card_01_70, card_01_71, card_01_76, card_01_77,
+            card_01_81, card_01_86, card_01_87,
+            card_01_90, card_01_93, card_01_95, card_01_96,]
+
+        self.character_card = card_01_16
+        self.hand_list = []
+        self.monster_in_play_dict = {
+            '1' : '',
+            '2' : '',
+            '3' : '',
+            '4' : '',
+            '5' : '',
+            '6' : '',
+        }
+
         self.character_under_card_by_level = {
             '10' : '',
             '20' : '',
