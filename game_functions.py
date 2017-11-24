@@ -1332,7 +1332,6 @@ def battle_screen_instruction_bar_yes_action(screen,buttons, screen_status, butt
 
 
 
-
 def battle_screen_instruction_bar_skip_action(screen,buttons, screen_status, button_status, card_database_filter, user):
     """ actions when click on skip on instruction bar"""
     print('skip')
