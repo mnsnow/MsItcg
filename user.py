@@ -66,7 +66,7 @@ class User():
 
         for card in stage_2_other_card_complete_list:
             if card != '':
-                if card.lv_active_level <= self.character_card.level:
+                if int(card.lv_active_level) <= int(self.character_card.level):
                     stage_2_other_card_usable_list.append(card)
 
         return stage_2_other_card_usable_list

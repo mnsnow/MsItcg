@@ -858,17 +858,86 @@ def battle_screen_character_1_card_display(screen,buttons, screen_status, button
             user.character_under_card_by_level['150'].bottom_rect.y = 542
             screen.blit(user.character_under_card_by_level['150'].bottom_image, user.character_under_card_by_level['150'].bottom_rect)
 
-
 def battle_screen_character_1_button_display(screen,buttons, screen_status, button_status, card_database_filter, user):
     """ Display character 1 buttons"""
     button_basic_info = Button('Lv: ' + user.character_card.level + '  HP: ' + user.character_card.health,'', (0,0,0),1000, 5, 200, 30)
     button_basic_info.update()
     button_basic_info.draw(screen)
 
-    if screen_status.battle_screen_action_indicator == 'p2':
-        button_action_pointer = Button('>>','',(92,13,78),1000,100,50,50)
+    if screen_status.battle_screen_action_indicator == 'stage-2-character-action-1':
+        button_action_pointer = Button('>>','',(92,13,78),1000,132,50,23)
         button_action_pointer.update()
         button_action_pointer.draw(screen)
+    elif screen_status.battle_screen_action_indicator == 'stage-2-character-action-2':
+        button_action_pointer = Button('>>','',(92,13,78),1000,155,50,23)
+        button_action_pointer.update()
+        button_action_pointer.draw(screen)
+    elif screen_status.battle_screen_action_indicator == 'stage-2-character-action-3':
+        button_action_pointer = Button('>>','',(92,13,78),1000,178,50,23)
+        button_action_pointer.update()
+        button_action_pointer.draw(screen)
+    elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-10':
+        button_action_pointer = Button('>>','',(92,13,78),1000,220,50,23)
+        button_action_pointer.update()
+        button_action_pointer.draw(screen)
+    elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-20':
+        button_action_pointer = Button('>>','',(92,13,78),1000,243,50,23)
+        button_action_pointer.update()
+        button_action_pointer.draw(screen)
+    elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-30':
+        button_action_pointer = Button('>>','',(92,13,78),1000,266,50,23)
+        button_action_pointer.update()
+        button_action_pointer.draw(screen)
+    elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-40':
+        button_action_pointer = Button('>>','',(92,13,78),1000,289,50,23)
+        button_action_pointer.update()
+        button_action_pointer.draw(screen)
+    elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-50':
+        button_action_pointer = Button('>>','',(92,13,78),1000,312,50,23)
+        button_action_pointer.update()
+        button_action_pointer.draw(screen)
+    elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-60':
+        button_action_pointer = Button('>>','',(92,13,78),1000,335,50,23)
+        button_action_pointer.update()
+        button_action_pointer.draw(screen)
+    elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-70':
+        button_action_pointer = Button('>>','',(92,13,78),1000,358,50,23)
+        button_action_pointer.update()
+        button_action_pointer.draw(screen)
+    elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-80':
+        button_action_pointer = Button('>>','',(92,13,78),1000,381,50,23)
+        button_action_pointer.update()
+        button_action_pointer.draw(screen)
+    elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-90':
+        button_action_pointer = Button('>>','',(92,13,78),1000,404,50,23)
+        button_action_pointer.update()
+        button_action_pointer.draw(screen)
+    elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-100':
+        button_action_pointer = Button('>>','',(92,13,78),1000,427,50,23)
+        button_action_pointer.update()
+        button_action_pointer.draw(screen)
+    elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-110':
+        button_action_pointer = Button('>>','',(92,13,78),1000,450,50,23)
+        button_action_pointer.update()
+        button_action_pointer.draw(screen)
+    elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-120':
+        button_action_pointer = Button('>>','',(92,13,78),1000,473,50,23)
+        button_action_pointer.update()
+        button_action_pointer.draw(screen)
+    elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-130':
+        button_action_pointer = Button('>>','',(92,13,78),1000,496,50,23)
+        button_action_pointer.update()
+        button_action_pointer.draw(screen)
+    elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-140':
+        button_action_pointer = Button('>>','',(92,13,78),1000,519,50,23)
+        button_action_pointer.update()
+        button_action_pointer.draw(screen)
+    elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-150':
+        button_action_pointer = Button('>>','',(92,13,78),1000,542,50,23)
+        button_action_pointer.update()
+        button_action_pointer.draw(screen)
+
+
 
 def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, button_status, card_database_filter, user, position = ''):
     """ Action after click on my hand part"""
@@ -963,7 +1032,7 @@ def battle_screen_instruction_bar_yes_action(screen,buttons, screen_status, butt
         battle_screen_hand_click_action('level up',screen,buttons, screen_status, button_status, card_database_filter, user)
         # Prepare usable list for next stage/run once per player per turn
         user.stage_2_other_card_usable_list = user.get_stage_2_other_card_usable_list()
-        if user.character_card.skill_1_lv <= user.character_card.level:
+        if int(user.character_card.skill_1_lv) <= int(user.character_card.level):
             screen_status.battle_screen_action_indicator = 'stage-2-character-action-1'
         elif len(user.stage_2_other_card_usable_list) >= 1:
             for position, card in user.character_under_card_by_level.items():
@@ -979,7 +1048,7 @@ def battle_screen_instruction_bar_yes_action(screen,buttons, screen_status, butt
     # Which stage to go when user at stage-2-character-action-1
     elif screen_status.battle_screen_action_indicator == 'stage-2-character-action-1':
         battle_screen_stage_2_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
-        if user.character_card.skill_2_lv <= user.character_card.level:
+        if int(user.character_card.skill_2_lv) <= int(user.character_card.level):
             screen_status.battle_screen_action_indicator = 'stage-2-character-action-2'
         elif len(user.stage_2_other_card_usable_list) >= 1:
             for position, card in user.character_under_card_by_level.items():
@@ -995,7 +1064,7 @@ def battle_screen_instruction_bar_yes_action(screen,buttons, screen_status, butt
     # Which stage to go when user at stage-2-character-action-2
     elif screen_status.battle_screen_action_indicator == 'stage-2-character-action-2':
         battle_screen_stage_2_action('2', screen,buttons, screen_status, button_status, card_database_filter, user)
-        if user.character_card.skill_3_lv <= user.character_card.level:
+        if int(user.character_card.skill_3_lv) <= int(user.character_card.level):
             screen_status.battle_screen_action_indicator = 'stage-2-character-action-3'
         elif len(user.stage_2_other_card_usable_list) >= 1:
             for position, card in user.character_under_card_by_level.items():
@@ -1260,7 +1329,6 @@ def battle_screen_instruction_bar_yes_action(screen,buttons, screen_status, butt
 
 
     print(screen_status.battle_screen_action_indicator)
-
 
 
 
