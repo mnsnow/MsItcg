@@ -615,7 +615,25 @@ def battle_screen_grid_display(grid, screen):
     screen.blit(grid.battle_screen_instruction_bar_grid, grid.battle_screen_instruction_bar_grid_rect)
 
 def battle_screen_instruction_bar_display(screen,buttons, screen_status, button_status, card_database_filter, user):
-    """ Display instruction bar"""
+    """ Display instruction bar
+    Stage List:
+    stage-0
+    stage-1
+    stage-1-pick-a-card-to-level-up
+    stage-2-character-action-1
+    stage-2-character-action-2
+    stage-2-character-action-3
+    stage-2-other-action-1
+    stage-2-other-action-2
+    stage-2-other-action-3
+    ...
+    stage-3-monster-1-action
+    stage-3-monster-2-action
+    stage-3-monster-3-action
+    ...
+    stage-4-end-turn
+    stage-4-wait-for-opponent
+    """
     # Instruction bar text
     button_instruction_bar_text = 'Welcome!'
     if screen_status.battle_screen_action_indicator == 'stage-0':
@@ -625,7 +643,45 @@ def battle_screen_instruction_bar_display(screen,buttons, screen_status, button_
     if screen_status.battle_screen_action_indicator == 'stage-1-pick-a-card-to-level-up':
         button_instruction_bar_text = 'p1-s1 -- Pick a card and click yes to level up'
     if screen_status.battle_screen_action_indicator == 'stage-2-character-action-1':
-        button_instruction_bar_text = 'p1-s2 -- actions:'
+        button_instruction_bar_text = 'p1-s2 -- Character action 1: Do you want to use: ' + user.character_card.skill_1_type + ' ?'
+    if screen_status.battle_screen_action_indicator == 'stage-2-character-action-2':
+        button_instruction_bar_text = 'p1-s2 -- Character action 2: Do you want to use: ' + user.character_card.skill_2_type + ' ?'
+    if screen_status.battle_screen_action_indicator == 'stage-2-character-action-3':
+        button_instruction_bar_text = 'p1-s2 -- Character action 3: Do you want to use: ' + user.character_card.skill_3_type + ' ?'
+    if screen_status.battle_screen_action_indicator == 'stage-2-other-action-10':
+        button_instruction_bar_text = 'p1-s2 -- Other action 1: Do you want to use: ' + '1111'
+    if screen_status.battle_screen_action_indicator == 'stage-2-other-action-20':
+        button_instruction_bar_text = 'p1-s2 -- Other action 2: Do you want to use: ' + '2222'
+    if screen_status.battle_screen_action_indicator == 'stage-2-other-action-30':
+        button_instruction_bar_text = 'p1-s2 -- Other action 3: Do you want to use: ' + '3333'
+    if screen_status.battle_screen_action_indicator == 'stage-2-other-action-40':
+        button_instruction_bar_text = 'p1-s2 -- Other action 4: Do you want to use: ' + '4444'
+    if screen_status.battle_screen_action_indicator == 'stage-2-other-action-50':
+        button_instruction_bar_text = 'p1-s2 -- Other action 5: Do you want to use: ' + '5555'
+    if screen_status.battle_screen_action_indicator == 'stage-2-other-action-60':
+        button_instruction_bar_text = 'p1-s2 -- Other action 6: Do you want to use: ' + '6666'
+    if screen_status.battle_screen_action_indicator == 'stage-2-other-action-70':
+        button_instruction_bar_text = 'p1-s2 -- Other action 7: Do you want to use: ' + '7777'
+    if screen_status.battle_screen_action_indicator == 'stage-2-other-action-80':
+        button_instruction_bar_text = 'p1-s2 -- Other action 8: Do you want to use: ' + '8888'
+    if screen_status.battle_screen_action_indicator == 'stage-2-other-action-90':
+        button_instruction_bar_text = 'p1-s2 -- Other action 9: Do you want to use: ' + '9999'
+    if screen_status.battle_screen_action_indicator == 'stage-2-other-action-100':
+        button_instruction_bar_text = 'p1-s2 -- Other action 10: Do you want to use: ' + '1010'
+    if screen_status.battle_screen_action_indicator == 'stage-2-other-action-110':
+        button_instruction_bar_text = 'p1-s2 -- Other action 11: Do you want to use: ' + '1111'
+    if screen_status.battle_screen_action_indicator == 'stage-2-other-action-120':
+        button_instruction_bar_text = 'p1-s2 -- Other action 12: Do you want to use: ' + '1212'
+    if screen_status.battle_screen_action_indicator == 'stage-2-other-action-130':
+        button_instruction_bar_text = 'p1-s2 -- Other action 13: Do you want to use: ' + '1313'
+    if screen_status.battle_screen_action_indicator == 'stage-2-other-action-140':
+        button_instruction_bar_text = 'p1-s2 -- Other action 14: Do you want to use: ' + '1414'
+    if screen_status.battle_screen_action_indicator == 'stage-2-other-action-150':
+        button_instruction_bar_text = 'p1-s2 -- Other action 15: Do you want to use: ' + '1515'
+    if screen_status.battle_screen_action_indicator == 'stage-4-end-turn':
+        button_instruction_bar_text = 'p1-s4 -- Your turn has end'
+    if screen_status.battle_screen_action_indicator == 'stage-4-wait-for-opponent':
+        button_instruction_bar_text = "p1-s4 -- Please wait for your opponent's turn"
 
 
     # instruction bar draw
@@ -674,16 +730,7 @@ def battle_screen_my_hand_card_display(screen,buttons, screen_status, button_sta
         user.deck_list = random.sample(user.deck_list, len(user.deck_list))
         user.hand_list = user.deck_list[0:15]
     else :
-        # user.deck_list = random.sample(user.deck_list, len(user.deck_list))
-        # user.hand_list = user.deck_list[0:15]
-    #     for card_hand in user.hand_list:
-    #         card_hand.rect.x = rect_position_x
-    #         card_hand.rect.y = rect_position_y
-    #         screen.blit(card_hand.image, card_hand.rect)
-    #         rect_position_x += 145
-    #         screen_status.battle_screen_action_indicator = 'p1'
-    #
-    # else:
+
         if screen_status.battle_screen_my_hand_page_id <= 0:
             screen_status.battle_screen_my_hand_page_id = 1
         # Edge cases when len() = 6,12,18....
@@ -751,17 +798,66 @@ def battle_screen_character_1_card_display(screen,buttons, screen_status, button
     screen.blit(user.character_card.image, user.character_card.rect)
     #
     if int(user.character_card.level) >= 10:
-            user.character_level_10_card.bottom_rect.x = 1050
-            user.character_level_10_card.bottom_rect.y = 220
-            screen.blit(user.character_level_10_card.bottom_image, user.character_level_10_card.bottom_rect)
+            user.character_under_card_by_level['10'].bottom_rect.x = 1050
+            user.character_under_card_by_level['10'].bottom_rect.y = 220
+            screen.blit(user.character_under_card_by_level['10'].bottom_image, user.character_under_card_by_level['10'].bottom_rect)
     if int(user.character_card.level) >= 20:
-            user.character_level_20_card.bottom_rect.x = 1050
-            user.character_level_20_card.bottom_rect.y = 243
-            screen.blit(user.character_level_20_card.bottom_image, user.character_level_20_card.bottom_rect)
+            user.character_under_card_by_level['20'].bottom_rect.x = 1050
+            user.character_under_card_by_level['20'].bottom_rect.y = 243
+            screen.blit(user.character_under_card_by_level['20'].bottom_image, user.character_under_card_by_level['20'].bottom_rect)
     if int(user.character_card.level) >= 30:
-            user.character_level_30_card.bottom_rect.x = 1050
-            user.character_level_30_card.bottom_rect.y = 266
-            screen.blit(user.character_level_30_card.bottom_image, user.character_level_30_card.bottom_rect)
+            user.character_under_card_by_level['30'].bottom_rect.x = 1050
+            user.character_under_card_by_level['30'].bottom_rect.y = 266
+            screen.blit(user.character_under_card_by_level['30'].bottom_image, user.character_under_card_by_level['30'].bottom_rect)
+    if int(user.character_card.level) >= 40:
+            user.character_under_card_by_level['40'].bottom_rect.x = 1050
+            user.character_under_card_by_level['40'].bottom_rect.y = 289
+            screen.blit(user.character_under_card_by_level['40'].bottom_image, user.character_under_card_by_level['40'].bottom_rect)
+    if int(user.character_card.level) >= 50:
+            user.character_under_card_by_level['50'].bottom_rect.x = 1050
+            user.character_under_card_by_level['50'].bottom_rect.y = 312
+            screen.blit(user.character_under_card_by_level['50'].bottom_image, user.character_under_card_by_level['50'].bottom_rect)
+    if int(user.character_card.level) >= 60:
+            user.character_under_card_by_level['60'].bottom_rect.x = 1050
+            user.character_under_card_by_level['60'].bottom_rect.y = 335
+            screen.blit(user.character_under_card_by_level['60'].bottom_image, user.character_under_card_by_level['60'].bottom_rect)
+    if int(user.character_card.level) >= 70:
+            user.character_under_card_by_level['70'].bottom_rect.x = 1050
+            user.character_under_card_by_level['70'].bottom_rect.y = 358
+            screen.blit(user.character_under_card_by_level['70'].bottom_image, user.character_under_card_by_level['70'].bottom_rect)
+    if int(user.character_card.level) >= 80:
+            user.character_under_card_by_level['80'].bottom_rect.x = 1050
+            user.character_under_card_by_level['80'].bottom_rect.y = 381
+            screen.blit(user.character_under_card_by_level['80'].bottom_image, user.character_under_card_by_level['80'].bottom_rect)
+    if int(user.character_card.level) >= 90:
+            user.character_under_card_by_level['90'].bottom_rect.x = 1050
+            user.character_under_card_by_level['90'].bottom_rect.y = 404
+            screen.blit(user.character_under_card_by_level['90'].bottom_image, user.character_under_card_by_level['90'].bottom_rect)
+    if int(user.character_card.level) >= 100:
+            user.character_under_card_by_level['100'].bottom_rect.x = 1050
+            user.character_under_card_by_level['100'].bottom_rect.y = 427
+            screen.blit(user.character_under_card_by_level['100'].bottom_image, user.character_under_card_by_level['100'].bottom_rect)
+    if int(user.character_card.level) >= 110:
+            user.character_under_card_by_level['110'].bottom_rect.x = 1050
+            user.character_under_card_by_level['110'].bottom_rect.y = 450
+            screen.blit(user.character_under_card_by_level['110'].bottom_image, user.character_under_card_by_level['110'].bottom_rect)
+    if int(user.character_card.level) >= 120:
+            user.character_under_card_by_level['120'].bottom_rect.x = 1050
+            user.character_under_card_by_level['120'].bottom_rect.y = 473
+            screen.blit(user.character_under_card_by_level['120'].bottom_image, user.character_under_card_by_level['120'].bottom_rect)
+    if int(user.character_card.level) >= 130:
+            user.character_under_card_by_level['130'].bottom_rect.x = 1050
+            user.character_under_card_by_level['130'].bottom_rect.y = 496
+            screen.blit(user.character_under_card_by_level['130'].bottom_image, user.character_under_card_by_level['130'].bottom_rect)
+    if int(user.character_card.level) >= 140:
+            user.character_under_card_by_level['140'].bottom_rect.x = 1050
+            user.character_under_card_by_level['140'].bottom_rect.y = 519
+            screen.blit(user.character_under_card_by_level['140'].bottom_image, user.character_under_card_by_level['140'].bottom_rect)
+    if int(user.character_card.level) >= 150:
+            user.character_under_card_by_level['150'].bottom_rect.x = 1050
+            user.character_under_card_by_level['150'].bottom_rect.y = 542
+            screen.blit(user.character_under_card_by_level['150'].bottom_image, user.character_under_card_by_level['150'].bottom_rect)
+
 
 def battle_screen_character_1_button_display(screen,buttons, screen_status, button_status, card_database_filter, user):
     """ Display character 1 buttons"""
@@ -773,7 +869,6 @@ def battle_screen_character_1_button_display(screen,buttons, screen_status, butt
         button_action_pointer = Button('>>','',(92,13,78),1000,100,50,50)
         button_action_pointer.update()
         button_action_pointer.draw(screen)
-
 
 def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, button_status, card_database_filter, user, position = ''):
     """ Action after click on my hand part"""
@@ -788,16 +883,39 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
                     pass
         elif click_type == 'level up':
             located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.battle_screen_handaction_display_position)-1)]
-            if user.character_level_10_card == '':
-                user.character_level_10_card = located_card
-            elif user.character_level_20_card == '':
-                user.character_level_20_card = located_card
-            elif user.character_level_30_card == '':
-                user.character_level_30_card = located_card
+            if user.character_under_card_by_level['10'] == '':
+                user.character_under_card_by_level['10'] = located_card
+            elif user.character_under_card_by_level['20'] == '':
+                user.character_under_card_by_level['20'] = located_card
+            elif user.character_under_card_by_level['30'] == '':
+                user.character_under_card_by_level['30'] = located_card
+            elif user.character_under_card_by_level['40'] == '':
+                user.character_under_card_by_level['40'] = located_card
+            elif user.character_under_card_by_level['50'] == '':
+                user.character_under_card_by_level['50'] = located_card
+            elif user.character_under_card_by_level['60'] == '':
+                user.character_under_card_by_level['60'] = located_card
+            elif user.character_under_card_by_level['70'] == '':
+                user.character_under_card_by_level['70'] = located_card
+            elif user.character_under_card_by_level['80'] == '':
+                user.character_under_card_by_level['80'] = located_card
+            elif user.character_under_card_by_level['90'] == '':
+                user.character_under_card_by_level['90'] = located_card
+            elif user.character_under_card_by_level['100'] == '':
+                user.character_under_card_by_level['100'] = located_card
+            elif user.character_under_card_by_level['110'] == '':
+                user.character_under_card_by_level['110'] = located_card
+            elif user.character_under_card_by_level['120'] == '':
+                user.character_under_card_by_level['120'] = located_card
+            elif user.character_under_card_by_level['130'] == '':
+                user.character_under_card_by_level['130'] = located_card
+            elif user.character_under_card_by_level['140'] == '':
+                user.character_under_card_by_level['140'] = located_card
+            elif user.character_under_card_by_level['150'] == '':
+                user.character_under_card_by_level['150'] = located_card
             user.hand_list.remove(located_card)
             user.character_card.level = str(int(user.character_card.level) + 10)
             user.character_card.health = str(int(user.character_card.health) + 20)
-            screen_status.battle_screen_action_indicator = 'p2'
             button_status.battle_screen_handaction_display = False
             bt = ''
             for button in buttons:
@@ -806,20 +924,360 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
                     buttons.remove(bt)
 
 def battle_screen_instruction_bar_yes_action(screen,buttons, screen_status, button_status, card_database_filter, user):
-    """ actions when click on yes on instruction bar"""
+    """ change to different stages when click on yes on instruction bar
+    Stage List:
+    stage-0
+    stage-1
+    stage-1-pick-a-card-to-level-up
+    stage-2-character-action-1
+    stage-2-character-action-2
+    stage-2-character-action-3
+    stage-2-other-action-10
+    stage-2-other-action-20
+    stage-2-other-action-30
+    ...
+    stage-3-monster-1-action
+    stage-3-monster-2-action
+    stage-3-monster-3-action
+    ...
+    stage-4-end-turn
+    stage-4-wait-for-opponent
+    """
+
+
+
+
+
+    # Which stage to go when user at stage-0
     if screen_status.battle_screen_action_indicator == 'stage-0':
         screen_status.battle_screen_action_indicator = 'stage-1'
+
+    # Which stage to go when user at stage-1
     elif screen_status.battle_screen_action_indicator == 'stage-1':
+        # Prepare usable list for next stage/run once per player per turn
+        user.stage_2_other_card_usable_list = user.get_stage_2_other_card_usable_list()
         screen_status.battle_screen_action_indicator = 'stage-1-pick-a-card-to-level-up'
+
+    # Which stage to go when user at stage-1-pick-a-card-to-level-up
     elif screen_status.battle_screen_action_indicator == 'stage-1-pick-a-card-to-level-up':
         battle_screen_hand_click_action('level up',screen,buttons, screen_status, button_status, card_database_filter, user)
-        screen_status.battle_screen_action_indicator = 'stage-2-character-action-1'
+        # Prepare usable list for next stage/run once per player per turn
+        user.stage_2_other_card_usable_list = user.get_stage_2_other_card_usable_list()
+        if user.character_card.skill_1_lv <= user.character_card.level:
+            screen_status.battle_screen_action_indicator = 'stage-2-character-action-1'
+        elif len(user.stage_2_other_card_usable_list) >= 1:
+            for position, card in user.character_under_card_by_level.items():
+                if card == user.stage_2_other_card_usable_list[0]:
+                    screen_status.battle_screen_action_indicator = 'stage-2-other-action-' + position
+        else:
+            if user.monster_in_play_list == []:
+                screen_status.battle_screen_action_indicator = 'stage-4-end-turn'
+            else:
+                battle_screen_stage_3_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
+                screen_status.battle_screen_action_indicator = 'stage-3-monster-1-action'
+
+    # Which stage to go when user at stage-2-character-action-1
+    elif screen_status.battle_screen_action_indicator == 'stage-2-character-action-1':
+        battle_screen_stage_2_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
+        if user.character_card.skill_2_lv <= user.character_card.level:
+            screen_status.battle_screen_action_indicator = 'stage-2-character-action-2'
+        elif len(user.stage_2_other_card_usable_list) >= 1:
+            for position, card in user.character_under_card_by_level.items():
+                if card == user.stage_2_other_card_usable_list[0]:
+                    screen_status.battle_screen_action_indicator = 'stage-2-other-action-' + position
+        else:
+            if user.monster_in_play_list == []:
+                screen_status.battle_screen_action_indicator = 'stage-4-end-turn'
+            else:
+                battle_screen_stage_3_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
+                screen_status.battle_screen_action_indicator = 'stage-3-monster-1-action'
+
+    # Which stage to go when user at stage-2-character-action-2
+    elif screen_status.battle_screen_action_indicator == 'stage-2-character-action-2':
+        battle_screen_stage_2_action('2', screen,buttons, screen_status, button_status, card_database_filter, user)
+        if user.character_card.skill_3_lv <= user.character_card.level:
+            screen_status.battle_screen_action_indicator = 'stage-2-character-action-3'
+        elif len(user.stage_2_other_card_usable_list) >= 1:
+            for position, card in user.character_under_card_by_level.items():
+                if card == user.stage_2_other_card_usable_list[0]:
+                    screen_status.battle_screen_action_indicator = 'stage-2-other-action-' + position
+        else:
+            if user.monster_in_play_list == []:
+                screen_status.battle_screen_action_indicator = 'stage-4-end-turn'
+            else:
+                battle_screen_stage_3_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
+                screen_status.battle_screen_action_indicator = 'stage-3-monster-1-action'
+
+    # Which stage to go when user at stage-2-character-action-3
+    elif screen_status.battle_screen_action_indicator == 'stage-2-character-action-3':
+        battle_screen_stage_2_action('3', screen,buttons, screen_status, button_status, card_database_filter, user)
+        if len(user.stage_2_other_card_usable_list) >= 1:
+            for position, card in user.character_under_card_by_level.items():
+                if card == user.stage_2_other_card_usable_list[0]:
+                    screen_status.battle_screen_action_indicator = 'stage-2-other-action-' + position
+        else:
+            if user.monster_in_play_list == []:
+                screen_status.battle_screen_action_indicator = 'stage-4-end-turn'
+            else:
+                battle_screen_stage_3_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
+                screen_status.battle_screen_action_indicator = 'stage-3-monster-1-action'
+
+    # Which stage to go when user at stage-2-other-action-10
+    elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-10':
+        battle_screen_stage_2_action('10', screen,buttons, screen_status, button_status, card_database_filter, user)
+        del user.stage_2_other_card_usable_list[0]
+        if len(user.stage_2_other_card_usable_list) >= 1:
+            for position, card in user.character_under_card_by_level.items():
+                if card == user.stage_2_other_card_usable_list[0]:
+                    screen_status.battle_screen_action_indicator = 'stage-2-other-action-' + position
+        else:
+            if user.monster_in_play_list == []:
+                screen_status.battle_screen_action_indicator = 'stage-4-end-turn'
+            else:
+                battle_screen_stage_3_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
+                screen_status.battle_screen_action_indicator = 'stage-3-monster-1-action'
+
+    # Which stage to go when user at stage-2-other-action-20
+    elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-20':
+        battle_screen_stage_2_action('20', screen,buttons, screen_status, button_status, card_database_filter, user)
+        del user.stage_2_other_card_usable_list[0]
+        if len(user.stage_2_other_card_usable_list) >= 1:
+            for position, card in user.character_under_card_by_level.items():
+                if card == user.stage_2_other_card_usable_list[0]:
+                    screen_status.battle_screen_action_indicator = 'stage-2-other-action-' + position
+        else:
+            if user.monster_in_play_list == []:
+                screen_status.battle_screen_action_indicator = 'stage-4-end-turn'
+            else:
+                battle_screen_stage_3_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
+                screen_status.battle_screen_action_indicator = 'stage-3-monster-1-action'
+
+    # Which stage to go when user at stage-2-other-action-30
+    elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-30':
+        battle_screen_stage_2_action('30', screen,buttons, screen_status, button_status, card_database_filter, user)
+        del user.stage_2_other_card_usable_list[0]
+        if len(user.stage_2_other_card_usable_list) >= 1:
+            for position, card in user.character_under_card_by_level.items():
+                if card == user.stage_2_other_card_usable_list[0]:
+                    screen_status.battle_screen_action_indicator = 'stage-2-other-action-' + position
+        else:
+            if user.monster_in_play_list == []:
+                screen_status.battle_screen_action_indicator = 'stage-4-end-turn'
+            else:
+                battle_screen_stage_3_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
+                screen_status.battle_screen_action_indicator = 'stage-3-monster-1-action'
+
+    # Which stage to go when user at stage-2-other-action-40
+    elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-40':
+        battle_screen_stage_2_action('40', screen,buttons, screen_status, button_status, card_database_filter, user)
+        del user.stage_2_other_card_usable_list[0]
+        if len(user.stage_2_other_card_usable_list) >= 1:
+            for position, card in user.character_under_card_by_level.items():
+                if card == user.stage_2_other_card_usable_list[0]:
+                    screen_status.battle_screen_action_indicator = 'stage-2-other-action-' + position
+        else:
+            if user.monster_in_play_list == []:
+                screen_status.battle_screen_action_indicator = 'stage-4-end-turn'
+            else:
+                battle_screen_stage_3_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
+                screen_status.battle_screen_action_indicator = 'stage-3-monster-1-action'
+
+    # Which stage to go when user at stage-2-other-action-50
+    elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-50':
+        battle_screen_stage_2_action('50', screen,buttons, screen_status, button_status, card_database_filter, user)
+        del user.stage_2_other_card_usable_list[0]
+        if len(user.stage_2_other_card_usable_list) >= 1:
+            for position, card in user.character_under_card_by_level.items():
+                if card == user.stage_2_other_card_usable_list[0]:
+                    screen_status.battle_screen_action_indicator = 'stage-2-other-action-' + position
+        else:
+            if user.monster_in_play_list == []:
+                screen_status.battle_screen_action_indicator = 'stage-4-end-turn'
+            else:
+                battle_screen_stage_3_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
+                screen_status.battle_screen_action_indicator = 'stage-3-monster-1-action'
+
+    # Which stage to go when user at stage-2-other-action-60
+    elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-60':
+        battle_screen_stage_2_action('60', screen,buttons, screen_status, button_status, card_database_filter, user)
+        del user.stage_2_other_card_usable_list[0]
+        if len(user.stage_2_other_card_usable_list) >= 1:
+            for position, card in user.character_under_card_by_level.items():
+                if card == user.stage_2_other_card_usable_list[0]:
+                    screen_status.battle_screen_action_indicator = 'stage-2-other-action-' + position
+        else:
+            if user.monster_in_play_list == []:
+                screen_status.battle_screen_action_indicator = 'stage-4-end-turn'
+            else:
+                battle_screen_stage_3_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
+                screen_status.battle_screen_action_indicator = 'stage-3-monster-1-action'
+
+    # Which stage to go when user at stage-2-other-action-70
+    elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-70':
+        battle_screen_stage_2_action('70', screen,buttons, screen_status, button_status, card_database_filter, user)
+        del user.stage_2_other_card_usable_list[0]
+        if len(user.stage_2_other_card_usable_list) >= 1:
+            for position, card in user.character_under_card_by_level.items():
+                if card == user.stage_2_other_card_usable_list[0]:
+                    screen_status.battle_screen_action_indicator = 'stage-2-other-action-' + position
+        else:
+            if user.monster_in_play_list == []:
+                screen_status.battle_screen_action_indicator = 'stage-4-end-turn'
+            else:
+                battle_screen_stage_3_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
+                screen_status.battle_screen_action_indicator = 'stage-3-monster-1-action'
+
+    # Which stage to go when user at stage-2-other-action-80
+    elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-80':
+        battle_screen_stage_2_action('80', screen,buttons, screen_status, button_status, card_database_filter, user)
+        del user.stage_2_other_card_usable_list[0]
+        if len(user.stage_2_other_card_usable_list) >= 1:
+            for position, card in user.character_under_card_by_level.items():
+                if card == user.stage_2_other_card_usable_list[0]:
+                    screen_status.battle_screen_action_indicator = 'stage-2-other-action-' + position
+        else:
+            if user.monster_in_play_list == []:
+                screen_status.battle_screen_action_indicator = 'stage-4-end-turn'
+            else:
+                battle_screen_stage_3_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
+                screen_status.battle_screen_action_indicator = 'stage-3-monster-1-action'
+
+    # Which stage to go when user at stage-2-other-action-90
+    elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-90':
+        battle_screen_stage_2_action('90', screen,buttons, screen_status, button_status, card_database_filter, user)
+        del user.stage_2_other_card_usable_list[0]
+        if len(user.stage_2_other_card_usable_list) >= 1:
+            for position, card in user.character_under_card_by_level.items():
+                if card == user.stage_2_other_card_usable_list[0]:
+                    screen_status.battle_screen_action_indicator = 'stage-2-other-action-' + position
+        else:
+            if user.monster_in_play_list == []:
+                screen_status.battle_screen_action_indicator = 'stage-4-end-turn'
+            else:
+                battle_screen_stage_3_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
+                screen_status.battle_screen_action_indicator = 'stage-3-monster-1-action'
+
+    # Which stage to go when user at stage-2-other-action-100
+    elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-100':
+        battle_screen_stage_2_action('100', screen,buttons, screen_status, button_status, card_database_filter, user)
+        del user.stage_2_other_card_usable_list[0]
+        if len(user.stage_2_other_card_usable_list) >= 1:
+            for position, card in user.character_under_card_by_level.items():
+                if card == user.stage_2_other_card_usable_list[0]:
+                    screen_status.battle_screen_action_indicator = 'stage-2-other-action-' + position
+        else:
+            if user.monster_in_play_list == []:
+                screen_status.battle_screen_action_indicator = 'stage-4-end-turn'
+            else:
+                battle_screen_stage_3_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
+                screen_status.battle_screen_action_indicator = 'stage-3-monster-1-action'
+
+    # Which stage to go when user at stage-2-other-action-110
+    elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-110':
+        battle_screen_stage_2_action('110', screen,buttons, screen_status, button_status, card_database_filter, user)
+        del user.stage_2_other_card_usable_list[0]
+        if len(user.stage_2_other_card_usable_list) >= 1:
+            for position, card in user.character_under_card_by_level.items():
+                if card == user.stage_2_other_card_usable_list[0]:
+                    screen_status.battle_screen_action_indicator = 'stage-2-other-action-' + position
+        else:
+            if user.monster_in_play_list == []:
+                screen_status.battle_screen_action_indicator = 'stage-4-end-turn'
+            else:
+                battle_screen_stage_3_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
+                screen_status.battle_screen_action_indicator = 'stage-3-monster-1-action'
+
+    # Which stage to go when user at stage-2-other-action-120
+    elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-120':
+        battle_screen_stage_2_action('120', screen,buttons, screen_status, button_status, card_database_filter, user)
+        del user.stage_2_other_card_usable_list[0]
+        if len(user.stage_2_other_card_usable_list) >= 1:
+            for position, card in user.character_under_card_by_level.items():
+                if card == user.stage_2_other_card_usable_list[0]:
+                    screen_status.battle_screen_action_indicator = 'stage-2-other-action-' + position
+        else:
+            if user.monster_in_play_list == []:
+                screen_status.battle_screen_action_indicator = 'stage-4-end-turn'
+            else:
+                battle_screen_stage_3_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
+                screen_status.battle_screen_action_indicator = 'stage-3-monster-1-action'
+
+    # Which stage to go when user at stage-2-other-action-130
+    elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-130':
+        battle_screen_stage_2_action('130', screen,buttons, screen_status, button_status, card_database_filter, user)
+        del user.stage_2_other_card_usable_list[0]
+        if len(user.stage_2_other_card_usable_list) >= 1:
+            for position, card in user.character_under_card_by_level.items():
+                if card == user.stage_2_other_card_usable_list[0]:
+                    screen_status.battle_screen_action_indicator = 'stage-2-other-action-' + position
+        else:
+            if user.monster_in_play_list == []:
+                screen_status.battle_screen_action_indicator = 'stage-4-end-turn'
+            else:
+                battle_screen_stage_3_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
+                screen_status.battle_screen_action_indicator = 'stage-3-monster-1-action'
+
+    # Which stage to go when user at stage-2-other-action-140
+    elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-140':
+        battle_screen_stage_2_action('140', screen,buttons, screen_status, button_status, card_database_filter, user)
+        del user.stage_2_other_card_usable_list[0]
+        if len(user.stage_2_other_card_usable_list) >= 1:
+            for position, card in user.character_under_card_by_level.items():
+                if card == user.stage_2_other_card_usable_list[0]:
+                    screen_status.battle_screen_action_indicator = 'stage-2-other-action-' + position
+        else:
+            if user.monster_in_play_list == []:
+                screen_status.battle_screen_action_indicator = 'stage-4-end-turn'
+            else:
+                battle_screen_stage_3_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
+                screen_status.battle_screen_action_indicator = 'stage-3-monster-1-action'
+
+    # Which stage to go when user at stage-2-other-action-150
+    elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-150':
+        battle_screen_stage_2_action('150', screen,buttons, screen_status, button_status, card_database_filter, user)
+        del user.stage_2_other_card_usable_list[0]
+        if len(user.stage_2_other_card_usable_list) >= 1:
+            for position, card in user.character_under_card_by_level.items():
+                if card == user.stage_2_other_card_usable_list[0]:
+                    screen_status.battle_screen_action_indicator = 'stage-2-other-action-' + position
+        else:
+            if user.monster_in_play_list == []:
+                screen_status.battle_screen_action_indicator = 'stage-4-end-turn'
+            else:
+                battle_screen_stage_3_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
+                screen_status.battle_screen_action_indicator = 'stage-3-monster-1-action'
+
+
+
+    # Which stage to go when user at stage-4-end-turn
+    elif screen_status.battle_screen_action_indicator == 'stage-4-end-turn':
+        screen_status.battle_screen_action_indicator = 'stage-4-wait-for-opponent'
+    # Which stage to go when user at stage-4-wait-for-opponent
+    elif screen_status.battle_screen_action_indicator == 'stage-4-wait-for-opponent':
+        screen_status.battle_screen_action_indicator = 'stage-1'
+
+
+
+
+    print(screen_status.battle_screen_action_indicator)
+
+
 
 
 
 def battle_screen_instruction_bar_skip_action(screen,buttons, screen_status, button_status, card_database_filter, user):
     """ actions when click on skip on instruction bar"""
     print('skip')
+
+def battle_screen_stage_2_action(position, screen,buttons, screen_status, button_status, card_database_filter, user):
+    """ Input position of the action, output action according to the type on specific card"""
+
+    if int(position) <= 3:
+        attribute_name = 'skill_' + position + '_type'
+        print(getattr(user.character_card, attribute_name))
+    else:
+        print(user.character_under_card_by_level[position].lv_type)
+
 
 
 

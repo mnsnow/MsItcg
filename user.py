@@ -1,6 +1,7 @@
 import sys
 import pygame
 from card_database import *
+from card import Monster, Character
 
 class User():
     """Contains informations of user's customatic informations"""
@@ -15,39 +16,66 @@ class User():
     card_01_70, card_01_71, card_01_76, card_01_77,
     card_01_81, card_01_86, card_01_87,
     card_01_90, card_01_93, card_01_95, card_01_96,
-    ], character_card = card_01_16, hand_list = [],
-    character_level_10_card = '',
-    character_level_20_card = '',
-    character_level_30_card = '',
-    character_level_40_card = '',
-    character_level_50_card = '',
-    character_level_60_card = '',
-    character_level_70_card = '',
-    character_level_80_card = '',
-    character_level_90_card = '',
-    character_level_100_card = '',
-    character_level_110_card = '',
-    character_level_120_card = '',
-    character_level_130_card = '',
-    character_level_140_card = '',
-    character_level_150_card = '',
-    ):
+    ], character_card = card_01_16, hand_list = [], monster_in_play_list = []):
 
         self.deck_list = deck_list
         self.character_card = character_card
         self.hand_list = hand_list
-        self.character_level_10_card = character_level_10_card
-        self.character_level_20_card = character_level_20_card
-        self.character_level_30_card = character_level_30_card
-        self.character_level_40_card = character_level_40_card
-        self.character_level_50_card = character_level_50_card
-        self.character_level_60_card = character_level_60_card
-        self.character_level_70_card = character_level_70_card
-        self.character_level_80_card = character_level_80_card
-        self.character_level_90_card = character_level_90_card
-        self.character_level_100_card = character_level_100_card
-        self.character_level_110_card = character_level_110_card
-        self.character_level_120_card = character_level_120_card
-        self.character_level_130_card = character_level_130_card
-        self.character_level_140_card = character_level_140_card
-        self.character_level_150_card = character_level_150_card
+        self.monster_in_play_list = monster_in_play_list
+        self.character_under_card_by_level = {
+            '10' : '',
+            '20' : '',
+            '30' : '',
+            '40' : '',
+            '50' : '',
+            '60' : '',
+            '70' : '',
+            '80' : '',
+            '90' : '',
+            '100' : '',
+            '110' : '',
+            '120' : '',
+            '130' : '',
+            '140' : '',
+            '150' : '',
+        }
+        self.stage_2_other_card_usable_list = []
+
+
+    def get_stage_2_other_card_usable_list(self):
+        """ Get list available at stage-2-other-actions at a given player level"""
+        stage_2_other_card_complete_list = [
+            self.character_under_card_by_level['10'],
+            self.character_under_card_by_level['20'],
+            self.character_under_card_by_level['30'],
+            self.character_under_card_by_level['40'],
+            self.character_under_card_by_level['50'],
+            self.character_under_card_by_level['60'],
+            self.character_under_card_by_level['70'],
+            self.character_under_card_by_level['80'],
+            self.character_under_card_by_level['90'],
+            self.character_under_card_by_level['100'],
+            self.character_under_card_by_level['110'],
+            self.character_under_card_by_level['120'],
+            self.character_under_card_by_level['130'],
+            self.character_under_card_by_level['140'],
+            self.character_under_card_by_level['150'],
+        ]
+
+        stage_2_other_card_usable_list = []
+
+        for card in stage_2_other_card_complete_list:
+            if card != '':
+                if card.lv_active_level <= self.character_card.level:
+                    stage_2_other_card_usable_list.append(card)
+
+        return stage_2_other_card_usable_list
+
+
+
+
+
+
+
+
+#---
