@@ -58,6 +58,30 @@ class Monster():
         self.top_rect = self.top_image.get_rect()
 
 
+class Tactic():
+
+    def __init__(self, set_number, card_number, card_type, job, level,
+    lv_type, lv_active_level, special_effect,ai_settings = Settings(), duplicate = 1):
+
+        self.set_number = set_number
+        self.card_number = card_number
+        self.card_type = card_type
+        self.job = job
+        self.level = level
+        self.lv_type = lv_type
+        self.lv_active_level = lv_active_level
+        self.special_effect = special_effect
+        self.duplicate = duplicate
+
+
+        self.image = self.image_raw = pygame.image.load('static/images/tactic/' + self.set_number + '_' + self.card_number + '.jpg')
+        self.image = pygame.transform.scale(self.image_raw,(ai_settings.card_size_x, ai_settings.card_size_y))
+        self.rect = self.image.get_rect()
+
+        self.bottom_image = self.image_raw = pygame.image.load('static/images/tactic/tactic_bottom/' + self.set_number + '_' + self.card_number + '.jpg')
+        self.bottom_image = pygame.transform.scale(self.image_raw,(ai_settings.card_bottom_size_x, ai_settings.card_bottom_size_y))
+        self.bottom_rect = self.bottom_image.get_rect()
+
 
 
 
