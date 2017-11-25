@@ -42,7 +42,7 @@ card_01_28 = Tactic(set_number='01',card_number='28',card_type='tactic',job='mag
 lv_type='Spawn/Think Fast 70',lv_active_level='60',special_effect='Dmg 80')
 
 card_01_31 = Monster(set_number='01',card_number='31',card_type='monster',job='magician',level='21',
-attack='30',health='30',lv_type='Spawn-30',lv_active_level='30',special_effect='')
+attack='30',health='30',lv_type='Spawn 30',lv_active_level='30',special_effect='')
 
 card_01_34 = Monster(set_number='01',card_number='34',card_type='monster',job='magician',level='73',
 attack='60',health='90',lv_type='lalalala',lv_active_level='0',special_effect='')
@@ -128,7 +128,7 @@ card_02_01 = Monster(set_number='02',card_number='01',card_type='monster',job='b
 attack='30',health='20',lv_type='snare',lv_active_level='40',special_effect='')
 
 card_02_02 = Monster(set_number='02',card_number='02',card_type='monster',job='bowman',level='20',
-attack='20',health='20',lv_type='spawn-30',lv_active_level='30',special_effect='')
+attack='20',health='20',lv_type='spawn 30',lv_active_level='30',special_effect='')
 
 card_02_03 = Monster(set_number='02',card_number='03',card_type='monster',job='bowman',level='30',
 attack='30',health='10',lv_type='lalalala',lv_active_level='20',special_effect='')
@@ -155,10 +155,10 @@ card_02_24 = Tactic(set_number='02',card_number='24',card_type='tactic',job='mag
 lv_type='Spawn/Think Fast 50',lv_active_level='50',special_effect='Dmg 50/Quest')
 
 card_02_25 = Monster(set_number='02',card_number='25',card_type='monster',job='magician',level='19',
-attack='10',health='40',lv_type='spawn-140',lv_active_level='90',special_effect='')
+attack='10',health='40',lv_type='spawn 140',lv_active_level='90',special_effect='')
 
 card_02_29 = Monster(set_number='02',card_number='29',card_type='monster',job='magician',level='12',
-attack='20',health='20',lv_type='think fast-90',lv_active_level='70',special_effect='')
+attack='20',health='20',lv_type='think fast 90',lv_active_level='70',special_effect='')
 
 card_02_33 = Monster(set_number='02',card_number='33',card_type='monster',job='thief',level='66',
 attack='50',health='40',lv_type='lalalala',lv_active_level='0',special_effect='')
@@ -170,7 +170,7 @@ card_02_46 = Character(set_number='02',card_number='46',card_type='character',jo
 health='220',skill_1_lv = '10', skill_1_type = '',skill_2_lv = '20', skill_2_type = '',skill_3_lv = '50', skill_3_type = '')
 
 card_02_47 = Monster(set_number='02',card_number='47',card_type='monster',job='warrior',level='12',
-attack='10',health='30',lv_type='spawn-60',lv_active_level='50',special_effect='')
+attack='10',health='30',lv_type='spawn 60',lv_active_level='50',special_effect='')
 
 card_02_48 = Monster(set_number='02',card_number='48',card_type='monster',job='warrior',level='82',
 attack='50',health='70',lv_type='lalalala',lv_active_level='70',special_effect='')

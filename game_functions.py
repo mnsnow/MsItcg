@@ -211,10 +211,10 @@ def check_events_battle_screen(ai_settings, screen, buttons,screen_status, butto
                             screen_status.battle_screen_display = False
                         elif button.text == '>':
                             screen_status.battle_screen_my_hand_page_id += 1
-                            button_status.battle_screen_handaction_display = False # Turn off display of buttons when change page
+                            button_status.battle_screen_my_hand_indicator_display = False # Turn off display of buttons when change page
                         elif button.text == '<':
                             screen_status.battle_screen_my_hand_page_id -= 1
-                            button_status.battle_screen_handaction_display = False
+                            button_status.battle_screen_my_hand_indicator_display = False
                         elif button.text == 'level up':
                             battle_screen_hand_click_action('level up',screen,buttons, screen_status, button_status, card_database_filter, user)
                         elif button.text == 'Yes':
@@ -668,21 +668,79 @@ def battle_screen_instruction_bar_display(screen,buttons, screen_status, button_
 
 
     # instruction bar draw
-    button_instruction_bar = Button(button_status.battle_screen_instruction_bar_text,'', (0,0,0),200, 550, 640, 30)
-    button_instruction_bar.update()
-    button_instruction_bar.draw(screen)
-    #
-    button_yes = Button('Yes','', (43,93,67),920, 554, 60, 22)
-    button_yes.update()
-    button_yes.draw(screen)
-    #
-    button_skip = Button('Skip','', (200,70,70),840, 554, 60, 22)
-    button_skip.update()
-    button_skip.draw(screen)
+    button_instruction_bar = Button(button_status.battle_screen_instruction_bar_text,'battle_screen_instruction_bar_text', (0,0,0),200, 550, 640, 30)
 
-    if button_status.battle_screen_instruction_bar_button_backend:
-        buttons.extend((button_instruction_bar, button_yes, button_skip))
-        button_status.battle_screen_instruction_bar_button_backend = False
+    if 1: # Display
+        button_instruction_bar.update()
+        button_instruction_bar.draw(screen)
+    if 0:# Backend
+        x = 0
+        for button in buttons:
+            if button_instruction_bar.group == button.group:
+                x = 1
+                break
+            else:
+                pass
+        if x == 0:
+            buttons.append(button_instruction_bar)
+        else:
+            pass
+
+    # yes button
+    button_yes = Button('Yes','battle_screen_instruction_bar_yes', (43,93,67),920, 554, 60, 22)
+
+    if button_status.battle_screen_instruction_bar_yes_display == True: # Display
+        button_yes.update()
+        button_yes.draw(screen)
+    if button_status.battle_screen_instruction_bar_yes_backend == True: # Backend
+        x = 0
+        for button in buttons:
+            if button_yes.group == button.group:
+                x = 1
+                break
+            else:
+                pass
+        if x == 0:
+            buttons.append(button_yes)
+        else:
+            pass
+    elif button_status.battle_screen_instruction_bar_yes_backend == False:
+        bt = ''
+        for button in buttons:
+            if button.group == button_yes.group:
+                bt = button
+        if bt == '':
+            pass
+        else:
+            buttons.remove(bt)
+
+    # Skip button
+    button_skip = Button('Skip','', (200,70,70),840, 554, 60, 22)
+
+    if button_status.battle_screen_instruction_bar_skip_display == True: # Display
+        button_skip.update()
+        button_skip.draw(screen)
+    if button_status.battle_screen_instruction_bar_skip_backend == True: # Backend
+        x = 0
+        for button in buttons:
+            if button_skip.group == button.group:
+                x = 1
+                break
+            else:
+                pass
+        if x == 0:
+            buttons.append(button_skip)
+        else:
+            pass
+    elif button_status.battle_screen_instruction_bar_skip_backend == False:
+        bt = ''
+        for button in buttons:
+            if button.group == button_skip.group:
+                bt = button
+        if bt == '':
+            pass
+        else:
+            buttons.remove(bt)
 
 
 def battle_screen_stable_button_display(screen, buttons,screen_status, button_status):
@@ -761,19 +819,12 @@ def battle_screen_my_hand_button_display(screen,buttons, screen_status, button_s
             button_status.battle_screen_my_hand_page_change_button_backend = False
     if (screen_status.battle_screen_action_indicator == 'stage-1-pick-a-card-to-level-up'
         or screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-spawn'):
-        if button_status.battle_screen_handaction_display == True:
-            located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.battle_screen_handaction_display_position)-1)]
+        if button_status.battle_screen_my_hand_indicator_display == True:
+            located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.battle_screen_my_hand_indicator_position)-1)]
             button_level_up = Button('****','battle_screen_handaction_****', (70,70,150),located_card.rect.x+10, located_card.rect.y - 27, 115, 27)
             button_level_up.update()
             button_level_up.draw(screen)
-            if button_status.battle_screen_handaction_backend:
-                bt = ''
-                for button in buttons:
-                    if button.group == 'battle_screen_handaction_****':
-                        bt = button
-                        buttons.remove(bt)
-                buttons.append(button_level_up)
-                button_status.battle_screen_handaction_backend = False
+
 
 def battle_screen_character_1_card_display(screen,buttons, screen_status, button_status, card_database_filter, user):
     """ Display character 1 card layout"""
@@ -882,24 +933,39 @@ def battle_screen_battleground_card_display(screen,buttons, screen_status, butto
 
 
 
-
 def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, button_status, card_database_filter, user, position = ''):
     """ Action after click on my hand part"""
     if click_type == 'card':
-        if (screen_status.battle_screen_action_indicator == 'stage-1-pick-a-card-to-level-up'
-            or screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-spawn'):
+        if screen_status.battle_screen_action_indicator == 'stage-1-pick-a-card-to-level-up':
             if len(user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1):7 * screen_status.battle_screen_my_hand_page_id]) >= int(position):
-                button_status.battle_screen_handaction_display_position = position
-                button_status.battle_screen_handaction_display = True
-                button_status.battle_screen_handaction_backend = True
+                button_status.battle_screen_my_hand_indicator_position = position
+                button_status.battle_screen_my_hand_indicator_display = True
+                button_status.battle_screen_instruction_bar_yes_display = True
+                button_status.battle_screen_instruction_bar_yes_backend = True
+
             else:
                 pass
+        elif screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-spawn':
+
+                if len(user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1):7 * screen_status.battle_screen_my_hand_page_id]) >= int(position):
+                    button_status.battle_screen_my_hand_indicator_position = position
+                    button_status.battle_screen_my_hand_indicator_display = True
+                    located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.battle_screen_my_hand_indicator_position)-1)]
+                    if located_card.card_type == 'monster' and int(located_card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Pick a monster lv','').replace(' or less and click yes to play.','')):
+                        button_status.battle_screen_instruction_bar_yes_display = True
+                        button_status.battle_screen_instruction_bar_yes_backend = True
+                    else:
+                        button_status.battle_screen_instruction_bar_yes_display = False
+                        button_status.battle_screen_instruction_bar_yes_backend = False
+                else:
+                    pass
+
     elif click_type == 'level up':
         # Make sure if using auto level up by clicking yes, the global position variable is set to one.
-        if len(user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1):7 * screen_status.battle_screen_my_hand_page_id]) < int(int(button_status.battle_screen_handaction_display_position)):
-            button_status.battle_screen_handaction_display_position = '1'
+        if len(user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1):7 * screen_status.battle_screen_my_hand_page_id]) < int(button_status.battle_screen_my_hand_indicator_position):
+            button_status.battle_screen_my_hand_indicator_position = '1'
         #
-        located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.battle_screen_handaction_display_position)-1)]
+        located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.battle_screen_my_hand_indicator_position)-1)]
         for i in range(1,16):
             if user.character_under_card_by_level[str(i*10)] == '':
                 user.character_under_card_by_level[str(i*10)] = located_card
@@ -907,7 +973,7 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
         user.hand_list.remove(located_card)
         user.character_card.level = str(int(user.character_card.level) + 10)
         user.character_card.health = str(int(user.character_card.health) + 20)
-        button_status.battle_screen_handaction_display = False
+        button_status.battle_screen_my_hand_indicator_display = False
         bt = ''
         for button in buttons:
             if button.group == 'battle_screen_handaction_****':
@@ -915,21 +981,20 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
                 buttons.remove(bt)
     elif click_type == 'spawn':
         # Make sure if using auto level up by clicking yes, the global position variable is set to one.
-        if len(user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1):7 * screen_status.battle_screen_my_hand_page_id]) < int(int(button_status.battle_screen_handaction_display_position)):
-            button_status.battle_screen_handaction_display_position = '1'
+        if len(user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1):7 * screen_status.battle_screen_my_hand_page_id]) < int(button_status.battle_screen_my_hand_indicator_position):
+            button_status.battle_screen_my_hand_indicator_position = '1'
         #
-        located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.battle_screen_handaction_display_position)-1)]
+        located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.battle_screen_my_hand_indicator_position)-1)]
+        # Check if this card satisfied spawn requirement
+
         for i in range(1,7):
             if user.monster_in_play_dict[str(i)] == '':
                 user.monster_in_play_dict[str(i)] = located_card
                 break
         user.hand_list.remove(located_card)
-        button_status.battle_screen_handaction_display = False # hand buttons on card eg:****
-        bt = ''
-        for button in buttons:
-            if button.group == 'battle_screen_handaction_****':
-                bt = button
-                buttons.remove(bt)
+        button_status.battle_screen_my_hand_indicator_display = False # hand buttons on card eg:****
+        button_status.battle_screen_instruction_bar_yes_display = True
+        button_status.battle_screen_instruction_bar_yes_backend = True
 
 def battle_screen_instruction_bar_yes_action(screen,buttons, screen_status, button_status, card_database_filter, user,action):
     """ change to different stages when click on yes on instruction bar
@@ -967,6 +1032,9 @@ def battle_screen_instruction_bar_yes_action(screen,buttons, screen_status, butt
         # Prepare usable list for next stage/run once per player per turn
         user.stage_2_other_card_usable_list = user.get_stage_2_other_card_usable_list()
         screen_status.battle_screen_action_indicator = 'stage-1-pick-a-card-to-level-up'
+        button_status.battle_screen_instruction_bar_yes_display = False
+        button_status.battle_screen_instruction_bar_yes_backend = False
+
 
     # Which stage to go when user at stage-1-pick-a-card-to-level-up
     elif screen_status.battle_screen_action_indicator == 'stage-1-pick-a-card-to-level-up':
@@ -1056,10 +1124,11 @@ def battle_screen_instruction_bar_yes_action(screen,buttons, screen_status, butt
         else:
             pass
 
-
+    # Which stage to go when user at stage-2-action-detail-
     elif 'stage-2-action-detail-1-' in screen_status.battle_screen_action_indicator:
         if screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-spawn':
             battle_screen_hand_click_action('spawn',screen,buttons, screen_status, button_status, card_database_filter, user)
+
             screen_status.battle_screen_action_indicator = 'stage-4-end-turn'
 
 
