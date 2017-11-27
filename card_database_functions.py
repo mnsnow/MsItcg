@@ -3,6 +3,24 @@ import pygame
 from card import Character, Monster
 from card_database import *
 
+# Card in database that playable in current version of the game:
+card_list_playable = [
+    # Set 1
+
+    # Set 2
+
+    # Set 3
+
+    # Set 4
+
+    # Set 5
+
+
+]
+
+
+
+# All cards that in card_database
 card_list = [
     # Set 1
     card_01_01, card_01_05, card_01_06, card_01_08,
@@ -63,7 +81,7 @@ class Card_database_filter():
 
 
 
-def request_card_list(card_database_filter, input_list = card_list):
+def request_card_list(card_database_filter, input_list = card_list_playable): #Input list is the cards available in the game
     """Return cards that user request"""
     req_list = []
 

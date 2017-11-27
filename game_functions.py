@@ -1026,6 +1026,9 @@ def battle_screen_instruction_bar_yes_action(screen,buttons, screen_status, butt
     # Which stage to go when user at stage-0
     if screen_status.battle_screen_action_indicator == 'stage-0':
         screen_status.battle_screen_action_indicator = 'stage-1'
+        button_status.battle_screen_instruction_bar_skip_display = True
+        button_status.battle_screen_instruction_bar_skip_backend = True
+
 
     # Which stage to go when user at stage-1
     elif screen_status.battle_screen_action_indicator == 'stage-1':
@@ -1146,7 +1149,43 @@ def battle_screen_instruction_bar_yes_action(screen,buttons, screen_status, butt
 
 def battle_screen_instruction_bar_skip_action(screen,buttons, screen_status, button_status, card_database_filter, user):
     """ actions when click on skip on instruction bar"""
-    print('skip')
+    if screen_status.battle_screen_action_indicator == 'stage-0':
+        pass
+    # Which stage to go when user at stage-1
+    elif screen_status.battle_screen_action_indicator == 'stage-1':
+        user.stage_2_other_card_usable_list = user.get_stage_2_other_card_usable_list()
+        if int(user.character_card.skill_1_lv) <= int(user.character_card.level):
+            screen_status.battle_screen_action_indicator = 'stage-2-character-action-1'
+        elif len(user.stage_2_other_card_usable_list) >= 1:
+            for position, card in user.character_under_card_by_level.items():
+                if card == user.stage_2_other_card_usable_list[0]:
+                    screen_status.battle_screen_action_indicator = 'stage-2-other-action-' + position
+        else:
+            if (user.monster_in_play_dict['1'] == ''
+            and user.monster_in_play_dict['2'] == ''
+            and user.monster_in_play_dict['3'] == ''
+            and user.monster_in_play_dict['4'] == ''
+            and user.monster_in_play_dict['5'] == ''
+            and user.monster_in_play_dict['6'] == ''):
+                screen_status.battle_screen_action_indicator = 'stage-4-end-turn'
+            else:
+                battle_screen_stage_3_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
+                screen_status.battle_screen_action_indicator = 'stage-3-monster-1-action'
+
+    # Which stage to go when user at stage-2-character-action-1,2,3
+    elif 'stage-2-character-action-' in screen_status.battle_screen_action_indicator:
+        pass
+
+
+
+
+
+
+
+
+
+
+
 
 def battle_screen_stage_2_action(position, screen,buttons, screen_status, button_status, card_database_filter, user,action):
     """ Input position of the action, output action according to the type on specific card"""
@@ -1156,7 +1195,8 @@ def battle_screen_stage_2_action(position, screen,buttons, screen_status, button
         print(getattr(user.character_card, attribute_name))
     else:
         if 'Spawn' in user.character_under_card_by_level[position].lv_type:
-            action.stage_2_spawn(user.character_under_card_by_level[position].lv_active_level, screen,buttons, screen_status, button_status, card_database_filter, user)
+            x = user.character_under_card_by_level[position].lv_type.replace('Spawn ','')
+            action.stage_2_spawn(x, screen,buttons, screen_status, button_status, card_database_filter, user)
         else:
             print(user.character_under_card_by_level[position].lv_type)
 

@@ -18,12 +18,12 @@ class Action():
 
 
 
-    def stage_2_spawn(self, action_active_level, screen, buttons, screen_status, button_status, card_database_filter, user):
+    def stage_2_spawn(self, spawn_level, screen, buttons, screen_status, button_status, card_database_filter, user):
         """ input spawn number, output spawn action"""
         screen_status.battle_screen_action_indicator = 'stage-2-action-detail-1-spawn'
         button_status.battle_screen_instruction_bar_yes_display = False
         button_status.battle_screen_instruction_bar_yes_backend = False
-        button_status.battle_screen_instruction_bar_text = 'Pick a monster lv' + action_active_level + ' or less and click yes to play.'
+        button_status.battle_screen_instruction_bar_text = 'Pick a monster lv' + spawn_level + ' or less and click yes to play.'
 
 
 
