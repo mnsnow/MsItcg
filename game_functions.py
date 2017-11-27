@@ -6,7 +6,7 @@ from settings import Settings
 from button import Button
 from display import Screen_status, Button_status
 from grid import Grid
-import card_database_functions as cdf
+import card_database_filter as cdf
 from action import Action
 from builtins import any
 
@@ -204,7 +204,6 @@ def check_events_battle_screen(ai_settings, screen, buttons,screen_status, butto
             elif rect_union(buttons).collidepoint(pygame.mouse.get_pos()):
                 for button in buttons:
                     if button.rect.collidepoint(pygame.mouse.get_pos()):
-
                         if button.text == 'Back':
                             screen_status.welcome_screen_display = False
                             screen_status.build_deck_screen_display = True
@@ -715,7 +714,7 @@ def battle_screen_instruction_bar_display(screen,buttons, screen_status, button_
             buttons.remove(bt)
 
     # Skip button
-    button_skip = Button('Skip','', (200,70,70),840, 554, 60, 22)
+    button_skip = Button('Skip','battle_screen_instruction_bar_skip', (200,70,70),840, 554, 60, 22)
 
     if button_status.battle_screen_instruction_bar_skip_display == True: # Display
         button_skip.update()
@@ -919,6 +918,7 @@ def battle_screen_character_1_button_display(screen,buttons, screen_status, butt
 
 def battle_screen_battleground_card_display(screen,buttons, screen_status, button_status, card_database_filter, user):
     """ Display cards on battleground """
+    # Monsters
     for i in range(1,4):
         if user.monster_in_play_dict[str(i)] != '':
             user.monster_in_play_dict[str(i)].top_rect.x = 650
@@ -929,6 +929,17 @@ def battle_screen_battleground_card_display(screen,buttons, screen_status, butto
             user.monster_in_play_dict[str(i)].top_rect.x = 825
             user.monster_in_play_dict[str(i)].top_rect.y = 200 + 120*(i-4)
             screen.blit(user.monster_in_play_dict[str(i)].top_image, user.monster_in_play_dict[str(i)].top_rect)
+    # Items
+    for i in range(1,4):
+        if user.item_in_play_dict[str(i)] != '':
+            user.item_in_play_dict[str(i)].top_rect.x = 620 + 50*(i-1)
+            user.item_in_play_dict[str(i)].top_rect.y = 40
+            screen.blit(user.item_in_play_dict[str(i)].top_image, user.item_in_play_dict[str(i)].top_rect)
+    for i in range(4,7):
+        if user.item_in_play_dict[str(i)] != '':
+            user.item_in_play_dict[str(i)].top_rect.x = 620 + 50*(i-1)
+            user.item_in_play_dict[str(i)].top_rect.y = 150
+            screen.blit(user.item_in_play_dict[str(i)].top_image, user.item_in_play_dict[str(i)].top_rect)
 
 
 
@@ -952,6 +963,34 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
                     button_status.battle_screen_my_hand_indicator_display = True
                     located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.battle_screen_my_hand_indicator_position)-1)]
                     if located_card.card_type == 'monster' and int(located_card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Pick a monster lv','').replace(' or less and click yes to play.','')):
+                        button_status.battle_screen_instruction_bar_yes_display = True
+                        button_status.battle_screen_instruction_bar_yes_backend = True
+                    else:
+                        button_status.battle_screen_instruction_bar_yes_display = False
+                        button_status.battle_screen_instruction_bar_yes_backend = False
+                else:
+                    pass
+        elif screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-think-fast':
+
+                if len(user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1):7 * screen_status.battle_screen_my_hand_page_id]) >= int(position):
+                    button_status.battle_screen_my_hand_indicator_position = position
+                    button_status.battle_screen_my_hand_indicator_display = True
+                    located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.battle_screen_my_hand_indicator_position)-1)]
+                    if located_card.card_type == 'tactic' and int(located_card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Pick a tactic lv','').replace(' or less and click yes to play.','')):
+                        button_status.battle_screen_instruction_bar_yes_display = True
+                        button_status.battle_screen_instruction_bar_yes_backend = True
+                    else:
+                        button_status.battle_screen_instruction_bar_yes_display = False
+                        button_status.battle_screen_instruction_bar_yes_backend = False
+                else:
+                    pass
+        elif screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-equip':
+
+                if len(user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1):7 * screen_status.battle_screen_my_hand_page_id]) >= int(position):
+                    button_status.battle_screen_my_hand_indicator_position = position
+                    button_status.battle_screen_my_hand_indicator_display = True
+                    located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.battle_screen_my_hand_indicator_position)-1)]
+                    if located_card.card_type == 'item' and int(located_card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Pick a equip lv','').replace(' or less and click yes to play.','')):
                         button_status.battle_screen_instruction_bar_yes_display = True
                         button_status.battle_screen_instruction_bar_yes_backend = True
                     else:
@@ -990,6 +1029,42 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
         for i in range(1,7):
             if user.monster_in_play_dict[str(i)] == '':
                 user.monster_in_play_dict[str(i)] = located_card
+                break
+        user.hand_list.remove(located_card)
+        button_status.battle_screen_my_hand_indicator_display = False # hand buttons on card eg:****
+        button_status.battle_screen_instruction_bar_yes_display = True
+        button_status.battle_screen_instruction_bar_yes_backend = True
+    elif click_type == 'think fast':
+        print('lalala')
+        button_status.battle_screen_my_hand_indicator_display = False
+        button_status.battle_screen_instruction_bar_yes_display = True
+        button_status.battle_screen_instruction_bar_yes_backend = True
+        # # Make sure if using auto level up by clicking yes, the global position variable is set to one.
+        # if len(user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1):7 * screen_status.battle_screen_my_hand_page_id]) < int(button_status.battle_screen_my_hand_indicator_position):
+        #     button_status.battle_screen_my_hand_indicator_position = '1'
+        # #
+        # located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.battle_screen_my_hand_indicator_position)-1)]
+        # # Check if this card satisfied spawn requirement
+        #
+        # for i in range(1,7):
+        #     if user.monster_in_play_dict[str(i)] == '':
+        #         user.monster_in_play_dict[str(i)] = located_card
+        #         break
+        # user.hand_list.remove(located_card)
+        # button_status.battle_screen_my_hand_indicator_display = False # hand buttons on card eg:****
+        # button_status.battle_screen_instruction_bar_yes_display = True
+        # button_status.battle_screen_instruction_bar_yes_backend = True
+    elif click_type == 'equip':
+        # Make sure if using auto level up by clicking yes, the global position variable is set to one.
+        if len(user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1):7 * screen_status.battle_screen_my_hand_page_id]) < int(button_status.battle_screen_my_hand_indicator_position):
+            button_status.battle_screen_my_hand_indicator_position = '1'
+        #
+        located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.battle_screen_my_hand_indicator_position)-1)]
+        # Check if this card satisfied item requirement
+
+        for i in range(1,7):
+            if user.item_in_play_dict[str(i)] == '':
+                user.item_in_play_dict[str(i)] = located_card
                 break
         user.hand_list.remove(located_card)
         button_status.battle_screen_my_hand_indicator_display = False # hand buttons on card eg:****
@@ -1131,6 +1206,10 @@ def battle_screen_instruction_bar_yes_action(screen,buttons, screen_status, butt
     elif 'stage-2-action-detail-1-' in screen_status.battle_screen_action_indicator:
         if screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-spawn':
             battle_screen_hand_click_action('spawn',screen,buttons, screen_status, button_status, card_database_filter, user)
+        elif screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-think-fast':
+            battle_screen_hand_click_action('think fast',screen,buttons, screen_status, button_status, card_database_filter, user)
+        elif screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-equip':
+            battle_screen_hand_click_action('equip',screen,buttons, screen_status, button_status, card_database_filter, user)
 
             screen_status.battle_screen_action_indicator = 'stage-4-end-turn'
 
@@ -1181,12 +1260,6 @@ def battle_screen_instruction_bar_skip_action(screen,buttons, screen_status, but
 
 
 
-
-
-
-
-
-
 def battle_screen_stage_2_action(position, screen,buttons, screen_status, button_status, card_database_filter, user,action):
     """ Input position of the action, output action according to the type on specific card"""
 
@@ -1194,9 +1267,26 @@ def battle_screen_stage_2_action(position, screen,buttons, screen_status, button
         attribute_name = 'skill_' + position + '_type'
         print(getattr(user.character_card, attribute_name))
     else:
+        if user.character_under_card_by_level[position].lv_type[-1:] == 'X':
+            action_level = user.character_card.level
+        else:
+            action_level = user.character_under_card_by_level[position].lv_type[-3:]
+
         if 'Spawn' in user.character_under_card_by_level[position].lv_type:
-            x = user.character_under_card_by_level[position].lv_type.replace('Spawn ','')
-            action.stage_2_spawn(x, screen,buttons, screen_status, button_status, card_database_filter, user)
+            if 'Equip' in user.character_under_card_by_level[position].lv_type:
+                action.stage_2_spawn_and_equip(action_level, screen,buttons, screen_status, button_status, card_database_filter, user)
+            elif 'Think Fast' in user.character_under_card_by_level[position].lv_type:
+                action.stage_2_spawn_and_think_fast(action_level, screen,buttons, screen_status, button_status, card_database_filter, user)
+            else:
+                action.stage_2_spawn(action_level, screen,buttons, screen_status, button_status, card_database_filter, user)
+        elif 'Think Fast' in user.character_under_card_by_level[position].lv_type:
+            if 'Equip' in user.character_under_card_by_level[position].lv_type:
+                action.stage_2_think_fast_and_equip(action_level, screen,buttons, screen_status, button_status, card_database_filter, user)
+            else:
+                action.stage_2_think_fast(action_level, screen,buttons, screen_status, button_status, card_database_filter, user)
+        elif 'Equip' in user.character_under_card_by_level[position].lv_type:
+                action.stage_2_equip(action_level, screen,buttons, screen_status, button_status, card_database_filter, user)
+
         else:
             print(user.character_under_card_by_level[position].lv_type)
 

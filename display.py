@@ -6,22 +6,19 @@ import pygame
 
 class Screen_status():
     """ Control active status of all screens"""
-    def __init__(self, welcome_screen_display = False, build_deck_screen_display = False, battle_screen_display = True,  # Main screen settings
-        # Other settings
-        welcome_screen_backend = True,
-        build_deck_screen_card_gallery_page_id = 1,build_deck_screen_my_deck_page_id = 1, build_deck_screen_to_battle_screen_all_clear = True,
-        battle_screen_action_indicator = 'stage-0', battle_screen_my_hand_page_id = 1,):
+    def __init__(self):
 
-        self.welcome_screen_display = welcome_screen_display
-        self.welcome_screen_backend = welcome_screen_backend
-        self.build_deck_screen_display = build_deck_screen_display
-        self.build_deck_screen_card_gallery_page_id = build_deck_screen_card_gallery_page_id
-        self.build_deck_screen_my_deck_page_id = build_deck_screen_my_deck_page_id
-        self.build_deck_screen_to_battle_screen_all_clear = build_deck_screen_to_battle_screen_all_clear
+        self.welcome_screen_display = False
+        self.build_deck_screen_display = False
+        self.battle_screen_display = True
 
-        self.battle_screen_display = battle_screen_display
-        self.battle_screen_my_hand_page_id = battle_screen_my_hand_page_id
-        self.battle_screen_action_indicator = battle_screen_action_indicator # p1: level up
+        self.welcome_screen_backend = True
+        self.build_deck_screen_card_gallery_page_id = 1
+        self.build_deck_screen_my_deck_page_id = 1
+        self.build_deck_screen_to_battle_screen_all_clear = True
+
+        self.battle_screen_my_hand_page_id = 1
+        self.battle_screen_action_indicator = 'stage-0'
 
 
 

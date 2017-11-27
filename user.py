@@ -29,6 +29,14 @@ class User():
             '5' : '',
             '6' : '',
         }
+        self.item_in_play_dict = {
+            '1' : '',
+            '2' : '',
+            '3' : '',
+            '4' : '',
+            '5' : '',
+            '6' : '',
+        }
 
         self.character_under_card_by_level = {
             '10' : '',

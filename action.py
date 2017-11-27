@@ -7,7 +7,7 @@ from settings import Settings
 from button import Button
 from display import Screen_status, Button_status
 from grid import Grid
-import card_database_functions as cdf
+import card_database_filter as cdf
 from user import User
 
 
@@ -18,16 +18,58 @@ class Action():
 
 
 
-    def stage_2_spawn(self, spawn_level, screen, buttons, screen_status, button_status, card_database_filter, user):
+    def stage_2_spawn(self, action_level, screen, buttons, screen_status, button_status, card_database_filter, user):
         """ input spawn number, output spawn action"""
         screen_status.battle_screen_action_indicator = 'stage-2-action-detail-1-spawn'
         button_status.battle_screen_instruction_bar_yes_display = False
         button_status.battle_screen_instruction_bar_yes_backend = False
-        button_status.battle_screen_instruction_bar_text = 'Pick a monster lv' + spawn_level + ' or less and click yes to play.'
+        button_status.battle_screen_instruction_bar_text = 'Pick a monster lv' + str(int(action_level)) + ' or less and click yes to play.'
+
+
+    def stage_2_think_fast(self, action_level, screen, buttons, screen_status, button_status, card_database_filter, user):
+        """ input spawn number, output spawn action"""
+        screen_status.battle_screen_action_indicator = 'stage-2-action-detail-1-think-fast'
+        button_status.battle_screen_instruction_bar_yes_display = False
+        button_status.battle_screen_instruction_bar_yes_backend = False
+        button_status.battle_screen_instruction_bar_text = 'Pick a tactic lv' + str(int(action_level)) + ' or less and click yes to play.'
+
+    def stage_2_equip(self, action_level, screen, buttons, screen_status, button_status, card_database_filter, user):
+        """ input spawn number, output spawn action"""
+        screen_status.battle_screen_action_indicator = 'stage-2-action-detail-1-equip'
+        button_status.battle_screen_instruction_bar_yes_display = False
+        button_status.battle_screen_instruction_bar_yes_backend = False
+        button_status.battle_screen_instruction_bar_text = 'Pick a equip lv' + str(int(action_level)) + ' or less and click yes to play.'
+
+    def stage_2_spawn_and_think_fast(self, action_level, screen, buttons, screen_status, button_status, card_database_filter, user):
+        """ input spawn number, output spawn action"""
+        screen_status.battle_screen_action_indicator = 'stage-2-action-detail-1-spawn'
+        button_status.battle_screen_instruction_bar_yes_display = False
+        button_status.battle_screen_instruction_bar_yes_backend = False
+        button_status.battle_screen_instruction_bar_text = 'Pick a monster lv' + str(int(action_level)) + ' or less and click yes to play.'
+
+    def stage_2_spawn_and_equip(self, action_level, screen, buttons, screen_status, button_status, card_database_filter, user):
+        """ input spawn number, output spawn action"""
+        screen_status.battle_screen_action_indicator = 'stage-2-action-detail-1-spawn'
+        button_status.battle_screen_instruction_bar_yes_display = False
+        button_status.battle_screen_instruction_bar_yes_backend = False
+        button_status.battle_screen_instruction_bar_text = 'Pick a monster lv' + str(int(action_level)) + ' or less and click yes to play.'
+
+    def stage_2_think_fast_and_equip(self, action_level, screen, buttons, screen_status, button_status, card_database_filter, user):
+        """ input spawn number, output spawn action"""
+        screen_status.battle_screen_action_indicator = 'stage-2-action-detail-1-spawn'
+        button_status.battle_screen_instruction_bar_yes_display = False
+        button_status.battle_screen_instruction_bar_yes_backend = False
+        button_status.battle_screen_instruction_bar_text = 'Pick a monster lv' + str(int(action_level)) + ' or less and click yes to play.'
 
 
 
 
+
+
+
+
+
+#---
 
 
 

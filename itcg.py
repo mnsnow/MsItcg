@@ -7,7 +7,7 @@ from settings import Settings
 from button import Button
 from display import Screen_status, Button_status
 from grid import Grid
-import card_database_functions as cdf
+import card_database_filter as cdf
 from user import User
 from action import Action
 

@@ -3,10 +3,17 @@ import pygame
 from card import Character, Monster, Tactic
 
 #-----------------------Set 1--------------------------------------------
-#monster lv_type list: spawn, equip, think fast, easy shot, quest, stab, slash,refresh
+#monster lv_type list: spawn, equip, think fast, easy shot, quest, stab, slash,refresh, sneak, crush
 #tactic lv_type list: Dmg, Heal, Quest
+
 card_01_01 = Tactic(set_number='01',card_number='01',card_type='tactic',job='bowman',level='10',
 lv_type='Spawn/Think Fast 40',lv_active_level='50',special_effect='Dmg 30')
+
+card_01_03 = Item(set_number='01',card_number='03',card_type='item',job='bowman',level='20',
+lv_type='Tricky Shot',lv_active_level='60',special_effect='')
+
+card_01_04 = Item(set_number='01',card_number='04',card_type='item',job='bowman',level='20',
+lv_type='Equip 30',lv_active_level='30',special_effect='')
 
 card_01_05 = Monster(set_number='01',card_number='05',card_type='monster',job='bowman',level='72',
 attack='70',health='70',lv_type='Spawn/Equip 120',lv_active_level='80',special_effect='')
@@ -35,6 +42,9 @@ health='210',skill_1_lv = '10', skill_1_type = '',skill_2_lv = '10', skill_2_typ
 card_01_23 = Monster(set_number='01',card_number='23',card_type='monster',job='bowman',level='20',
 attack='30',health='20',lv_type='Spawn/Equip 50',lv_active_level='60',special_effect='')
 
+card_01_25 = Monster(set_number='01',card_number='25',card_type='monster',job='magician',level='53',
+attack='40',health='60',lv_type='Think Fast/Equip 50',lv_active_level='50',special_effect='')
+
 card_01_27 = Monster(set_number='01',card_number='27',card_type='monster',job='magician',level='22',
 attack='10',health='40',lv_type='Spawn 40',lv_active_level='40',special_effect='')
 
@@ -43,6 +53,9 @@ lv_type='Spawn/Think Fast 70',lv_active_level='60',special_effect='Dmg 80')
 
 card_01_31 = Monster(set_number='01',card_number='31',card_type='monster',job='magician',level='21',
 attack='30',health='30',lv_type='Spawn 30',lv_active_level='30',special_effect='')
+
+card_01_33 = Monster(set_number='01',card_number='33',card_type='monster',job='magician',level='53',
+attack='50',health='50',lv_type='Spawn/Think Fast 90',lv_active_level='70',special_effect='')
 
 card_01_34 = Monster(set_number='01',card_number='34',card_type='monster',job='magician',level='73',
 attack='60',health='90',lv_type='lalalala',lv_active_level='0',special_effect='')
@@ -53,11 +66,17 @@ health='190',skill_1_lv = '10', skill_1_type = '',skill_2_lv = '20', skill_2_typ
 card_01_40 = Monster(set_number='01',card_number='40',card_type='monster',job='magician',level='12',
 attack='10',health='10',lv_type='Quest',lv_active_level='0',special_effect='')
 
+card_01_42 = Item(set_number='01',card_number='42',card_type='item',job='magician',level='10',
+lv_type='Equip 40',lv_active_level='40',special_effect='')
+
 card_01_44 = Character(set_number='01',card_number='44',card_type='character',job='magician',level='0',
 health='180',skill_1_lv = '10', skill_1_type = '',skill_2_lv = '30', skill_2_type = '',skill_3_lv = '70', skill_3_type = '')
 
 card_01_53 = Monster(set_number='01',card_number='53',card_type='monster',job='thief',level='25',
 attack='30',health='20',lv_type='Spawn/Equip 30',lv_active_level='40',special_effect='')
+
+card_01_55 = Monster(set_number='01',card_number='55',card_type='monster',job='thief',level='52',
+attack='70',health='40',lv_type='Equip X',lv_active_level='30',special_effect='')
 
 card_01_59 = Character(set_number='01',card_number='59',card_type='character',job='thief',level='0',
 health='220',skill_1_lv = '10', skill_1_type = '',skill_2_lv = '10', skill_2_type = '',skill_3_lv = '20', skill_3_type = '')
@@ -91,6 +110,9 @@ attack='10',health='50',lv_type='Spawn 40',lv_active_level='30',special_effect='
 
 card_01_77 = Monster(set_number='01',card_number='77',card_type='monster',job='warrior',level='15',
 attack='10',health='40',lv_type='Spawn/Equip 90',lv_active_level='70',special_effect='')
+
+card_01_78 = Monster(set_number='01',card_number='78',card_type='monster',job='warrior',level='56',
+attack='50',health='60',lv_type='Spawn X',lv_active_level='50',special_effect='')
 
 card_01_81 = Monster(set_number='01',card_number='81',card_type='monster',job='warrior',level='63',
 attack='50',health='60',lv_type='lalalala',lv_active_level='50',special_effect='')
@@ -160,6 +182,9 @@ attack='10',health='40',lv_type='Spawn 140',lv_active_level='90',special_effect=
 card_02_29 = Monster(set_number='02',card_number='29',card_type='monster',job='magician',level='12',
 attack='20',health='20',lv_type='think fast 90',lv_active_level='70',special_effect='')
 
+card_02_31 = Monster(set_number='02',card_number='31',card_type='monster',job='thief',level='55',
+attack='60',health='40',lv_type='Spawn/Think Fast 50',lv_active_level='50',special_effect='')
+
 card_02_33 = Monster(set_number='02',card_number='33',card_type='monster',job='thief',level='66',
 attack='50',health='40',lv_type='lalalala',lv_active_level='0',special_effect='')
 
@@ -201,6 +226,9 @@ attack='100',health='100',lv_type='lalalala',lv_active_level='70',special_effect
 card_03_08 = Monster(set_number='03',card_number='08',card_type='monster',job='bowman',level='65',
 attack='50',health='40',lv_type='lalalala',lv_active_level='0',special_effect='')
 
+card_03_09 = Monster(set_number='03',card_number='09',card_type='monster',job='bowman',level='48',
+attack='40',health='40',lv_type='Tricky Shot',lv_active_level='60',special_effect='')
+
 card_03_11 = Character(set_number='03',card_number='11',card_type='character',job='bowman',level='0',
 health='190',skill_1_lv = '10', skill_1_type = '',skill_2_lv = '20', skill_2_type = '',skill_3_lv = '20', skill_3_type = '')
 
@@ -215,6 +243,9 @@ health='180',skill_1_lv = '10', skill_1_type = '',skill_2_lv = '60', skill_2_typ
 
 card_03_25 = Tactic(set_number='03',card_number='25',card_type='tactic',job='magician',level='30',
 lv_type='Think Fast X',lv_active_level='40',special_effect='Dmg 70')
+
+card_03_29 = Monster(set_number='03',card_number='29',card_type='monster',job='magician',level='54',
+attack='50',health='50',lv_type='Spawn 60',lv_active_level='60',special_effect='')
 
 card_03_35 = Monster(set_number='03',card_number='35',card_type='monster',job='thief',level='70',
 attack='70',health='40',lv_type='lalalala',lv_active_level='70',special_effect='')
@@ -260,6 +291,12 @@ attack='30',health='30',lv_type='lalalala',lv_active_level='40',special_effect='
 card_04_08 = Monster(set_number='04',card_number='08',card_type='monster',job='bowman',level='5',
 attack='10',health='20',lv_type='Spawn 30',lv_active_level='20',special_effect='NPC-QUEST')
 
+card_04_10 = Item(set_number='04',card_number='10',card_type='item',job='bowman',level='15',
+lv_type='Equip 50',lv_active_level='50',special_effect='')
+
+card_04_12 = Item(set_number='04',card_number='12',card_type='item',job='bowman',level='10',
+lv_type='Easy Shot',lv_active_level='20',special_effect='')
+
 card_04_15 = Character(set_number='04',card_number='15',card_type='character',job='bowman',level='0',
 health='210',skill_1_lv = '10', skill_1_type = '',skill_2_lv = '30', skill_2_type = '',skill_3_lv = '40', skill_3_type = '')
 
@@ -277,6 +314,9 @@ lv_type='Think Fast 90',lv_active_level='70',special_effect='Dmg 30')
 
 card_04_24 = Monster(set_number='04',card_number='24',card_type='monster',job='magician',level='30',
 attack='30',health='20',lv_type='lalalala',lv_active_level='80',special_effect='')
+
+card_04_26 = Item(set_number='04',card_number='26',card_type='item',job='magician',level='18',
+lv_type='Think Fast/Equip 40',lv_active_level='40',special_effect='')
 
 card_04_27 = Monster(set_number='04',card_number='27',card_type='monster',job='magician',level='10',
 attack='10',health='20',lv_type='buff a friend',lv_active_level='10',special_effect='')
@@ -299,8 +339,17 @@ attack='80',health='80',lv_type='lalalala',lv_active_level='50',special_effect='
 card_04_40 = Character(set_number='04',card_number='40',card_type='character',job='thief',level='0',
 health='200',skill_1_lv = '10', skill_1_type = '',skill_2_lv = '20', skill_2_type = '',skill_3_lv = '40', skill_3_type = '')
 
+card_04_42 = Monster(set_number='04',card_number='42',card_type='monster',job='thief',level='45',
+attack='50',health='20',lv_type='Sneak 50',lv_active_level='60',special_effect='')
+
+card_04_44 = Item(set_number='04',card_number='44',card_type='item',job='thief',level='17',
+lv_type='Spawn 40',lv_active_level='40',special_effect='')
+
 card_04_49 = Monster(set_number='04',card_number='49',card_type='monster',job='warrior',level='35',
 attack='30',health='30',lv_type='lalalala',lv_active_level='80',special_effect='')
+
+card_04_51 = Item(set_number='04',card_number='51',card_type='item',job='warrior',level='10',
+lv_type='Refresh',lv_active_level='40',special_effect='')
 
 card_04_52 = Monster(set_number='04',card_number='52',card_type='monster',job='warrior',level='95',
 attack='80',health='80',lv_type='lalalala',lv_active_level='0',special_effect='')
@@ -322,6 +371,9 @@ attack='20',health='30',lv_type='lalalala',lv_active_level='0',special_effect=''
 
 
 #-----------------------Set 5--------------------------------------------
+card_05_02 = Item(set_number='05',card_number='02',card_type='item',job='bowman',level='15',
+lv_type='Think Fast/Equip 20',lv_active_level='20',special_effect='')
+
 card_05_03 = Monster(set_number='05',card_number='03',card_type='monster',job='bowman',level='72',
 attack='70',health='70',lv_type='lalalala',lv_active_level='80',special_effect='')
 
@@ -355,6 +407,9 @@ health='190',skill_1_lv = '10', skill_1_type = '',skill_2_lv = '20', skill_2_typ
 card_05_32 = Monster(set_number='05',card_number='32',card_type='monster',job='magician',level='62',
 attack='60',health='60',lv_type='lalalala',lv_active_level='80',special_effect='')
 
+card_05_40 = Monster(set_number='05',card_number='40',card_type='monster',job='thief',level='48',
+attack='50',health='30',lv_type='Equip X',lv_active_level='30',special_effect='')
+
 card_05_43 = Monster(set_number='05',card_number='43',card_type='monster',job='thief',level='29',
 attack='20',health='30',lv_type='lalalala',lv_active_level='50',special_effect='')
 
@@ -363,6 +418,9 @@ health='200',skill_1_lv = '10', skill_1_type = '',skill_2_lv = '30', skill_2_typ
 
 card_05_48 = Monster(set_number='05',card_number='48',card_type='monster',job='thief',level='89',
 attack='80',health='90',lv_type='lalalala',lv_active_level='60',special_effect='')
+
+card_05_50 = Item(set_number='05',card_number='50',card_type='item',job='thief',level='10',
+lv_type='Sneak 20',lv_active_level='20',special_effect='')
 
 card_05_51 = Monster(set_number='05',card_number='51',card_type='monster',job='thief',level='30',
 attack='30',health='20',lv_type='lalalala',lv_active_level='0',special_effect='')
