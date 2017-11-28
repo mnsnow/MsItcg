@@ -639,6 +639,8 @@ def battle_screen_grid_display(grid, screen):
     screen.blit(grid.battle_screen_character_2_grid, grid.battle_screen_character_2_grid_rect)
     screen.blit(grid.battle_screen_battle_1_grid, grid.battle_screen_battle_1_grid_rect)
     screen.blit(grid.battle_screen_battle_2_grid, grid.battle_screen_battle_2_grid_rect)
+    screen.blit(grid.battle_screen_item_1_grid, grid.battle_screen_item_1_grid_rect)
+    screen.blit(grid.battle_screen_item_2_grid, grid.battle_screen_item_2_grid_rect)
     screen.blit(grid.battle_screen_instruction_bar_grid, grid.battle_screen_instruction_bar_grid_rect)
 
 def battle_screen_instruction_bar_display(screen,buttons, screen_status, button_status, card_database_filter, user):
