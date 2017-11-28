@@ -107,7 +107,7 @@ class Item():
         self.bottom_rect = self.bottom_image.get_rect()
 
         self.top_image = self.image_raw = pygame.image.load('static/images/item/item_top/' + self.set_number + '_' + self.card_number + '.jpg')
-        self.top_image = pygame.transform.scale(self.image_raw,(ai_settings.card_top_size_x, ai_settings.card_top_size_y))
+        self.top_image = pygame.transform.scale(self.image_raw,(int(ai_settings.card_top_size_x * 0.80), int(ai_settings.card_top_size_y * 0.75)))
         self.top_rect = self.top_image.get_rect()
 
 
