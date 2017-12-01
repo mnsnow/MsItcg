@@ -23,7 +23,7 @@ class Character():
         self.duplicate = duplicate
 
 
-        self.image = self.image_raw = pygame.image.load('static/images/character/' + self.set_number + '_' + self.card_number + '.jpg')
+        self.image = self.image_raw = pygame.image.load('static/images/in_game/character/' + self.set_number + '_' + self.card_number + '.jpg')
         self.image = pygame.transform.scale(self.image_raw,(ai_settings.card_size_x, ai_settings.card_size_y))
         self.rect = self.image.get_rect()
 
@@ -45,15 +45,19 @@ class Monster():
         self.duplicate = duplicate
 
 
-        self.image = self.image_raw = pygame.image.load('static/images/monster/' + self.set_number + '_' + self.card_number + '.jpg')
+        self.image_zoom = pygame.image.load('static/images/in_game_zoom/monster/' + self.set_number + '_' + self.card_number + '.jpg')
+
+        self.rect_zoom = self.image_zoom.get_rect()
+
+        self.image = self.image_raw = pygame.image.load('static/images/in_game/monster/' + self.set_number + '_' + self.card_number + '.jpg')
         self.image = pygame.transform.scale(self.image_raw,(ai_settings.card_size_x, ai_settings.card_size_y))
         self.rect = self.image.get_rect()
 
-        self.bottom_image = self.image_raw = pygame.image.load('static/images/monster/monster_bottom/' + self.set_number + '_' + self.card_number + '.jpg')
+        self.bottom_image = self.image_raw = pygame.image.load('static/images/in_game/monster/monster_bottom/' + self.set_number + '_' + self.card_number + '.jpg')
         self.bottom_image = pygame.transform.scale(self.image_raw,(ai_settings.card_bottom_size_x, ai_settings.card_bottom_size_y))
         self.bottom_rect = self.bottom_image.get_rect()
 
-        self.top_image = self.image_raw = pygame.image.load('static/images/monster/monster_top/' + self.set_number + '_' + self.card_number + '.jpg')
+        self.top_image = self.image_raw = pygame.image.load('static/images/in_game/monster/monster_top/' + self.set_number + '_' + self.card_number + '.jpg')
         self.top_image = pygame.transform.scale(self.image_raw,(ai_settings.card_top_size_x, ai_settings.card_top_size_y))
         self.top_rect = self.top_image.get_rect()
 
@@ -73,12 +77,15 @@ class Tactic():
         self.special_effect = special_effect
         self.duplicate = duplicate
 
+        self.image_zoom = pygame.image.load('static/images/in_game_zoom/tactic/' + self.set_number + '_' + self.card_number + '.jpg')
 
-        self.image = self.image_raw = pygame.image.load('static/images/tactic/' + self.set_number + '_' + self.card_number + '.jpg')
+        self.rect_zoom = self.image_zoom.get_rect()
+
+        self.image = self.image_raw = pygame.image.load('static/images/in_game/tactic/' + self.set_number + '_' + self.card_number + '.jpg')
         self.image = pygame.transform.scale(self.image_raw,(ai_settings.card_size_x, ai_settings.card_size_y))
         self.rect = self.image.get_rect()
 
-        self.bottom_image = self.image_raw = pygame.image.load('static/images/tactic/tactic_bottom/' + self.set_number + '_' + self.card_number + '.jpg')
+        self.bottom_image = self.image_raw = pygame.image.load('static/images/in_game/tactic/tactic_bottom/' + self.set_number + '_' + self.card_number + '.jpg')
         self.bottom_image = pygame.transform.scale(self.image_raw,(ai_settings.card_bottom_size_x, ai_settings.card_bottom_size_y))
         self.bottom_rect = self.bottom_image.get_rect()
 
@@ -97,16 +104,19 @@ class Item():
         self.special_effect = special_effect
         self.duplicate = duplicate
 
+        self.image_zoom = pygame.image.load('static/images/in_game_zoom/item/' + self.set_number + '_' + self.card_number + '.jpg')
 
-        self.image = self.image_raw = pygame.image.load('static/images/item/' + self.set_number + '_' + self.card_number + '.jpg')
+        self.rect_zoom = self.image_zoom.get_rect()
+
+        self.image = self.image_raw = pygame.image.load('static/images/in_game/item/' + self.set_number + '_' + self.card_number + '.jpg')
         self.image = pygame.transform.scale(self.image_raw,(ai_settings.card_size_x, ai_settings.card_size_y))
         self.rect = self.image.get_rect()
 
-        self.bottom_image = self.image_raw = pygame.image.load('static/images/item/item_bottom/' + self.set_number + '_' + self.card_number + '.jpg')
+        self.bottom_image = self.image_raw = pygame.image.load('static/images/in_game/item/item_bottom/' + self.set_number + '_' + self.card_number + '.jpg')
         self.bottom_image = pygame.transform.scale(self.image_raw,(ai_settings.card_bottom_size_x, ai_settings.card_bottom_size_y))
         self.bottom_rect = self.bottom_image.get_rect()
 
-        self.top_image = self.image_raw = pygame.image.load('static/images/item/item_top/' + self.set_number + '_' + self.card_number + '.jpg')
+        self.top_image = self.image_raw = pygame.image.load('static/images/in_game/item/item_top/' + self.set_number + '_' + self.card_number + '.jpg')
         self.top_image = pygame.transform.scale(self.image_raw,(int(ai_settings.card_top_size_x * 0.80), int(ai_settings.card_top_size_y * 0.75)))
         self.top_rect = self.top_image.get_rect()
 

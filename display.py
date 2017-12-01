@@ -45,6 +45,11 @@ class Button_status():
         self.battle_screen_battleaction_display = False
         self.battle_screen_battleaction_backend = True
 
+        self.card_zoom_active = False
+        self.card_zoom_screen_indicator = 'build_deck_screen'
+        self.card_zoom_part_indicator = ''
+        self.card_zoom_position_indicator = '1'
+
 
 
 

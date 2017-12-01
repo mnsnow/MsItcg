@@ -180,28 +180,13 @@ def check_events_battle_screen(ai_settings, screen, buttons,screen_status, butto
 
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
+            #check click on cards in hand
+            for i in range(1,8):
+                if Rect((100+145*(i-1)),610,130,180).collidepoint(pygame.mouse.get_pos()):
+                    battle_screen_hand_click_action('card',screen,buttons, screen_status, button_status, card_database_filter, user, position = str(i))
+                    break
 
-            if Rect(100,610,130,180).collidepoint(pygame.mouse.get_pos()):
-                battle_screen_hand_click_action('card',screen,buttons, screen_status, button_status, card_database_filter, user, position = '1')
-
-            if Rect(245,610,130,180).collidepoint(pygame.mouse.get_pos()):
-                battle_screen_hand_click_action('card',screen,buttons, screen_status, button_status, card_database_filter, user, position = '2')
-
-            if Rect(390,610,130,180).collidepoint(pygame.mouse.get_pos()):
-                battle_screen_hand_click_action('card',screen,buttons, screen_status, button_status, card_database_filter, user, position = '3')
-
-            if Rect(535,610,130,180).collidepoint(pygame.mouse.get_pos()):
-                battle_screen_hand_click_action('card',screen,buttons, screen_status, button_status, card_database_filter, user, position = '4')
-
-            if Rect(680,610,130,180).collidepoint(pygame.mouse.get_pos()):
-                battle_screen_hand_click_action('card',screen,buttons, screen_status, button_status, card_database_filter, user, position = '5')
-
-            if Rect(825,610,130,180).collidepoint(pygame.mouse.get_pos()):
-                battle_screen_hand_click_action('card',screen,buttons, screen_status, button_status, card_database_filter, user, position = '6')
-
-            if Rect(970,610,130,180).collidepoint(pygame.mouse.get_pos()):
-                battle_screen_hand_click_action('card',screen,buttons, screen_status, button_status, card_database_filter, user, position = '7')
-            elif rect_union(buttons).collidepoint(pygame.mouse.get_pos()):
+            if rect_union(buttons).collidepoint(pygame.mouse.get_pos()):
                 for button in buttons:
                     if button.rect.collidepoint(pygame.mouse.get_pos()):
                         if button.text == 'Back':
@@ -247,7 +232,17 @@ def check_events_battle_screen(ai_settings, screen, buttons,screen_status, butto
 
 
         elif event.type == pygame.MOUSEMOTION:
-            pass
+            x = 0 # indicator helps remove zoom in.
+            for i in range(1,8):
+                if Rect((100+145*(i-1)),610,130,180).collidepoint(pygame.mouse.get_pos()):
+                    button_status.card_zoom_active = True
+                    button_status.card_zoom_screen_indicator = 'battle_screen'
+                    button_status.card_zoom_part_indicator = 'hand'
+                    button_status.card_zoom_position_indicator = str(i)
+                    print(pygame.mouse.get_pos())
+                    x = 1
+            if x == 0:
+                button_status.card_zoom_active = False
 
         elif event.type == pygame.MOUSEBUTTONUP:
             pass
@@ -318,6 +313,8 @@ def battle_screen_update(ai_settings,grid, screen, buttons, screen_status, butto
     battle_screen_character_1_button_display(screen,buttons, screen_status, button_status, card_database_filter, user)
 
     battle_screen_battleground_card_display(screen,buttons, screen_status, button_status, card_database_filter, user)
+
+    battle_screen_card_zoom_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user)
 
 
 
@@ -643,6 +640,17 @@ def battle_screen_grid_display(grid, screen):
     screen.blit(grid.battle_screen_item_2_grid, grid.battle_screen_item_2_grid_rect)
     screen.blit(grid.battle_screen_instruction_bar_grid, grid.battle_screen_instruction_bar_grid_rect)
 
+def battle_screen_card_zoom_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user):
+    """ display card details (zoom in) any card"""
+    if screen_status.battle_screen_action_indicator != 'stage-0':
+        if button_status.card_zoom_active:
+            if button_status.card_zoom_screen_indicator == 'battle_screen':
+                if button_status.card_zoom_part_indicator == 'hand':
+                    located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.card_zoom_position_indicator)-1)]
+                    located_card.rect_zoom.x = located_card.rect.x - 85
+                    located_card.rect_zoom.y = located_card.rect.y - 210
+                    screen.blit(located_card.image_zoom, located_card.rect_zoom)
+
 def battle_screen_instruction_bar_display(screen,buttons, screen_status, button_status, card_database_filter, user):
     """ Display instruction bar
     Stage List:
@@ -767,7 +775,6 @@ def battle_screen_instruction_bar_display(screen,buttons, screen_status, button_
         else:
             buttons.remove(bt)
 
-
 def battle_screen_stable_button_display(screen, buttons,screen_status, button_status):
     """ Display all stable button on battle screen"""
 
@@ -852,7 +859,6 @@ def battle_screen_my_hand_button_display(screen,buttons, screen_status, button_s
             button_level_up = Button('****','battle_screen_handaction_****', (70,70,150),located_card.rect.x+10, located_card.rect.y - 27, 115, 27)
             button_level_up.update()
             button_level_up.draw(screen)
-
 
 def battle_screen_character_1_card_display(screen,buttons, screen_status, button_status, card_database_filter, user):
     """ Display character 1 card layout"""
@@ -969,7 +975,6 @@ def battle_screen_battleground_card_display(screen,buttons, screen_status, butto
             user.item_in_play_dict[str(i)].top_rect.x = 620 + 130*(i-4)
             user.item_in_play_dict[str(i)].top_rect.y = 110
             screen.blit(user.item_in_play_dict[str(i)].top_image, user.item_in_play_dict[str(i)].top_rect)
-
 
 def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, button_status, card_database_filter, user, position = ''):
     """ Action after click on my hand part"""
@@ -1357,7 +1362,6 @@ def battle_screen_instruction_bar_yes_action(screen,buttons, screen_status, butt
 
     print(screen_status.battle_screen_action_indicator)
 
-
 def battle_screen_instruction_bar_skip_action(screen,buttons, screen_status, button_status, card_database_filter, user):
     """ actions when click on skip on instruction bar"""
     if screen_status.battle_screen_action_indicator == 'stage-0':
@@ -1386,8 +1390,6 @@ def battle_screen_instruction_bar_skip_action(screen,buttons, screen_status, but
     # Which stage to go when user at stage-2-character-action-1,2,3
     elif 'stage-2-character-action-' in screen_status.battle_screen_action_indicator:
         pass
-
-
 
 def battle_screen_stage_2_action(position, screen,buttons, screen_status, button_status, card_database_filter, user,action):
     """ Input position of the action, output action according to the type on specific card"""
@@ -1418,7 +1420,6 @@ def battle_screen_stage_2_action(position, screen,buttons, screen_status, button
 
         else:
             print(user.character_under_card_by_level[position].lv_type)
-
 
 def battle_screen_stage_3_action(position, screen,buttons, screen_status, button_status, card_database_filter, user):
     """ Input position of the action, output action according to the type on specific card"""
