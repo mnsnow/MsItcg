@@ -1,5 +1,6 @@
 import pygame
 import sys
+import random
 from card_database import *
 from card import Monster, Character
 
@@ -83,9 +84,39 @@ class Player2():
             '6' : '',
         }
 
+        self.hand_list = random.sample(self.deck_list, len(self.deck_list))[0:40]
+
+        self.stage_2_other_card_usable_list = []
 
 
+    def get_stage_2_other_card_usable_list(self):
+        """ Get list available at stage-2-other-actions at a given player level"""
+        stage_2_other_card_complete_list = [
+            self.character_under_card_by_level['10'],
+            self.character_under_card_by_level['20'],
+            self.character_under_card_by_level['30'],
+            self.character_under_card_by_level['40'],
+            self.character_under_card_by_level['50'],
+            self.character_under_card_by_level['60'],
+            self.character_under_card_by_level['70'],
+            self.character_under_card_by_level['80'],
+            self.character_under_card_by_level['90'],
+            self.character_under_card_by_level['100'],
+            self.character_under_card_by_level['110'],
+            self.character_under_card_by_level['120'],
+            self.character_under_card_by_level['130'],
+            self.character_under_card_by_level['140'],
+            self.character_under_card_by_level['150'],
+        ]
 
+        stage_2_other_card_usable_list = []
+
+        for card in stage_2_other_card_complete_list:
+            if card != '':
+                if int(card.lv_active_level) <= int(self.character_card.level):
+                    stage_2_other_card_usable_list.append(card)
+
+        return stage_2_other_card_usable_list
 
 
 

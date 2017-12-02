@@ -1,5 +1,6 @@
 import sys
 import pygame
+import random
 from card_database import *
 from card import Monster, Character
 
@@ -48,7 +49,9 @@ class User():
             ]
 
         self.character_card = card_01_16
-        self.hand_list = []
+
+        self.hand_list = random.sample(self.deck_list, len(self.deck_list))[0:40]
+
         self.monster_in_play_dict = {
             '1' : '',
             '2' : '',

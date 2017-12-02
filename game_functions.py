@@ -9,6 +9,7 @@ from grid import Grid
 import card_database_filter as cdf
 from action import Action
 from builtins import any
+import time
 
 
 
@@ -802,8 +803,7 @@ def battle_screen_my_hand_card_display(screen,buttons, screen_status, button_sta
     rect_position_y = 610
     row_number = 1
     if screen_status.battle_screen_action_indicator == 'stage-0':
-        user.deck_list = random.sample(user.deck_list, len(user.deck_list))
-        user.hand_list = user.deck_list[0:40]
+        pass
     else :
 
         if screen_status.battle_screen_my_hand_page_id <= 0:
@@ -1431,8 +1431,32 @@ def battle_screen_instruction_bar_yes_action(screen,buttons, screen_status, butt
         button_status.battle_screen_instruction_bar_yes_display = False
         button_status.battle_screen_instruction_bar_yes_backend = False
         button_status.battle_screen_instruction_bar_text = "p1-s4 -- Please wait for your opponent's turn"
+
         screen_status.battle_screen_action_indicator = 'player2-stage-1'
-        battle_screen_player2_action(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
+
+
+        refresh_blocked = False
+        while screen_status.battle_screen_action_indicator != 'stage-1':
+
+            clock = pygame.time.Clock()
+            x = clock.tick()
+
+            if refresh_blocked:
+                refresh_blocked_count += x
+                if refresh_blocked_count >= 3000:
+                    refresh_blocked = False
+            else:
+                battle_screen_player2_action(screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                print(screen_status.battle_screen_action_indicator)
+                refresh_blocked = True
+                refresh_blocked_count = 0
+
+
+
+            #pygame.time.delay(3000)
+
+
     # Which stage to go when user at stage-4-wait-for-opponent
     elif screen_status.battle_screen_action_indicator == 'stage-4-wait-for-opponent':
 
@@ -1504,9 +1528,316 @@ def battle_screen_stage_3_action(position, screen,buttons, screen_status, button
     """ Input position of the action, output action according to the type on specific card"""
     print('monster action!')
 
-def battle_screen_player2_action(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
+# For offline AI player2 only
+def battle_screen_player2_action(screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ Actions of player2"""
-    
+    # Level up action
+    if screen_status.battle_screen_action_indicator == 'player2-stage-1':
+        if player2.hand_list == []:
+            button_status.battle_screen_instruction_bar_text = 'Opponent decide not to level up'
+            pass # skip action
+        else:
+
+            located_card = player2.hand_list[0]
+            for i in range(1,16):
+                if player2.character_under_card_by_level[str(i*10)] == '':
+                    player2.character_under_card_by_level[str(i*10)] = located_card
+                    break
+            player2.hand_list.remove(located_card)
+            player2.character_card.level = str(int(player2.character_card.level) + 10)
+            player2.character_card.health = str(int(player2.character_card.health) + 20)
+
+            button_status.battle_screen_instruction_bar_text = 'Opponent has leveled up to lv ' + player2.character_card.level
+            player2.stage_2_other_card_usable_list = player2.get_stage_2_other_card_usable_list()
+
+            if int(player2.character_card.skill_1_lv) <= int(player2.character_card.level):
+                screen_status.battle_screen_action_indicator = 'player2-stage-2-character-action-1'
+                button_status.battle_screen_instruction_bar_text = 'Opponent deciding whether to use character action: 1'
+                #pygame.time.delay(3000)
+            elif len(player2.stage_2_other_card_usable_list) >= 1:
+                for position, card in player2.character_under_card_by_level.items():
+                    if card == player2.stage_2_other_card_usable_list[0]:
+                        screen_status.battle_screen_action_indicator = 'player2-stage-2-other-action-' + position
+                        button_status.battle_screen_instruction_bar_text = 'Opponent deciding whether to use: ' + player2.character_under_card_by_level[position].lv_type
+                        #pygame.time.delay(3000)
+            else:
+                if (player2.monster_in_play_dict['1'] == ''
+                and player2.monster_in_play_dict['2'] == ''
+                and player2.monster_in_play_dict['3'] == ''
+                and player2.monster_in_play_dict['4'] == ''
+                and player2.monster_in_play_dict['5'] == ''
+                and player2.monster_in_play_dict['6'] == ''):
+                    screen_status.battle_screen_action_indicator = 'player2-stage-4-end-turn'
+                    button_status.battle_screen_instruction_bar_text = "Opponent's turn has end"
+                    #pygame.time.delay(3000)
+                else:
+                    battle_screen_stage_3_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
+                    screen_status.battle_screen_action_indicator = 'player2-stage-3-monster-1-action'
+                    button_status.battle_screen_instruction_bar_text = "Opponent deciding action for first monster"
+                    #pygame.time.delay(3000)
+
+
+    #
+    elif 'player2-stage-2-character-action-' in screen_status.battle_screen_action_indicator:
+        x = screen_status.battle_screen_action_indicator.replace('player2-stage-2-character-action-','')
+        attribute_name = 'skill_' + x + '_type'
+        print(getattr(player2.character_card, attribute_name))
+        if int(x) <= 2:
+            attribute_name = 'skill_' + str(int(x)+1) + '_lv'
+            if int(getattr(player2.character_card, attribute_name)) <= int(player2.character_card.level):
+                screen_status.battle_screen_action_indicator = 'player2-stage-2-character-action-' + str(int(x)+1)
+                button_status.battle_screen_instruction_bar_text = 'Opponent deciding whether to use character action: ' +  str(int(x)+1)
+                #pygame.time.delay(3000)
+            elif len(player2.stage_2_other_card_usable_list) >= 1:
+                for position, card in player2.character_under_card_by_level.items():
+                    if card == player2.stage_2_other_card_usable_list[0]:
+                        screen_status.battle_screen_action_indicator = 'player2-stage-2-other-action-' + position
+                        button_status.battle_screen_instruction_bar_text = 'Opponent deciding whether to use: ' + player2.character_under_card_by_level[position].lv_type
+                        #pygame.time.delay(3000)
+            else:
+                if (player2.monster_in_play_dict['1'] == ''
+                and player2.monster_in_play_dict['2'] == ''
+                and player2.monster_in_play_dict['3'] == ''
+                and player2.monster_in_play_dict['4'] == ''
+                and player2.monster_in_play_dict['5'] == ''
+                and player2.monster_in_play_dict['6'] == ''):
+                    screen_status.battle_screen_action_indicator = 'player2-stage-4-end-turn'
+                    button_status.battle_screen_instruction_bar_text = "Opponent's turn has end"
+                    #pygame.time.delay(3000)
+                else:
+                    battle_screen_stage_3_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
+                    screen_status.battle_screen_action_indicator = 'player2-stage-3-monster-1-action'
+                    button_status.battle_screen_instruction_bar_text = "Opponent deciding action for first monster"
+                    #pygame.time.delay(3000)
+        else:
+            if len(player2.stage_2_other_card_usable_list) >= 1:
+                for position, card in player2.character_under_card_by_level.items():
+                    if card == player2.stage_2_other_card_usable_list[0]:
+                        screen_status.battle_screen_action_indicator = 'player2-stage-2-other-action-' + position
+                        button_status.battle_screen_instruction_bar_text = 'Opponent deciding whether to use: ' + player2.character_under_card_by_level[position].lv_type
+                        #pygame.time.delay(3000)
+            else:
+                if (player2.monster_in_play_dict['1'] == ''
+                and player2.monster_in_play_dict['2'] == ''
+                and player2.monster_in_play_dict['3'] == ''
+                and player2.monster_in_play_dict['4'] == ''
+                and player2.monster_in_play_dict['5'] == ''
+                and player2.monster_in_play_dict['6'] == ''):
+                    screen_status.battle_screen_action_indicator = 'player2-stage-4-end-turn'
+                    button_status.battle_screen_instruction_bar_text = "Opponent's turn has end"
+                    #pygame.time.delay(3000)
+                else:
+                    battle_screen_stage_3_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
+                    screen_status.battle_screen_action_indicator = 'player2-stage-3-monster-1-action'
+                    button_status.battle_screen_instruction_bar_text = "Opponent deciding action for first monster"
+                    #pygame.time.delay(3000)
+
+
+
+
+    elif 'player2-stage-2-other-action-' in screen_status.battle_screen_action_indicator:
+        x = screen_status.battle_screen_action_indicator.replace('player2-stage-2-other-action-','')
+
+        if player2.character_under_card_by_level[x].lv_type[-1:] == 'X':
+            action_level = player2.character_card.level
+        else:
+            action_level = player2.character_under_card_by_level[x].lv_type[-3:]
+
+        if 'Spawn' in player2.character_under_card_by_level[x].lv_type:
+            if 'Equip' in player2.character_under_card_by_level[x].lv_type:
+                screen_status.battle_screen_action_indicator = 'player2-stage-2-action-detail-1-spawn-and-equip' + '-under-' + x
+                button_status.battle_screen_instruction_bar_text = 'Opponent is choosing a monster/item lv' + str(int(action_level)) + ' to play'
+                #pygame.time.delay(3000)
+            elif 'Think Fast' in player2.character_under_card_by_level[x].lv_type:
+                screen_status.battle_screen_action_indicator = 'player2-stage-2-action-detail-1-spawn-and-think-fast' + '-under-' + x
+                button_status.battle_screen_instruction_bar_text = 'Opponent is choosing a monster/tactic lv' + str(int(action_level)) + ' to play'
+                #pygame.time.delay(3000)
+            else:
+                screen_status.battle_screen_action_indicator = 'player2-stage-2-action-detail-1-spawn' + '-under-' + x
+                button_status.battle_screen_instruction_bar_text = 'Opponent is choosing a monster lv' + str(int(action_level)) + ' to play'
+                #pygame.time.delay(3000)
+        elif 'Think Fast' in player2.character_under_card_by_level[x].lv_type:
+            if 'Equip' in player2.character_under_card_by_level[x].lv_type:
+
+                screen_status.battle_screen_action_indicator = 'player2-stage-2-action-detail-1-think-fast-and-equip' + '-under-' + x
+                button_status.battle_screen_instruction_bar_text = 'Opponent is choosing a tactic/item lv' + str(int(action_level)) + ' to play'
+                #pygame.time.delay(3000)
+            else:
+                screen_status.battle_screen_action_indicator = 'player2-stage-2-action-detail-1-think-fast' + '-under-' + x
+                button_status.battle_screen_instruction_bar_text = 'Opponent is choosing a tactic lv' + str(int(action_level)) + ' to play'
+                #pygame.time.delay(3000)
+        elif 'Equip' in player2.character_under_card_by_level[x].lv_type:
+                screen_status.battle_screen_action_indicator = 'player2-stage-2-action-detail-1-equip' + '-under-' + x
+                button_status.battle_screen_instruction_bar_text = 'Opponent is choosing a item lv' + str(int(action_level)) + ' to play'
+                #pygame.time.delay(3000)
+        else:
+            print(player2.character_under_card_by_level[x].lv_type)
+
+        if screen_status.battle_screen_action_indicator == 'player2-stage-2-other-action-' + x:
+            del player2.stage_2_other_card_usable_list[0]
+            if len(player2.stage_2_other_card_usable_list) >= 1:
+                for position, card in player2.character_under_card_by_level.items():
+                    if card == player2.stage_2_other_card_usable_list[0]:
+                        screen_status.battle_screen_action_indicator = 'player2-stage-2-other-action-' + position
+                        button_status.battle_screen_instruction_bar_text = 'Opponent deciding whether to use: ' + player2.character_under_card_by_level[position].lv_type
+                        #pygame.time.delay(3000)
+            else:
+                if (player2.monster_in_play_dict['1'] == ''
+                and player2.monster_in_play_dict['2'] == ''
+                and player2.monster_in_play_dict['3'] == ''
+                and player2.monster_in_play_dict['4'] == ''
+                and player2.monster_in_play_dict['5'] == ''
+                and player2.monster_in_play_dict['6'] == ''):
+                    screen_status.battle_screen_action_indicator = 'player2-stage-4-end-turn'
+                    button_status.battle_screen_instruction_bar_text = "Opponent's turn has end"
+                    #pygame.time.delay(3000)
+                else:
+                    battle_screen_stage_3_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
+                    screen_status.battle_screen_action_indicator = 'player2-stage-3-monster-1-action'
+                    button_status.battle_screen_instruction_bar_text = "Opponent deciding action for first monster"
+                    #pygame.time.delay(3000)
+        else:
+            pass
+
+
+
+
+    # Which stage to go when user at stage-2-action-detail-
+    elif 'player2-stage-2-action-detail-1-' in screen_status.battle_screen_action_indicator:
+        if 'player2-stage-2-action-detail-1-spawn-and-think-fast' in screen_status.battle_screen_action_indicator:
+
+            for card in player2.hand_list:
+                if ((card.card_type == 'monster' or card.card_type == 'tactic')
+                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a monster/tactic lv','').replace(' to play.','')))):
+                    located_card = card
+                break
+            if located_card.card_type == 'monster':
+                for i in range(1,7):
+                    if player2.monster_in_play_dict[str(i)] == '':
+                        player2.monster_in_play_dict[str(i)] = located_card
+                        break
+                player2.hand_list.remove(located_card)
+            else:
+                player2.hand_list.remove(located_card)
+                print('Opponent use tactic')
+
+        elif 'player2-stage-2-action-detail-1-spawn-and-equip' in screen_status.battle_screen_action_indicator:
+
+            for card in player2.hand_list:
+                if ((card.card_type == 'monster' or card.card_type == 'item')
+                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a monster/item lv','').replace(' to play.','')))):
+                    located_card = card
+                break
+            if located_card.card_type == 'monster':
+                for i in range(1,7):
+                    if player2.monster_in_play_dict[str(i)] == '':
+                        player2.monster_in_play_dict[str(i)] = located_card
+                        break
+                player2.hand_list.remove(located_card)
+            else:
+                for i in range(1,7):
+                    if player2.item_in_play_dict[str(i)] == '':
+                        player2.item_in_play_dict[str(i)] = located_card
+                        break
+                player2.hand_list.remove(located_card)
+
+        elif 'player2-stage-2-action-detail-1-think-fast-and-equip' in screen_status.battle_screen_action_indicator:
+
+            for card in player2.hand_list:
+                if ((card.card_type == 'tactic' or card.card_type == 'item')
+                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a tactic/item lv','').replace(' to play.','')))):
+                    located_card = card
+                break
+            if located_card.card_type == 'item':
+                for i in range(1,7):
+                    if player2.item_in_play_dict[str(i)] == '':
+                        player2.item_in_play_dict[str(i)] = located_card
+                        break
+                player2.hand_list.remove(located_card)
+            else:
+                player2.hand_list.remove(located_card)
+                print('Opponent use tactic')
+
+        elif 'player2-stage-2-action-detail-1-spawn' in screen_status.battle_screen_action_indicator:
+
+            for card in player2.hand_list:
+                if ((card.card_type == 'monster')
+                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a monster lv','').replace(' to play.','')))):
+                    located_card = card
+                break
+
+            for i in range(1,7):
+                if player2.monster_in_play_dict[str(i)] == '':
+                    player2.monster_in_play_dict[str(i)] = located_card
+                    break
+            player2.hand_list.remove(located_card)
+
+
+        elif 'player2-stage-2-action-detail-1-think-fast' in screen_status.battle_screen_action_indicator:
+
+            for card in player2.hand_list:
+                if ((card.card_type == 'tactic')
+                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a tactic lv','').replace(' to play.','')))):
+                    located_card = card
+                break
+
+            player2.hand_list.remove(located_card)
+            print('Opponent use tactic')
+
+        elif 'player2-stage-2-action-detail-1-equip' in screen_status.battle_screen_action_indicator:
+
+            for card in player2.hand_list:
+                if ((card.card_type == 'item')
+                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a item lv','').replace(' to play.','')))):
+                    located_card = card
+                break
+
+            for i in range(1,7):
+                if player2.item_in_play_dict[str(i)] == '':
+                    player2.item_in_play_dict[str(i)] = located_card
+                    break
+            player2.hand_list.remove(located_card)
+
+
+        del player2.stage_2_other_card_usable_list[0]
+        if len(player2.stage_2_other_card_usable_list) >= 1:
+            for position, card in player2.character_under_card_by_level.items():
+                if card == player2.stage_2_other_card_usable_list[0]:
+                    screen_status.battle_screen_action_indicator = 'player2-stage-2-other-action-' + position
+                    button_status.battle_screen_instruction_bar_text = 'Opponent deciding whether to use: ' + player2.character_under_card_by_level[position].lv_type
+                    #pygame.time.delay(3000)
+        else:
+            if (player2.monster_in_play_dict['1'] == ''
+            and player2.monster_in_play_dict['2'] == ''
+            and player2.monster_in_play_dict['3'] == ''
+            and player2.monster_in_play_dict['4'] == ''
+            and player2.monster_in_play_dict['5'] == ''
+            and player2.monster_in_play_dict['6'] == ''):
+                screen_status.battle_screen_action_indicator = 'player2-stage-4-end-turn'
+                button_status.battle_screen_instruction_bar_text = "Opponent's turn has end"
+                #pygame.time.delay(3000)
+            else:
+                battle_screen_stage_3_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
+                screen_status.battle_screen_action_indicator = 'player2-stage-3-monster-1-action'
+                button_status.battle_screen_instruction_bar_text = "Opponent deciding action for first monster"
+                #pygame.time.delay(3000)
+
+
+    elif screen_status.battle_screen_action_indicator == 'player2-stage-3-monster-1-action':
+        screen_status.battle_screen_action_indicator = 'player2-stage-4-end-turn'
+
+
+
+    # Which stage to go when user at stage-4-end-turn
+    elif screen_status.battle_screen_action_indicator == 'player2-stage-4-end-turn':
+            button_status.battle_screen_instruction_bar_text = "Opponent's turn has end"
+            #pygame.time.delay(3000)
+            screen_status.battle_screen_action_indicator = 'stage-1'
+            button_status.battle_screen_instruction_bar_yes_display = True
+            button_status.battle_screen_instruction_bar_yes_backend = True
+
+
+
 
 
 
