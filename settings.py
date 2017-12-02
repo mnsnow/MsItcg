@@ -13,8 +13,8 @@ class Settings():
 
 
         #Cards Settings
-        self.card_size_x = 130 #180
-        self.card_size_y = 180 #250
+        self.card_size_x = 130
+        self.card_size_y = 180 
 
         self.card_bottom_size_x = 130
         self.card_bottom_size_y = 23

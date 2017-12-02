@@ -14,7 +14,7 @@ from builtins import any
 
 
 #-----------------------------Check events----------------------------------------------------
-def check_events(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user,action):
+def check_events(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user,action, player2):
     """Check mouse and keyboard events"""
 
     if screen_status.welcome_screen_display:
@@ -24,7 +24,7 @@ def check_events(ai_settings,grid, screen, buttons,screen_status, button_status,
         check_events_build_deck_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user)
 
     if screen_status.battle_screen_display:
-        check_events_battle_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action)
+        check_events_battle_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
 
 def check_events_welcome_screen(ai_settings, screen, buttons,screen_status, button_status):
     """ Check all events on the welcome screen"""
@@ -168,7 +168,7 @@ def check_events_build_deck_screen(ai_settings, screen, buttons,screen_status, b
         elif event.type == pygame.MOUSEBUTTONUP:
             pass
 
-def check_events_battle_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action):
+def check_events_battle_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ Check all evetns on the battle screen"""
     for event in pygame.event.get():
 
@@ -226,7 +226,7 @@ def check_events_battle_screen(ai_settings, screen, buttons,screen_status, butto
                         elif button.text == 'level up':
                             battle_screen_hand_click_action('level up',screen,buttons, screen_status, button_status, card_database_filter, user)
                         elif button.text == 'Yes':
-                            battle_screen_instruction_bar_yes_action(screen,buttons, screen_status, button_status, card_database_filter, user,action)
+                            battle_screen_instruction_bar_yes_action(screen,buttons, screen_status, button_status, card_database_filter, user,action,player2)
                         elif button.text == 'Skip':
                             battle_screen_instruction_bar_skip_action(screen,buttons, screen_status, button_status, card_database_filter, user)
 
@@ -251,7 +251,7 @@ def check_events_battle_screen(ai_settings, screen, buttons,screen_status, butto
 
 
 #-----------------------------Update screens----------------------------------------------------
-def update_screen(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user):
+def update_screen(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2):
     """ Update images on the screen and flip to the new screen"""
 
     if screen_status.welcome_screen_display:
@@ -261,7 +261,7 @@ def update_screen(ai_settings,grid, screen, buttons, screen_status, button_statu
         build_deck_screen_update(ai_settings, grid, screen, buttons, screen_status, button_status, card_database_filter, user)
 
     if screen_status.battle_screen_display:
-        battle_screen_update(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user)
+        battle_screen_update(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2)
 
 
     pygame.display.flip()
@@ -294,7 +294,7 @@ def build_deck_screen_update(ai_settings, grid, screen, buttons, screen_status, 
 
     build_deck_screen_my_deck_display(screen,buttons, screen_status, button_status, card_database_filter, user)
 
-def battle_screen_update(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user):
+def battle_screen_update(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2):
     """ Battle screen update"""
     screen.fill(ai_settings.bg_color)
 
@@ -315,6 +315,8 @@ def battle_screen_update(ai_settings,grid, screen, buttons, screen_status, butto
     battle_screen_battleground_card_display(screen,buttons, screen_status, button_status, card_database_filter, user)
 
     battle_screen_card_zoom_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user)
+    # Display informations of player2
+    battle_screen_player2_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
 
 
@@ -627,7 +629,7 @@ def build_deck_screen_my_deck_duplicate_number_display(card, screen):
 
 
 
-#-----------------------------Battle Screen actions-------------------------------------------------
+#-----------------------------Battle Screen displays-------------------------------------------------
 def battle_screen_grid_display(grid, screen):
     """ Display grid system on battle screen"""
     screen.blit(grid.battle_screen_menu_grid, grid.battle_screen_menu_grid_rect)
@@ -696,8 +698,8 @@ def battle_screen_instruction_bar_display(screen,buttons, screen_status, button_
 
     elif screen_status.battle_screen_action_indicator == 'stage-4-end-turn':
         button_status.battle_screen_instruction_bar_text = 'p1-s4 -- Your turn has end'
-    elif screen_status.battle_screen_action_indicator == 'stage-4-wait-for-opponent':
-        button_status.battle_screen_instruction_bar_text = "p1-s4 -- Please wait for your opponent's turn"
+    # elif screen_status.battle_screen_action_indicator == 'stage-4-wait-for-opponent':
+    #     button_status.battle_screen_instruction_bar_text = "p1-s4 -- Please wait for your opponent's turn"
 
 
     # instruction bar draw
@@ -866,66 +868,73 @@ def battle_screen_character_1_card_display(screen,buttons, screen_status, button
     user.character_card.rect.y = 40
     screen.blit(user.character_card.image, user.character_card.rect)
     #
-    if int(user.character_card.level) >= 10:
-            user.character_under_card_by_level['10'].bottom_rect.x = 1050
-            user.character_under_card_by_level['10'].bottom_rect.y = 220
-            screen.blit(user.character_under_card_by_level['10'].bottom_image, user.character_under_card_by_level['10'].bottom_rect)
-    if int(user.character_card.level) >= 20:
-            user.character_under_card_by_level['20'].bottom_rect.x = 1050
-            user.character_under_card_by_level['20'].bottom_rect.y = 243
-            screen.blit(user.character_under_card_by_level['20'].bottom_image, user.character_under_card_by_level['20'].bottom_rect)
-    if int(user.character_card.level) >= 30:
-            user.character_under_card_by_level['30'].bottom_rect.x = 1050
-            user.character_under_card_by_level['30'].bottom_rect.y = 266
-            screen.blit(user.character_under_card_by_level['30'].bottom_image, user.character_under_card_by_level['30'].bottom_rect)
-    if int(user.character_card.level) >= 40:
-            user.character_under_card_by_level['40'].bottom_rect.x = 1050
-            user.character_under_card_by_level['40'].bottom_rect.y = 289
-            screen.blit(user.character_under_card_by_level['40'].bottom_image, user.character_under_card_by_level['40'].bottom_rect)
-    if int(user.character_card.level) >= 50:
-            user.character_under_card_by_level['50'].bottom_rect.x = 1050
-            user.character_under_card_by_level['50'].bottom_rect.y = 312
-            screen.blit(user.character_under_card_by_level['50'].bottom_image, user.character_under_card_by_level['50'].bottom_rect)
-    if int(user.character_card.level) >= 60:
-            user.character_under_card_by_level['60'].bottom_rect.x = 1050
-            user.character_under_card_by_level['60'].bottom_rect.y = 335
-            screen.blit(user.character_under_card_by_level['60'].bottom_image, user.character_under_card_by_level['60'].bottom_rect)
-    if int(user.character_card.level) >= 70:
-            user.character_under_card_by_level['70'].bottom_rect.x = 1050
-            user.character_under_card_by_level['70'].bottom_rect.y = 358
-            screen.blit(user.character_under_card_by_level['70'].bottom_image, user.character_under_card_by_level['70'].bottom_rect)
-    if int(user.character_card.level) >= 80:
-            user.character_under_card_by_level['80'].bottom_rect.x = 1050
-            user.character_under_card_by_level['80'].bottom_rect.y = 381
-            screen.blit(user.character_under_card_by_level['80'].bottom_image, user.character_under_card_by_level['80'].bottom_rect)
-    if int(user.character_card.level) >= 90:
-            user.character_under_card_by_level['90'].bottom_rect.x = 1050
-            user.character_under_card_by_level['90'].bottom_rect.y = 404
-            screen.blit(user.character_under_card_by_level['90'].bottom_image, user.character_under_card_by_level['90'].bottom_rect)
-    if int(user.character_card.level) >= 100:
-            user.character_under_card_by_level['100'].bottom_rect.x = 1050
-            user.character_under_card_by_level['100'].bottom_rect.y = 427
-            screen.blit(user.character_under_card_by_level['100'].bottom_image, user.character_under_card_by_level['100'].bottom_rect)
-    if int(user.character_card.level) >= 110:
-            user.character_under_card_by_level['110'].bottom_rect.x = 1050
-            user.character_under_card_by_level['110'].bottom_rect.y = 450
-            screen.blit(user.character_under_card_by_level['110'].bottom_image, user.character_under_card_by_level['110'].bottom_rect)
-    if int(user.character_card.level) >= 120:
-            user.character_under_card_by_level['120'].bottom_rect.x = 1050
-            user.character_under_card_by_level['120'].bottom_rect.y = 473
-            screen.blit(user.character_under_card_by_level['120'].bottom_image, user.character_under_card_by_level['120'].bottom_rect)
-    if int(user.character_card.level) >= 130:
-            user.character_under_card_by_level['130'].bottom_rect.x = 1050
-            user.character_under_card_by_level['130'].bottom_rect.y = 496
-            screen.blit(user.character_under_card_by_level['130'].bottom_image, user.character_under_card_by_level['130'].bottom_rect)
-    if int(user.character_card.level) >= 140:
-            user.character_under_card_by_level['140'].bottom_rect.x = 1050
-            user.character_under_card_by_level['140'].bottom_rect.y = 519
-            screen.blit(user.character_under_card_by_level['140'].bottom_image, user.character_under_card_by_level['140'].bottom_rect)
-    if int(user.character_card.level) >= 150:
-            user.character_under_card_by_level['150'].bottom_rect.x = 1050
-            user.character_under_card_by_level['150'].bottom_rect.y = 542
-            screen.blit(user.character_under_card_by_level['150'].bottom_image, user.character_under_card_by_level['150'].bottom_rect)
+    for i in range(1,16):
+        if int(user.character_card.level) >= 10 * i:
+            user.character_under_card_by_level[str(10 * i)].bottom_rect.x = 1050
+            user.character_under_card_by_level[str(10 * i)].bottom_rect.y = 220 + 23 * (i-1)
+            screen.blit(user.character_under_card_by_level[str(10 * i)].bottom_image, user.character_under_card_by_level[str(10 * i)].bottom_rect)
+
+    #
+    # if int(user.character_card.level) >= 10:
+    #         user.character_under_card_by_level['10'].bottom_rect.x = 1050
+    #         user.character_under_card_by_level['10'].bottom_rect.y = 220
+    #         screen.blit(user.character_under_card_by_level['10'].bottom_image, user.character_under_card_by_level['10'].bottom_rect)
+    # if int(user.character_card.level) >= 20:
+    #         user.character_under_card_by_level['20'].bottom_rect.x = 1050
+    #         user.character_under_card_by_level['20'].bottom_rect.y = 243
+    #         screen.blit(user.character_under_card_by_level['20'].bottom_image, user.character_under_card_by_level['20'].bottom_rect)
+    # if int(user.character_card.level) >= 30:
+    #         user.character_under_card_by_level['30'].bottom_rect.x = 1050
+    #         user.character_under_card_by_level['30'].bottom_rect.y = 266
+    #         screen.blit(user.character_under_card_by_level['30'].bottom_image, user.character_under_card_by_level['30'].bottom_rect)
+    # if int(user.character_card.level) >= 40:
+    #         user.character_under_card_by_level['40'].bottom_rect.x = 1050
+    #         user.character_under_card_by_level['40'].bottom_rect.y = 289
+    #         screen.blit(user.character_under_card_by_level['40'].bottom_image, user.character_under_card_by_level['40'].bottom_rect)
+    # if int(user.character_card.level) >= 50:
+    #         user.character_under_card_by_level['50'].bottom_rect.x = 1050
+    #         user.character_under_card_by_level['50'].bottom_rect.y = 312
+    #         screen.blit(user.character_under_card_by_level['50'].bottom_image, user.character_under_card_by_level['50'].bottom_rect)
+    # if int(user.character_card.level) >= 60:
+    #         user.character_under_card_by_level['60'].bottom_rect.x = 1050
+    #         user.character_under_card_by_level['60'].bottom_rect.y = 335
+    #         screen.blit(user.character_under_card_by_level['60'].bottom_image, user.character_under_card_by_level['60'].bottom_rect)
+    # if int(user.character_card.level) >= 70:
+    #         user.character_under_card_by_level['70'].bottom_rect.x = 1050
+    #         user.character_under_card_by_level['70'].bottom_rect.y = 358
+    #         screen.blit(user.character_under_card_by_level['70'].bottom_image, user.character_under_card_by_level['70'].bottom_rect)
+    # if int(user.character_card.level) >= 80:
+    #         user.character_under_card_by_level['80'].bottom_rect.x = 1050
+    #         user.character_under_card_by_level['80'].bottom_rect.y = 381
+    #         screen.blit(user.character_under_card_by_level['80'].bottom_image, user.character_under_card_by_level['80'].bottom_rect)
+    # if int(user.character_card.level) >= 90:
+    #         user.character_under_card_by_level['90'].bottom_rect.x = 1050
+    #         user.character_under_card_by_level['90'].bottom_rect.y = 404
+    #         screen.blit(user.character_under_card_by_level['90'].bottom_image, user.character_under_card_by_level['90'].bottom_rect)
+    # if int(user.character_card.level) >= 100:
+    #         user.character_under_card_by_level['100'].bottom_rect.x = 1050
+    #         user.character_under_card_by_level['100'].bottom_rect.y = 427
+    #         screen.blit(user.character_under_card_by_level['100'].bottom_image, user.character_under_card_by_level['100'].bottom_rect)
+    # if int(user.character_card.level) >= 110:
+    #         user.character_under_card_by_level['110'].bottom_rect.x = 1050
+    #         user.character_under_card_by_level['110'].bottom_rect.y = 450
+    #         screen.blit(user.character_under_card_by_level['110'].bottom_image, user.character_under_card_by_level['110'].bottom_rect)
+    # if int(user.character_card.level) >= 120:
+    #         user.character_under_card_by_level['120'].bottom_rect.x = 1050
+    #         user.character_under_card_by_level['120'].bottom_rect.y = 473
+    #         screen.blit(user.character_under_card_by_level['120'].bottom_image, user.character_under_card_by_level['120'].bottom_rect)
+    # if int(user.character_card.level) >= 130:
+    #         user.character_under_card_by_level['130'].bottom_rect.x = 1050
+    #         user.character_under_card_by_level['130'].bottom_rect.y = 496
+    #         screen.blit(user.character_under_card_by_level['130'].bottom_image, user.character_under_card_by_level['130'].bottom_rect)
+    # if int(user.character_card.level) >= 140:
+    #         user.character_under_card_by_level['140'].bottom_rect.x = 1050
+    #         user.character_under_card_by_level['140'].bottom_rect.y = 519
+    #         screen.blit(user.character_under_card_by_level['140'].bottom_image, user.character_under_card_by_level['140'].bottom_rect)
+    # if int(user.character_card.level) >= 150:
+    #         user.character_under_card_by_level['150'].bottom_rect.x = 1050
+    #         user.character_under_card_by_level['150'].bottom_rect.y = 542
+    #         screen.blit(user.character_under_card_by_level['150'].bottom_image, user.character_under_card_by_level['150'].bottom_rect)
 
 def battle_screen_character_1_button_display(screen,buttons, screen_status, button_status, card_database_filter, user):
     """ Display character 1 buttons"""
@@ -975,6 +984,71 @@ def battle_screen_battleground_card_display(screen,buttons, screen_status, butto
             user.item_in_play_dict[str(i)].top_rect.x = 620 + 130*(i-4)
             user.item_in_play_dict[str(i)].top_rect.y = 110
             screen.blit(user.item_in_play_dict[str(i)].top_image, user.item_in_play_dict[str(i)].top_rect)
+
+def battle_screen_player2_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
+    """ Display informations of player2"""
+    # Display Character card
+    player2.character_card.rect.x = 20
+    player2.character_card.rect.y = 40
+    screen.blit(player2.character_card.image, player2.character_card.rect)
+
+    # Display cards under character card
+    for i in range(1,16):
+        if int(player2.character_card.level) >= 10 * i:
+            player2.character_under_card_by_level[str(10 * i)].bottom_rect.x = 20
+            player2.character_under_card_by_level[str(10 * i)].bottom_rect.y = 220 + 23 * (i-1)
+            screen.blit(player2.character_under_card_by_level[str(10 * i)].bottom_image, player2.character_under_card_by_level[str(10 * i)].bottom_rect)
+    # Info bar above character_card
+    button_basic_info = Button('Lv: ' + player2.character_card.level + '  HP: ' + player2.character_card.health,'', (0,0,0),0, 5, 200, 30)
+    button_basic_info.update()
+    button_basic_info.draw(screen)
+
+    # Display the arrow when doing actions
+    if screen_status.battle_screen_action_indicator == 'player2-stage-2-character-action-1':
+        button_action_pointer = Button('<<','',(92,13,78),150,132,50,23)
+        button_action_pointer.update()
+        button_action_pointer.draw(screen)
+    elif screen_status.battle_screen_action_indicator == 'player2-stage-2-character-action-2':
+        button_action_pointer = Button('<<','',(92,13,78),150,155,50,23)
+        button_action_pointer.update()
+        button_action_pointer.draw(screen)
+    elif screen_status.battle_screen_action_indicator == 'player2-stage-2-character-action-3':
+        button_action_pointer = Button('<<','',(92,13,78),150,178,50,23)
+        button_action_pointer.update()
+        button_action_pointer.draw(screen)
+    elif 'player2-stage-2-other-action-' in screen_status.battle_screen_action_indicator:
+        x = screen_status.battle_screen_action_indicator.replace('player2-stage-2-other-action-','')
+        button_action_pointer = Button('<<','',(92,13,78),150,220+23*(int(x)/10-1),50,23)
+        button_action_pointer.update()
+        button_action_pointer.draw(screen)
+
+
+    # Display Monsters
+    for i in range(1,4):
+        if player2.monster_in_play_dict[str(i)] != '':
+            player2.monster_in_play_dict[str(i)].top_rect.x = 420
+            player2.monster_in_play_dict[str(i)].top_rect.y = 220 + 110*(i-1)
+            screen.blit(player2.monster_in_play_dict[str(i)].top_image, player2.monster_in_play_dict[str(i)].top_rect)
+    for i in range(4,7):
+        if player2.monster_in_play_dict[str(i)] != '':
+            player2.monster_in_play_dict[str(i)].top_rect.x = 245
+            player2.monster_in_play_dict[str(i)].top_rect.y = 220 + 110*(i-4)
+            screen.blit(player2.monster_in_play_dict[str(i)].top_image, player2.monster_in_play_dict[str(i)].top_rect)
+    # Display Items
+    for i in range(1,4):
+        if player2.item_in_play_dict[str(i)] != '':
+            player2.item_in_play_dict[str(i)].top_rect.x = 476 + 130*(i-1)
+            player2.item_in_play_dict[str(i)].top_rect.y = 40
+            screen.blit(player2.item_in_play_dict[str(i)].top_image, player2.item_in_play_dict[str(i)].top_rect)
+    for i in range(4,7):
+        if player2.item_in_play_dict[str(i)] != '':
+            player2.item_in_play_dict[str(i)].top_rect.x = 476 + 130*(i-4)
+            player2.item_in_play_dict[str(i)].top_rect.y = 110
+            screen.blit(player2.item_in_play_dict[str(i)].top_image, player2.item_in_play_dict[str(i)].top_rect)
+
+
+# -----------------------------Battle Screen Actions----------------------------------------
+
 
 def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, button_status, card_database_filter, user, position = ''):
     """ Action after click on my hand part"""
@@ -1203,7 +1277,7 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
         button_status.battle_screen_instruction_bar_yes_display = True
         button_status.battle_screen_instruction_bar_yes_backend = True
 
-def battle_screen_instruction_bar_yes_action(screen,buttons, screen_status, button_status, card_database_filter, user,action):
+def battle_screen_instruction_bar_yes_action(screen,buttons, screen_status, button_status, card_database_filter, user,action,player2):
     """ change to different stages when click on yes on instruction bar"""
 
     # Which stage to go when user at stage-0
@@ -1354,9 +1428,14 @@ def battle_screen_instruction_bar_yes_action(screen,buttons, screen_status, butt
 
     # Which stage to go when user at stage-4-end-turn
     elif screen_status.battle_screen_action_indicator == 'stage-4-end-turn':
-        screen_status.battle_screen_action_indicator = 'stage-4-wait-for-opponent'
+        button_status.battle_screen_instruction_bar_yes_display = False
+        button_status.battle_screen_instruction_bar_yes_backend = False
+        button_status.battle_screen_instruction_bar_text = "p1-s4 -- Please wait for your opponent's turn"
+        screen_status.battle_screen_action_indicator = 'player2-stage-1'
+        battle_screen_player2_action(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
     # Which stage to go when user at stage-4-wait-for-opponent
     elif screen_status.battle_screen_action_indicator == 'stage-4-wait-for-opponent':
+
         screen_status.battle_screen_action_indicator = 'stage-1'
 
 
@@ -1425,66 +1504,11 @@ def battle_screen_stage_3_action(position, screen,buttons, screen_status, button
     """ Input position of the action, output action according to the type on specific card"""
     print('monster action!')
 
+def battle_screen_player2_action(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
+    """ Actions of player2"""
+    
 
 
-
-#-----------------------------Hand handaction----------------------------------------------------
-def monster_button_handaction_display(screen, buttons, button_status):
-    """Display monster handaction button"""
-    button1 = Button('Play','monster_handaction', (0,0,0),50, 600, 100, 50)
-    button2 = Button('Level up', 'monster_handaction' ,(0,0,0),50, 650, 100, 50)
-    button3 = Button('Back', 'monster_handaction' ,(0,0,0),50, 700, 100, 50)
-    button1.update()
-    button2.update()
-    button3.update()
-    button1.draw(screen)
-    button2.draw(screen)
-    button3.draw(screen)
-    if button_status.monster_handaction_backend:
-        buttons.extend((button1, button2, button3))
-        button_status.monster_handaction_backend = False
-
-def monster_handaction_back(buttons, button_status):
-    button_status.monster_handaction_display = False
-    bts = []
-    for button in buttons:
-        if button.group == 'monster_handaction':
-            bts.append(button)
-    for bt in bts:
-        buttons.remove(bt)
-    button_status.monster_handaction_backend = True
-
-
-
-
-#----------------------------- Battle action----------------------------------------------------
-def monster_button_battleaction_display(screen, buttons, button_status):
-    """Display monster battle action button"""
-    button1 = Button('Face!','monster_battleaction', (0,0,0),600, 200, 100, 50)
-    button2 = Button('Fight!', 'monster_battleaction', (0,0,0),600, 250, 100, 50)
-    button3 = Button('Skip', 'monster_battleaction',(0,0,0),600, 300, 100, 50)
-    button4 = Button('Back','monster_battleaction', (0,0,0),600, 350, 100, 50)
-    button1.update()
-    button2.update()
-    button3.update()
-    button4.update()
-    button1.draw(screen)
-    button2.draw(screen)
-    button3.draw(screen)
-    button4.draw(screen)
-    if button_status.monster_battleaction_backend:
-        buttons.extend((button1, button2, button3, button4))
-        button_status.monster_battleaction_backend = False
-
-def monster_battleaction_back(buttons, button_status):
-    button_status.monster_battleaction_display = False
-    bts = []
-    for button in buttons:
-        if button.group == 'monster_battleaction':
-            bts.append(button)
-    for bt in bts:
-        buttons.remove(bt)
-    button_status.monster_battleaction_backend = True
 
 
 

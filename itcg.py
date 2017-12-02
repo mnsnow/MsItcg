@@ -10,6 +10,7 @@ from grid import Grid
 import card_database_filter as cdf
 from user import User
 from action import Action
+from player2 import Player2
 
 
 def main():
@@ -28,6 +29,7 @@ def main():
     buttons = []
     card_database_filter = cdf.Card_database_filter()
     user = User()
+    player2 = Player2()
     action = Action()
 
 
@@ -36,9 +38,9 @@ def main():
 
     while True:
 
-        gf.check_events(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action)
+        gf.check_events(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
 
-        gf.update_screen(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user)
+        gf.update_screen(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2)
 
 
 
