@@ -1046,6 +1046,15 @@ def battle_screen_player2_display(ai_settings, screen, buttons,screen_status, bu
             player2.item_in_play_dict[str(i)].top_rect.y = 110
             screen.blit(player2.item_in_play_dict[str(i)].top_image, player2.item_in_play_dict[str(i)].top_rect)
 
+    # Display actions
+    if screen_status.battle_screen_player2_action_display_indicator:
+        now = pygame.time.get_ticks()
+        cooldown = 3000
+        if now - screen_status.time_last >= cooldown:
+            screen_status.time_last = now
+            battle_screen_player2_action(screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
+
 
 # -----------------------------Battle Screen Actions----------------------------------------
 
@@ -1430,27 +1439,25 @@ def battle_screen_instruction_bar_yes_action(screen,buttons, screen_status, butt
     elif screen_status.battle_screen_action_indicator == 'stage-4-end-turn':
         button_status.battle_screen_instruction_bar_yes_display = False
         button_status.battle_screen_instruction_bar_yes_backend = False
-        button_status.battle_screen_instruction_bar_text = "p1-s4 -- Please wait for your opponent's turn"
 
-        screen_status.battle_screen_action_indicator = 'player2-stage-1'
+        screen_status.battle_screen_action_indicator = 'player2-stage-0'
+        screen_status.battle_screen_player2_action_display_indicator = True
 
-
-
-        refresh_blocked = False
-        while screen_status.battle_screen_action_indicator != 'stage-1':
-
-            clock = pygame.time.Clock()
-            x = clock.tick()
-
-            if refresh_blocked:
-                refresh_blocked_count += x
-                if refresh_blocked_count >= 3000:
-                    refresh_blocked = False
-            else:
-                battle_screen_player2_action(screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-                print(screen_status.battle_screen_action_indicator)
-                refresh_blocked = True
-                refresh_blocked_count = 0
+        # refresh_blocked = False
+        # while screen_status.battle_screen_action_indicator != 'stage-1':
+        #
+        #     clock = pygame.time.Clock()
+        #     x = clock.tick()
+        #
+        #     if refresh_blocked:
+        #         refresh_blocked_count += x
+        #         if refresh_blocked_count >= 3000:
+        #             refresh_blocked = False
+        #     else:
+        #         battle_screen_player2_action(screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+        #         print(screen_status.battle_screen_action_indicator)
+        #         refresh_blocked = True
+        #         refresh_blocked_count = 0
 
 
 
@@ -1532,12 +1539,20 @@ def battle_screen_stage_3_action(position, screen,buttons, screen_status, button
 def battle_screen_player2_action(screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ Actions of player2"""
     # Level up action
-    if screen_status.battle_screen_action_indicator == 'player2-stage-1':
+    if screen_status.battle_screen_action_indicator == 'player2-stage-0':
+        screen_status.battle_screen_action_indicator = 'player2-stage-1'
+        button_status.battle_screen_instruction_bar_text = "Now it's your opponent's turn"
+
+    elif screen_status.battle_screen_action_indicator == 'player2-stage-1':
+        screen_status.battle_screen_action_indicator = 'player2-stage-1-level-up'
+        button_status.battle_screen_instruction_bar_text = 'Opponent is deciding whether to level up '
+
+
+    elif screen_status.battle_screen_action_indicator == 'player2-stage-1-level-up':
         if player2.hand_list == []:
             button_status.battle_screen_instruction_bar_text = 'Opponent decide not to level up'
             pass # skip action
         else:
-
             located_card = player2.hand_list[0]
             for i in range(1,16):
                 if player2.character_under_card_by_level[str(i*10)] == '':
@@ -1833,8 +1848,10 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
             button_status.battle_screen_instruction_bar_text = "Opponent's turn has end"
             #pygame.time.delay(3000)
             screen_status.battle_screen_action_indicator = 'stage-1'
+            screen_status.battle_screen_player2_action_display_indicator = False # No longer doing player2 loops
             button_status.battle_screen_instruction_bar_yes_display = True
             button_status.battle_screen_instruction_bar_yes_backend = True
+
 
 
 

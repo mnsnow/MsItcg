@@ -8,6 +8,9 @@ class Screen_status():
     """ Control active status of all screens"""
     def __init__(self):
 
+        self.time_last = pygame.time.get_ticks() # For player2(AI) use only 
+        self.time_player2_cooldown = 3000
+
         self.welcome_screen_display = False
         self.build_deck_screen_display = False
         self.battle_screen_display = True
@@ -19,6 +22,9 @@ class Screen_status():
 
         self.battle_screen_my_hand_page_id = 1
         self.battle_screen_action_indicator = 'stage-0'
+
+        self.battle_screen_player2_action_display_indicator = False
+
 
 
 
