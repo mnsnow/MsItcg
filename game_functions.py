@@ -203,12 +203,12 @@ def check_events_battle_screen(ai_settings, screen, buttons,screen_status, butto
                             button_status.battle_screen_my_hand_indicator_display = False # Turn off display of buttons when change page
 
                             if (screen_status.battle_screen_action_indicator == 'stage-1-level-up'
-                            or screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-spawn-and-think-fast'
-                            or screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-spawn-and-equip'
-                            or screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-think-fast-and-equip'
-                            or screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-spawn'
-                            or screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-think-fast'
-                            or screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-equip'
+                            or screen_status.battle_screen_action_indicator == 'stage-2-other-action-detail-spawn-and-think-fast'
+                            or screen_status.battle_screen_action_indicator == 'stage-2-other-action-detail-spawn-and-equip'
+                            or screen_status.battle_screen_action_indicator == 'stage-2-other-action-detail-think-fast-and-equip'
+                            or screen_status.battle_screen_action_indicator == 'stage-2-other-action-detail-spawn'
+                            or screen_status.battle_screen_action_indicator == 'stage-2-other-action-detail-think-fast'
+                            or screen_status.battle_screen_action_indicator == 'stage-2-other-action-detail-equip'
                             ):
                                 button_status.battle_screen_instruction_bar_yes_display = False
                                 button_status.battle_screen_instruction_bar_yes_backend = False
@@ -218,12 +218,12 @@ def check_events_battle_screen(ai_settings, screen, buttons,screen_status, butto
                             button_status.battle_screen_my_hand_indicator_display = False
 
                             if (screen_status.battle_screen_action_indicator == 'stage-1-level-up'
-                            or screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-spawn-and-think-fast'
-                            or screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-spawn-and-equip'
-                            or screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-think-fast-and-equip'
-                            or screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-spawn'
-                            or screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-think-fast'
-                            or screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-equip'
+                            or screen_status.battle_screen_action_indicator == 'stage-2-other-action-detail-spawn-and-think-fast'
+                            or screen_status.battle_screen_action_indicator == 'stage-2-other-action-detail-spawn-and-equip'
+                            or screen_status.battle_screen_action_indicator == 'stage-2-other-action-detail-think-fast-and-equip'
+                            or screen_status.battle_screen_action_indicator == 'stage-2-other-action-detail-spawn'
+                            or screen_status.battle_screen_action_indicator == 'stage-2-other-action-detail-think-fast'
+                            or screen_status.battle_screen_action_indicator == 'stage-2-other-action-detail-equip'
                             ):
                                 button_status.battle_screen_instruction_bar_yes_display = False
                                 button_status.battle_screen_instruction_bar_yes_backend = False
@@ -671,9 +671,9 @@ def battle_screen_instruction_bar_display(screen,buttons, screen_status, button_
     stage-2-other-action-2
     stage-2-other-action-3
     ...
-    stage-2-action-detail-1-spawn-under-10
-    stage-2-action-detail-2
-    stage-2-action-detail-3
+    stage-2-other-action-detail-spawn-under-10
+    stage-2-other-action-detail-2
+    stage-2-other-action-detail-3
     ...
     stage-3-monster-1-action
     stage-3-monster-2-action
@@ -698,7 +698,8 @@ def battle_screen_instruction_bar_display(screen,buttons, screen_status, button_
         button_status.battle_screen_instruction_bar_text = 'p1-s2 -- Character action 3: Do you want to use: ' + user.character_card.skill_3_type + ' ?'
     # stage-2-other-action-10-150
     elif (('stage-2-other-action-' in screen_status.battle_screen_action_indicator)
-        and (screen_status.battle_screen_player2_action_display_indicator == False)):
+        and (screen_status.battle_screen_player2_action_display_indicator == False)
+        and 'detail' not in screen_status.battle_screen_action_indicator):
         x = screen_status.battle_screen_action_indicator.replace('stage-2-other-action-','')
         button_status.battle_screen_instruction_bar_text = 'p1-s2 -- Other action: Do you want to use: ' + user.character_under_card_by_level[x].lv_type
 
@@ -858,9 +859,9 @@ def battle_screen_my_hand_button_display(screen,buttons, screen_status, button_s
             buttons.extend((button1,button2))
             button_status.battle_screen_my_hand_page_change_button_backend = False
     if (screen_status.battle_screen_action_indicator == 'stage-1-level-up'
-        or screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-spawn'
-        or screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-think-fast'
-        or screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-equip'
+        or screen_status.battle_screen_action_indicator == 'stage-2-other-action-detail-spawn'
+        or screen_status.battle_screen_action_indicator == 'stage-2-other-action-detail-think-fast'
+        or screen_status.battle_screen_action_indicator == 'stage-2-other-action-detail-equip'
         ):
         if button_status.battle_screen_my_hand_indicator_display == True:
             located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.battle_screen_my_hand_indicator_position)-1)]
@@ -900,7 +901,9 @@ def battle_screen_character_1_button_display(screen,buttons, screen_status, butt
         button_action_pointer = Button('>>','',(92,13,78),1000,178,50,23)
         button_action_pointer.update()
         button_action_pointer.draw(screen)
-    elif 'stage-2-other-action-' in screen_status.battle_screen_action_indicator and screen_status.battle_screen_player2_action_display_indicator == False:
+    elif ('stage-2-other-action-' in screen_status.battle_screen_action_indicator
+        and screen_status.battle_screen_player2_action_display_indicator == False
+        and 'detail' not in screen_status.battle_screen_action_indicator):
         x = screen_status.battle_screen_action_indicator.replace('stage-2-other-action-','')
         button_action_pointer = Button('>>','',(92,13,78),1000,220+23*(int(x)/10-1),50,23)
         button_action_pointer.update()
@@ -995,7 +998,7 @@ def battle_screen_player2_display(ai_settings, screen, buttons,screen_status, bu
     # Display actions cooldown
     if screen_status.battle_screen_player2_action_display_indicator:
         now = pygame.time.get_ticks()
-        cooldown = 3000
+        cooldown = 1000
         if now - screen_status.time_last >= cooldown:
             screen_status.time_last = now
             battle_screen_player2_action(screen, buttons,screen_status, button_status, card_database_filter, user, player2)
@@ -1017,7 +1020,7 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
 
             else:
                 pass
-        elif screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-spawn-and-think-fast':
+        elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-detail-spawn-and-think-fast':
 
                 if len(user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1):7 * screen_status.battle_screen_my_hand_page_id]) >= int(position):
                     button_status.battle_screen_my_hand_indicator_position = position
@@ -1032,7 +1035,7 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
                         button_status.battle_screen_instruction_bar_yes_backend = False
                 else:
                     pass
-        elif screen_status.battle_screen_action_indicator ==  'stage-2-action-detail-1-spawn-and-equip':
+        elif screen_status.battle_screen_action_indicator ==  'stage-2-other-action-detail-spawn-and-equip':
 
                 if len(user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1):7 * screen_status.battle_screen_my_hand_page_id]) >= int(position):
                     button_status.battle_screen_my_hand_indicator_position = position
@@ -1047,7 +1050,7 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
                         button_status.battle_screen_instruction_bar_yes_backend = False
                 else:
                     pass
-        elif screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-think-fast-and-equip':
+        elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-detail-think-fast-and-equip':
 
                 if len(user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1):7 * screen_status.battle_screen_my_hand_page_id]) >= int(position):
                     button_status.battle_screen_my_hand_indicator_position = position
@@ -1062,7 +1065,7 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
                         button_status.battle_screen_instruction_bar_yes_backend = False
                 else:
                     pass
-        elif screen_status.battle_screen_action_indicator ==  'stage-2-action-detail-1-spawn':
+        elif screen_status.battle_screen_action_indicator ==  'stage-2-other-action-detail-spawn':
 
                 if len(user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1):7 * screen_status.battle_screen_my_hand_page_id]) >= int(position):
                     button_status.battle_screen_my_hand_indicator_position = position
@@ -1076,7 +1079,7 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
                         button_status.battle_screen_instruction_bar_yes_backend = False
                 else:
                     pass
-        elif screen_status.battle_screen_action_indicator ==  'stage-2-action-detail-1-think-fast':
+        elif screen_status.battle_screen_action_indicator ==  'stage-2-other-action-detail-think-fast':
 
                 if len(user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1):7 * screen_status.battle_screen_my_hand_page_id]) >= int(position):
                     button_status.battle_screen_my_hand_indicator_position = position
@@ -1090,7 +1093,7 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
                         button_status.battle_screen_instruction_bar_yes_backend = False
                 else:
                     pass
-        elif screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-equip':
+        elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-detail-equip':
 
                 if len(user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1):7 * screen_status.battle_screen_my_hand_page_id]) >= int(position):
                     button_status.battle_screen_my_hand_indicator_position = position
@@ -1218,17 +1221,34 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
         button_status.battle_screen_instruction_bar_yes_display = True
         button_status.battle_screen_instruction_bar_yes_backend = True
 
-def battle_screen_battleground_click_action(click_type,screen,buttons, screen_status, button_status, card_database_filter, user,player2):
+def battle_screen_battleground_click_action(click_type,screen,buttons, screen_status, button_status, card_database_filter, user,player2, position = ''):
     """ battleground click action """
     if click_type == 'player2-character':
-        if screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-easy-shot':
+        if (('stage-2-character-action-' in screen_status.battle_screen_action_indicator
+            and 'detail-easy-shot' in screen_status.battle_screen_action_indicator)
+
+            or ('stage-2-other-action-' in screen_status.battle_screen_action_indicator
+                and 'detail-easy-shot' in screen_status.battle_screen_action_indicator)
+
+                ):
             button_status.battle_screen_instruction_bar_yes_display = True
             button_status.battle_screen_instruction_bar_yes_backend = True
             button_status.battle_screen_instruction_bar_text = "Do you want to deal 10 damage to opponent's character?"
+        elif (('stage-2-character-action-' in screen_status.battle_screen_action_indicator
+            and 'detail-tricky-shot' in screen_status.battle_screen_action_indicator)
+
+            or ('stage-2-other-action-' in screen_status.battle_screen_action_indicator
+                and 'detail-tricky-shot' in screen_status.battle_screen_action_indicator)
+
+                ):
+            button_status.battle_screen_instruction_bar_yes_display = True
+            button_status.battle_screen_instruction_bar_yes_backend = True
+            button_status.battle_screen_instruction_bar_text = "Do you want to deal 20 damage to opponent's character?"
 
     elif click_type == 'easy shot':
         player2.character_card.health = str(int(player2.character_card.health)-10)
-
+    elif click_type == 'tricky shot':
+        player2.character_card.health = str(int(player2.character_card.health)-20)
 
 
 
@@ -1274,11 +1294,62 @@ def battle_screen_instruction_bar_yes_action(screen,buttons, screen_status, butt
                 battle_screen_stage_3_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
                 screen_status.battle_screen_action_indicator = 'stage-3-monster-1-action'
 
+
+
+    # Which stage to go when user at stage-2-character-action-detail-
+    elif ('stage-2-character-action-' in screen_status.battle_screen_action_indicator
+        and '-detail-' in screen_status.battle_screen_action_indicator):
+        x = screen_status.battle_screen_action_indicator.replace('stage-2-character-action-','')[0]
+
+        if screen_status.battle_screen_action_indicator == 'stage-2-character-action-' + x +'-detail-easy-shot':
+            battle_screen_battleground_click_action('easy shot',screen,buttons, screen_status, button_status, card_database_filter, user, player2)
+
+        elif screen_status.battle_screen_action_indicator == 'stage-2-character-action-' + x +'-detail-tricky-shot':
+            battle_screen_battleground_click_action('tricky shot',screen,buttons, screen_status, button_status, card_database_filter, user, player2)
+
+        if int(x) <= 2:
+            attribute_name = 'skill_' + str(int(x)+1) + '_lv'
+            if int(getattr(user.character_card, attribute_name)) <= int(user.character_card.level):
+                screen_status.battle_screen_action_indicator = 'stage-2-character-action-' + str(int(x)+1)
+            elif len(user.stage_2_other_card_usable_list) >= 1:
+                for position, card in user.character_under_card_by_level.items():
+                    if card == user.stage_2_other_card_usable_list[0]:
+                        screen_status.battle_screen_action_indicator = 'stage-2-other-action-' + position
+            else:
+                if (user.monster_in_play_dict['1'] == ''
+                and user.monster_in_play_dict['2'] == ''
+                and user.monster_in_play_dict['3'] == ''
+                and user.monster_in_play_dict['4'] == ''
+                and user.monster_in_play_dict['5'] == ''
+                and user.monster_in_play_dict['6'] == ''):
+                    screen_status.battle_screen_action_indicator = 'stage-4-end-turn'
+                else:
+                    battle_screen_stage_3_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
+                    screen_status.battle_screen_action_indicator = 'stage-3-monster-1-action'
+        else:
+            if len(user.stage_2_other_card_usable_list) >= 1:
+                for position, card in user.character_under_card_by_level.items():
+                    if card == user.stage_2_other_card_usable_list[0]:
+                        screen_status.battle_screen_action_indicator = 'stage-2-other-action-' + position
+            else:
+                if (user.monster_in_play_dict['1'] == ''
+                and user.monster_in_play_dict['2'] == ''
+                and user.monster_in_play_dict['3'] == ''
+                and user.monster_in_play_dict['4'] == ''
+                and user.monster_in_play_dict['5'] == ''
+                and user.monster_in_play_dict['6'] == ''):
+                    screen_status.battle_screen_action_indicator = 'stage-4-end-turn'
+                else:
+                    battle_screen_stage_3_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
+                    screen_status.battle_screen_action_indicator = 'stage-3-monster-1-action'
+
+
+
     # Which stage to go when user at stage-2-character-action-1,2,3
     elif 'stage-2-character-action-' in screen_status.battle_screen_action_indicator:
         x = screen_status.battle_screen_action_indicator.replace('stage-2-character-action-','')
         battle_screen_stage_2_action(x, screen,buttons, screen_status, button_status, card_database_filter, user, action)
-        if screen_status.battle_screen_action_indicator == 'stage-2-other-action-' + x:
+        if screen_status.battle_screen_action_indicator == 'stage-2-character-action-' + x:
             if int(x) <= 2:
                 attribute_name = 'skill_' + str(int(x)+1) + '_lv'
                 if int(getattr(user.character_card, attribute_name)) <= int(user.character_card.level):
@@ -1318,6 +1389,45 @@ def battle_screen_instruction_bar_yes_action(screen,buttons, screen_status, butt
             pass
 
 
+
+    # Which stage to go when user at stage-2-other-action-detail-
+    elif 'stage-2-other-action-detail-' in screen_status.battle_screen_action_indicator:
+        if screen_status.battle_screen_action_indicator == 'stage-2-other-action-detail-spawn-and-think-fast':
+            battle_screen_hand_click_action('spawn/think fast',screen,buttons, screen_status, button_status, card_database_filter, user)
+        elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-detail-spawn-and-equip':
+            battle_screen_hand_click_action('spawn/equip',screen,buttons, screen_status, button_status, card_database_filter, user)
+        elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-detail-think-fast-and-equip':
+            battle_screen_hand_click_action('think fast/equip',screen,buttons, screen_status, button_status, card_database_filter, user)
+        elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-detail-spawn':
+            battle_screen_hand_click_action('spawn',screen,buttons, screen_status, button_status, card_database_filter, user)
+        elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-detail-think-fast':
+            battle_screen_hand_click_action('think fast',screen,buttons, screen_status, button_status, card_database_filter, user)
+        elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-detail-equip':
+            battle_screen_hand_click_action('equip',screen,buttons, screen_status, button_status, card_database_filter, user)
+        elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-detail-easy-shot':
+            battle_screen_battleground_click_action('easy shot',screen,buttons, screen_status, button_status, card_database_filter, user, player2)
+        elif screen_status.battle_screen_action_indicator == 'stage-2-other-action-detail-tricky-shot':
+            battle_screen_battleground_click_action('tricky shot',screen,buttons, screen_status, button_status, card_database_filter, user, player2)
+
+        del user.stage_2_other_card_usable_list[0]
+        if len(user.stage_2_other_card_usable_list) >= 1:
+            for position, card in user.character_under_card_by_level.items():
+                if card == user.stage_2_other_card_usable_list[0]:
+                    screen_status.battle_screen_action_indicator = 'stage-2-other-action-' + position
+        else:
+            if (user.monster_in_play_dict['1'] == ''
+            and user.monster_in_play_dict['2'] == ''
+            and user.monster_in_play_dict['3'] == ''
+            and user.monster_in_play_dict['4'] == ''
+            and user.monster_in_play_dict['5'] == ''
+            and user.monster_in_play_dict['6'] == ''):
+                screen_status.battle_screen_action_indicator = 'stage-4-end-turn'
+            else:
+                battle_screen_stage_3_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
+                screen_status.battle_screen_action_indicator = 'stage-3-monster-1-action'
+
+
+
     # Which stage to go when user at stage-2-other-action-10-150
     elif 'stage-2-other-action-' in screen_status.battle_screen_action_indicator:
         x = screen_status.battle_screen_action_indicator.replace('stage-2-other-action-','')
@@ -1342,42 +1452,8 @@ def battle_screen_instruction_bar_yes_action(screen,buttons, screen_status, butt
         else:
             pass
 
-    # Which stage to go when user at stage-2-action-detail-
-    elif 'stage-2-action-detail-1-' in screen_status.battle_screen_action_indicator:
-        if screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-spawn-and-think-fast':
-            battle_screen_hand_click_action('spawn/think fast',screen,buttons, screen_status, button_status, card_database_filter, user)
-        elif screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-spawn-and-equip':
-            battle_screen_hand_click_action('spawn/equip',screen,buttons, screen_status, button_status, card_database_filter, user)
-        elif screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-think-fast-and-equip':
-            battle_screen_hand_click_action('think fast/equip',screen,buttons, screen_status, button_status, card_database_filter, user)
-        elif screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-spawn':
-            battle_screen_hand_click_action('spawn',screen,buttons, screen_status, button_status, card_database_filter, user)
-        elif screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-think-fast':
-            battle_screen_hand_click_action('think fast',screen,buttons, screen_status, button_status, card_database_filter, user)
-        elif screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-equip':
-            battle_screen_hand_click_action('equip',screen,buttons, screen_status, button_status, card_database_filter, user)
-        elif screen_status.battle_screen_action_indicator == 'stage-2-action-detail-1-easy-shot':
-            battle_screen_battleground_click_action('easy shot',screen,buttons, screen_status, button_status, card_database_filter, user, player2)
 
-        if len(user.stage_2_other_card_usable_list) >= 1:
-            del user.stage_2_other_card_usable_list[0]
-        else:
-            pass
-        if len(user.stage_2_other_card_usable_list) >= 1:
-            for position, card in user.character_under_card_by_level.items():
-                if card == user.stage_2_other_card_usable_list[0]:
-                    screen_status.battle_screen_action_indicator = 'stage-2-other-action-' + position
-        else:
-            if (user.monster_in_play_dict['1'] == ''
-            and user.monster_in_play_dict['2'] == ''
-            and user.monster_in_play_dict['3'] == ''
-            and user.monster_in_play_dict['4'] == ''
-            and user.monster_in_play_dict['5'] == ''
-            and user.monster_in_play_dict['6'] == ''):
-                screen_status.battle_screen_action_indicator = 'stage-4-end-turn'
-            else:
-                battle_screen_stage_3_action('1', screen,buttons, screen_status, button_status, card_database_filter, user)
-                screen_status.battle_screen_action_indicator = 'stage-3-monster-1-action'
+
 
 
 
@@ -1440,9 +1516,18 @@ def battle_screen_stage_2_action(position, screen,buttons, screen_status, button
         if ('Easy Shot' in character_skill_name
             or 'Stab' in character_skill_name
             ):
-            action.stage_2_easy_shot(screen,buttons, screen_status, button_status, card_database_filter, user)
+            action.stage_2_easy_shot('character', screen,buttons, screen_status, button_status, card_database_filter, user, under_position = position)
 
-        print(character_skill_name)
+        elif ('Tricky Shot' in character_skill_name
+
+            ):
+            action.stage_2_tricky_shot('character', screen,buttons, screen_status, button_status, card_database_filter, user, under_position = position)
+
+        elif ('Quest' in character_skill_name
+
+            ):
+            action.stage_2_quest(screen,buttons, screen_status, button_status, card_database_filter, user)
+
     else:
         if user.character_under_card_by_level[position].lv_type[-1:] == 'X':
             action_level = user.character_card.level
@@ -1463,6 +1548,20 @@ def battle_screen_stage_2_action(position, screen,buttons, screen_status, button
                 action.stage_2_think_fast(position, action_level, screen,buttons, screen_status, button_status, card_database_filter, user)
         elif 'Equip' in user.character_under_card_by_level[position].lv_type:
                 action.stage_2_equip(position, action_level, screen,buttons, screen_status, button_status, card_database_filter, user)
+        elif ('Easy Shot' in user.character_under_card_by_level[position].lv_type
+            or 'Stab' in user.character_under_card_by_level[position].lv_type
+            ):
+            action.stage_2_easy_shot('other', screen,buttons, screen_status, button_status, card_database_filter, user)
+
+        elif ('Tricky Shot' in user.character_under_card_by_level[position].lv_type
+
+            ):
+            action.stage_2_tricky_shot('other', screen,buttons, screen_status, button_status, card_database_filter, user)
+
+        elif ('Quest' in user.character_under_card_by_level[position].lv_type
+
+            ):
+            action.stage_2_quest(screen,buttons, screen_status, button_status, card_database_filter, user)
 
         else:
             print(user.character_under_card_by_level[position].lv_type)
@@ -1597,29 +1696,29 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
 
         if 'Spawn' in player2.character_under_card_by_level[x].lv_type:
             if 'Equip' in player2.character_under_card_by_level[x].lv_type:
-                screen_status.battle_screen_action_indicator = 'player2-stage-2-action-detail-1-spawn-and-equip'
+                screen_status.battle_screen_action_indicator = 'player2-stage-2-other-action-detail-spawn-and-equip'
                 button_status.battle_screen_instruction_bar_text = 'Opponent is choosing a monster/item lv' + str(int(action_level)) + ' to play'
                 #pygame.time.delay(3000)
             elif 'Think Fast' in player2.character_under_card_by_level[x].lv_type:
-                screen_status.battle_screen_action_indicator = 'player2-stage-2-action-detail-1-spawn-and-think-fast'
+                screen_status.battle_screen_action_indicator = 'player2-stage-2-other-action-detail-spawn-and-think-fast'
                 button_status.battle_screen_instruction_bar_text = 'Opponent is choosing a monster/tactic lv' + str(int(action_level)) + ' to play'
                 #pygame.time.delay(3000)
             else:
-                screen_status.battle_screen_action_indicator = 'player2-stage-2-action-detail-1-spawn'
+                screen_status.battle_screen_action_indicator = 'player2-stage-2-other-action-detail-spawn'
                 button_status.battle_screen_instruction_bar_text = 'Opponent is choosing a monster lv' + str(int(action_level)) + ' to play'
                 #pygame.time.delay(3000)
         elif 'Think Fast' in player2.character_under_card_by_level[x].lv_type:
             if 'Equip' in player2.character_under_card_by_level[x].lv_type:
 
-                screen_status.battle_screen_action_indicator = 'player2-stage-2-action-detail-1-think-fast-and-equip'
+                screen_status.battle_screen_action_indicator = 'player2-stage-2-other-action-detail-think-fast-and-equip'
                 button_status.battle_screen_instruction_bar_text = 'Opponent is choosing a tactic/item lv' + str(int(action_level)) + ' to play'
                 #pygame.time.delay(3000)
             else:
-                screen_status.battle_screen_action_indicator = 'player2-stage-2-action-detail-1-think-fast'
+                screen_status.battle_screen_action_indicator = 'player2-stage-2-other-action-detail-think-fast'
                 button_status.battle_screen_instruction_bar_text = 'Opponent is choosing a tactic lv' + str(int(action_level)) + ' to play'
                 #pygame.time.delay(3000)
         elif 'Equip' in player2.character_under_card_by_level[x].lv_type:
-                screen_status.battle_screen_action_indicator = 'player2-stage-2-action-detail-1-equip'
+                screen_status.battle_screen_action_indicator = 'player2-stage-2-other-action-detail-equip'
                 button_status.battle_screen_instruction_bar_text = 'Opponent is choosing a item lv' + str(int(action_level)) + ' to play'
                 #pygame.time.delay(3000)
         else:
@@ -1654,10 +1753,10 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
 
 
 
-    # Which stage to go when user at stage-2-action-detail-
-    elif 'player2-stage-2-action-detail-1-' in screen_status.battle_screen_action_indicator:
+    # Which stage to go when user at stage-2-other-action-detail-
+    elif 'player2-stage-2-other-action-detail-' in screen_status.battle_screen_action_indicator:
 
-        if screen_status.battle_screen_action_indicator == 'player2-stage-2-action-detail-1-spawn-and-think-fast':
+        if screen_status.battle_screen_action_indicator == 'player2-stage-2-other-action-detail-spawn-and-think-fast':
             located_card = []
             for card in player2.hand_list:
                 if ((card.card_type == 'monster' or card.card_type == 'tactic')
@@ -1677,7 +1776,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                     player2.hand_list.remove(located_card)
                     print('Opponent use tactic')
 
-        elif screen_status.battle_screen_action_indicator == 'player2-stage-2-action-detail-1-spawn-and-equip':
+        elif screen_status.battle_screen_action_indicator == 'player2-stage-2-other-action-detail-spawn-and-equip':
             located_card = []
             for card in player2.hand_list:
                 if ((card.card_type == 'monster' or card.card_type == 'item')
@@ -1700,7 +1799,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                             break
                     player2.hand_list.remove(located_card)
 
-        elif screen_status.battle_screen_action_indicator == 'player2-stage-2-action-detail-1-think-fast-and-equip':
+        elif screen_status.battle_screen_action_indicator == 'player2-stage-2-other-action-detail-think-fast-and-equip':
             located_card = []
             for card in player2.hand_list:
                 if ((card.card_type == 'tactic' or card.card_type == 'item')
@@ -1720,7 +1819,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                     player2.hand_list.remove(located_card)
                     print('Opponent use tactic')
 
-        elif screen_status.battle_screen_action_indicator == 'player2-stage-2-action-detail-1-spawn':
+        elif screen_status.battle_screen_action_indicator == 'player2-stage-2-other-action-detail-spawn':
             located_card = []
             for card in player2.hand_list:
                 if ((card.card_type == 'monster')
@@ -1737,7 +1836,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                 player2.hand_list.remove(located_card)
 
 
-        elif screen_status.battle_screen_action_indicator == 'player2-stage-2-action-detail-1-think-fast':
+        elif screen_status.battle_screen_action_indicator == 'player2-stage-2-other-action-detail-think-fast':
             located_card = []
             for card in player2.hand_list:
                 if ((card.card_type == 'tactic')
@@ -1750,7 +1849,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                 player2.hand_list.remove(located_card)
                 print('Opponent use tactic')
 
-        elif screen_status.battle_screen_action_indicator == 'player2-stage-2-action-detail-1-equip':
+        elif screen_status.battle_screen_action_indicator == 'player2-stage-2-other-action-detail-equip':
             located_card = []
             for card in player2.hand_list:
                 if ((card.card_type == 'item')
