@@ -22,6 +22,9 @@ class Character():
         self.skill_3_type = skill_3_type
         self.duplicate = duplicate
 
+        self.image_zoom = pygame.image.load('static/images/in_game_zoom/character/' + self.set_number + '_' + self.card_number + '.jpg')
+
+        self.rect_zoom = self.image_zoom.get_rect()
 
         self.image = self.image_raw = pygame.image.load('static/images/in_game/character/' + self.set_number + '_' + self.card_number + '.jpg')
         self.image = pygame.transform.scale(self.image_raw,(ai_settings.card_size_x, ai_settings.card_size_y))
