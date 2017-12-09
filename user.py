@@ -14,7 +14,7 @@ class User():
             card_01_13,
             card_01_23, card_01_25, card_01_27, card_01_28, card_01_29,
             card_01_31, card_01_33, card_01_36,
-            card_01_42,
+            card_01_42, card_01_43,
             card_01_50, card_01_55, card_05_56, card_01_58,
             card_01_61, card_01_62,
             card_01_73, card_01_77, card_01_78,
@@ -22,7 +22,7 @@ class User():
             card_01_94, card_01_95,
             # Set 2
             card_02_11, card_02_18, card_02_19,
-            card_02_20, card_02_24, card_02_25,
+            card_02_20, card_02_25,
             card_02_30, card_02_31, card_02_35, card_02_38,
             # Set 3
             card_03_01, card_03_09,

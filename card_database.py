@@ -75,6 +75,9 @@ attack='10',health='10',lv_type='Quest',lv_active_level='0',special_effect='')
 card_01_42 = Item(set_number='01',card_number='42',card_type='item',job='magician',level='10',
 lv_type='Equip 40',lv_active_level='40',special_effect='')
 
+card_01_43 = Tactic(set_number='01',card_number='43',card_type='tactic',job='magician',level='40',
+lv_type='Think Fast 40',lv_active_level='30',special_effect='Quest/Quest')
+
 card_01_44 = Character(set_number='01',card_number='44',card_type='character',job='magician',level='0',
 health='180',skill_1_lv = '10', skill_1_type = '',skill_2_lv = '30', skill_2_type = '',skill_3_lv = '70', skill_3_type = '')
 
