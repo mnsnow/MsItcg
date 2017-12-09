@@ -47,7 +47,7 @@ class Player2():
 
             ]
 
-        self.character_card = card_01_21
+        self.character_card = card_01_16
 
         self.character_under_card_by_level = {
             '10' : '',
@@ -84,7 +84,10 @@ class Player2():
             '6' : '',
         }
 
-        self.hand_list = random.sample(self.deck_list, len(self.deck_list))[0:40]
+        self.random_deck_list = random.sample(self.deck_list, len(self.deck_list))
+
+        self.remain_deck_list = self.random_deck_list[6:]
+        self.hand_list = self.random_deck_list[0:30]
 
         self.stage_2_other_card_usable_list = []
 

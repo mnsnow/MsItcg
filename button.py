@@ -20,7 +20,7 @@ class Button():
         self.image = self.image_normal
         self.rect = self.image.get_rect()
 
-        font = pygame.font.Font('freesansbold.ttf', 17)
+        font = pygame.font.Font('freesansbold.ttf', 16)
         text_image = font.render(text, True, font_color)
         text_rect = text_image.get_rect(center = self.rect.center)
 
