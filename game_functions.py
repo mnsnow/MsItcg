@@ -249,7 +249,7 @@ def check_events_battle_screen(ai_settings, screen, buttons,screen_status, butto
                             battle_screen_instruction_bar_skip_action(screen,buttons, screen_status, button_status, card_database_filter, user)
 
 
-        elif event.type == pygame.MOUSEMOTION:
+        elif event.type == pygame.MOUSEMOTION: # Mostly for zoom in
             x = 0 # indicator helps remove zoom in.
             for i in range(1,8):
                 if Rect((100+145*(i-1)),610,130,180).collidepoint(pygame.mouse.get_pos()):
@@ -259,7 +259,24 @@ def check_events_battle_screen(ai_settings, screen, buttons,screen_status, butto
                     button_status.card_zoom_position_indicator = str(i)
                     x = 1
 
-            if Rect(650,40,130,180).collidepoint(pygame.mouse.get_pos()):
+            for i in range(1,16):
+                if Rect(1050,(220 + 23 * (i-1)),130,23).collidepoint(pygame.mouse.get_pos()):
+                    button_status.card_zoom_active = True
+                    button_status.card_zoom_screen_indicator = 'battle_screen'
+                    button_status.card_zoom_part_indicator = 'character 1 under'
+                    button_status.card_zoom_position_indicator = str(i)
+                    x = 1
+
+            for i in range(1,16):
+                if Rect(20,(220 + 23 * (i-1)),130,23).collidepoint(pygame.mouse.get_pos()):
+                    button_status.card_zoom_active = True
+                    button_status.card_zoom_screen_indicator = 'battle_screen'
+                    button_status.card_zoom_part_indicator = 'character 2 under'
+                    button_status.card_zoom_position_indicator = str(i)
+                    x = 1
+
+
+            if Rect(1050,40,130,180).collidepoint(pygame.mouse.get_pos()):
                 button_status.card_zoom_active = True
                 button_status.card_zoom_screen_indicator = 'battle_screen'
                 button_status.card_zoom_part_indicator = 'character 1'
@@ -296,6 +313,8 @@ def update_screen(ai_settings,grid, screen, buttons, screen_status, button_statu
     if screen_status.battle_screen_display:
         battle_screen_update(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2)
 
+    # Display zoom in affect at the end to cover previous draw when zoom in
+    card_zoom_update(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
     pygame.display.flip()
 
@@ -347,9 +366,50 @@ def battle_screen_update(ai_settings,grid, screen, buttons, screen_status, butto
 
     battle_screen_battleground_card_display(screen,buttons, screen_status, button_status, card_database_filter, user)
 
-    battle_screen_card_zoom_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
     # Display informations of player2
     battle_screen_player2_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
+def card_zoom_update(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
+    """ display card details (zoom in) any card"""
+    if screen_status.battle_screen_action_indicator != 'stage-0':
+        if button_status.card_zoom_active:
+            if button_status.card_zoom_screen_indicator == 'battle_screen':
+                if button_status.card_zoom_part_indicator == 'hand':
+                    located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.card_zoom_position_indicator)-1)]
+                    located_card.rect_zoom.x = located_card.rect.x - 85
+                    located_card.rect_zoom.y = located_card.rect.y - 210
+                    screen.blit(located_card.image_zoom, located_card.rect_zoom)
+
+                elif button_status.card_zoom_part_indicator == 'character 1':
+                    located_card = user.character_card
+                    located_card.rect_zoom.x = located_card.rect.x - 305
+                    located_card.rect_zoom.y = located_card.rect.y
+                    screen.blit(located_card.image_zoom, located_card.rect_zoom)
+
+                elif button_status.card_zoom_part_indicator == 'character 2':
+                    located_card = player2.character_card
+                    located_card.rect_zoom.x = located_card.rect.x + 135
+                    located_card.rect_zoom.y = located_card.rect.y
+                    screen.blit(located_card.image_zoom, located_card.rect_zoom)
+
+                elif button_status.card_zoom_part_indicator == 'character 1 under':
+                    if user.character_under_card_by_level[str(int(button_status.card_zoom_position_indicator)*10)] != '':
+                        located_card = user.character_under_card_by_level[str(int(button_status.card_zoom_position_indicator)*10)]
+                        located_card.bottom_rect_zoom.x = 880
+                        located_card.bottom_rect_zoom.y = 220 + 23 * (int(button_status.card_zoom_position_indicator)-1)
+                        screen.blit(located_card.bottom_image_zoom, located_card.bottom_rect_zoom)
+                    else:
+                        pass
+
+                elif button_status.card_zoom_part_indicator == 'character 2 under':
+                    if player2.character_under_card_by_level[str(int(button_status.card_zoom_position_indicator)*10)] != '':
+                        located_card = player2.character_under_card_by_level[str(int(button_status.card_zoom_position_indicator)*10)]
+                        located_card.bottom_rect_zoom.x = 20
+                        located_card.bottom_rect_zoom.y = 220 + 23 * (int(button_status.card_zoom_position_indicator)-1)
+                        screen.blit(located_card.bottom_image_zoom, located_card.bottom_rect_zoom)
+                    else:
+                        pass
+
 
 
 
@@ -674,30 +734,6 @@ def battle_screen_grid_display(grid, screen):
     screen.blit(grid.battle_screen_item_1_grid, grid.battle_screen_item_1_grid_rect)
     screen.blit(grid.battle_screen_item_2_grid, grid.battle_screen_item_2_grid_rect)
     screen.blit(grid.battle_screen_instruction_bar_grid, grid.battle_screen_instruction_bar_grid_rect)
-
-def battle_screen_card_zoom_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
-    """ display card details (zoom in) any card"""
-    if screen_status.battle_screen_action_indicator != 'stage-0':
-        if button_status.card_zoom_active:
-            if button_status.card_zoom_screen_indicator == 'battle_screen':
-                if button_status.card_zoom_part_indicator == 'hand':
-                    located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.card_zoom_position_indicator)-1)]
-                    located_card.rect_zoom.x = located_card.rect.x - 85
-                    located_card.rect_zoom.y = located_card.rect.y - 210
-                    screen.blit(located_card.image_zoom, located_card.rect_zoom)
-
-                elif button_status.card_zoom_part_indicator == 'character 1':
-                    located_card = user.character_card
-                    located_card.rect_zoom.x = located_card.rect.x -100
-                    located_card.rect_zoom.y = located_card.rect.y -100
-                    screen.blit(located_card.image_zoom, located_card.rect_zoom)
-
-                elif button_status.card_zoom_part_indicator == 'character 2':
-                    located_card = player2.character_card
-                    located_card.rect_zoom.x = located_card.rect.x -100
-                    located_card.rect_zoom.y = located_card.rect.y -100
-                    screen.blit(located_card.image_zoom, located_card.rect_zoom)
-
 
 def battle_screen_instruction_bar_display(screen,buttons, screen_status, button_status, card_database_filter, user):
     """ Display instruction bar

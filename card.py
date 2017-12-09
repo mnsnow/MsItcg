@@ -49,8 +49,10 @@ class Monster():
 
 
         self.image_zoom = pygame.image.load('static/images/in_game_zoom/monster/' + self.set_number + '_' + self.card_number + '.jpg')
-
         self.rect_zoom = self.image_zoom.get_rect()
+
+        self.bottom_image_zoom = pygame.image.load('static/images/in_game_zoom/monster/monster_bottom/' + self.set_number + '_' + self.card_number + '.jpg')
+        self.bottom_rect_zoom = self.bottom_image_zoom.get_rect()
 
         self.image = self.image_raw = pygame.image.load('static/images/in_game/monster/' + self.set_number + '_' + self.card_number + '.jpg')
         self.image = pygame.transform.scale(self.image_raw,(ai_settings.card_size_x, ai_settings.card_size_y))
@@ -81,8 +83,10 @@ class Tactic():
         self.duplicate = duplicate
 
         self.image_zoom = pygame.image.load('static/images/in_game_zoom/tactic/' + self.set_number + '_' + self.card_number + '.jpg')
-
         self.rect_zoom = self.image_zoom.get_rect()
+
+        self.bottom_image_zoom = pygame.image.load('static/images/in_game_zoom/tactic/tactic_bottom/' + self.set_number + '_' + self.card_number + '.jpg')
+        self.bottom_rect_zoom = self.bottom_image_zoom.get_rect()
 
         self.image = self.image_raw = pygame.image.load('static/images/in_game/tactic/' + self.set_number + '_' + self.card_number + '.jpg')
         self.image = pygame.transform.scale(self.image_raw,(ai_settings.card_size_x, ai_settings.card_size_y))
@@ -108,8 +112,10 @@ class Item():
         self.duplicate = duplicate
 
         self.image_zoom = pygame.image.load('static/images/in_game_zoom/item/' + self.set_number + '_' + self.card_number + '.jpg')
-
         self.rect_zoom = self.image_zoom.get_rect()
+
+        self.bottom_image_zoom = pygame.image.load('static/images/in_game_zoom/item/item_bottom/' + self.set_number + '_' + self.card_number + '.jpg')
+        self.bottom_rect_zoom = self.bottom_image_zoom.get_rect()
 
         self.image = self.image_raw = pygame.image.load('static/images/in_game/item/' + self.set_number + '_' + self.card_number + '.jpg')
         self.image = pygame.transform.scale(self.image_raw,(ai_settings.card_size_x, ai_settings.card_size_y))
