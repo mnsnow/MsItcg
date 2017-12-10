@@ -53,7 +53,7 @@ class User():
         self.random_deck_list = random.sample(self.deck_list, len(self.deck_list))
 
         self.remain_deck_list = self.random_deck_list[6:]
-        self.hand_list = self.random_deck_list[0:30]
+        self.hand_list = self.random_deck_list[0:6]
 
         self.monster_in_play_dict = {
             '1' : '',

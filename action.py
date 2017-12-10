@@ -43,6 +43,10 @@ class Action():
         user.hand_list.append(user.remain_deck_list[0])
         del user.remain_deck_list[0]
 
+    def stage_2_refresh(self, screen,buttons, screen_status, button_status, card_database_filter, user):
+        """ refresh"""
+        user.character_card.health = str(int(user.character_card.health) + 10)
+
     def stage_2_sneak(self, caster_type,  action_level, screen, buttons, screen_status, button_status, card_database_filter, user, under_position = '1'):
         """ input spawn number, output spawn action"""
         if caster_type == 'character':

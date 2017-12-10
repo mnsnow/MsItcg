@@ -317,7 +317,7 @@ card_03_44 = Monster(set_number='03',card_number='44',card_type='monster',job='t
 attack='80',health='90',lv_type='lalalala',lv_active_level='0',special_effect='')
 
 card_03_45 = Monster(set_number='03',card_number='45',card_type='monster',job='thief',level='24',
-attack='40',health='10',lv_type='lalalala',lv_active_level='50',special_effect='')
+attack='40',health='10',lv_type='Spawn/Think Fast 40',lv_active_level='50',special_effect='')
 
 card_03_46 = Monster(set_number='03',card_number='46',card_type='monster',job='warrior',level='90',
 attack='60',health='80',lv_type='lalalala',lv_active_level='70',special_effect='')
