@@ -808,7 +808,7 @@ def battle_screen_instruction_bar_display(screen,buttons, screen_status, button_
         button_status.battle_screen_instruction_bar_skip_backend = True
 
     elif screen_status.battle_screen_action_indicator == 'stage-4-end-turn':
-        button_status.battle_screen_instruction_bar_text = 'Your turn has end'
+        button_status.battle_screen_instruction_bar_text = "Your turn has end with " + user.item_in_play_length + " item. Deal " + str(int(user.item_in_play_length)*10) + ' damage. Gain ' + str(int(user.item_in_play_length)*10) + ' hp.'   
         button_status.battle_screen_instruction_bar_yes_display = True
         button_status.battle_screen_instruction_bar_yes_backend = True
         button_status.battle_screen_instruction_bar_skip_display = False
@@ -1199,6 +1199,21 @@ def battle_screen_battleground_button_display(ai_settings, screen, buttons,scree
 
 def battle_screen_result_update(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ update result in each cycle"""
+    # items list length update
+
+    for position,card in user.item_in_play_dict.items():
+        if card != '':
+            user.item_in_play_length = position
+
+    for position,card in player2.item_in_play_dict.items():
+        if card != '':
+            player2.item_in_play_length = position
+
+    if int(user.item_in_play_length) > 6:
+        user.item_in_play_length = '6'
+    if int(player2.item_in_play_length) > 6:
+        player2.item_in_play_length = '6'
+
     # Monster list update
     for position, card in user.monster_in_play_dict.items():
         if card != '' and int(card.health) <= 0:
@@ -2270,10 +2285,15 @@ def battle_screen_instruction_bar_yes_skip_action(yes_skip_indicator, screen,but
 
     # Which stage to go when user at stage-4-end-turn
     elif screen_status.battle_screen_action_indicator == 'stage-4-end-turn':
+
+        player2.character_card.health = str(int(player2.character_card.health) - 10*int(user.item_in_play_length))
+        user.character_card.health = str(int(user.character_card.health) + 10*int(user.item_in_play_length))
+
         button_status.battle_screen_instruction_bar_yes_display = False
         button_status.battle_screen_instruction_bar_yes_backend = False
         button_status.battle_screen_instruction_bar_skip_display = False
         button_status.battle_screen_instruction_bar_skip_backend = False
+
 
         screen_status.battle_screen_action_indicator = 'player2-stage-0'
         screen_status.battle_screen_player2_action_display_indicator = True
@@ -2302,6 +2322,7 @@ def battle_screen_stage_2_action(position, screen,buttons, screen_status, button
 
         elif ('Tricky Shot' in character_skill_name
             or 'Crush' in character_skill_name
+            or 'Slash' in character_skill_name
             ):
             action.stage_2_tricky_shot('character', screen,buttons, screen_status, button_status, card_database_filter, user, under_position = position)
 
@@ -2371,6 +2392,7 @@ def battle_screen_stage_2_action(position, screen,buttons, screen_status, button
 
         elif ('Tricky Shot' in user.character_under_card_by_level[position].lv_type
             or 'Slash' in user.character_under_card_by_level[position].lv_type
+            or 'Crush' in user.character_under_card_by_level[position].lv_type
             ):
             action.stage_2_tricky_shot('other', screen,buttons, screen_status, button_status, card_database_filter, user)
 
@@ -2570,6 +2592,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
 
         elif ('Tricky Shot' in character_skill_name
             or 'Crush' in character_skill_name
+            or 'Slash' in character_skill_name
             ):
             user.character_card.health = str(int(user.character_card.health)-20)
 
@@ -2888,6 +2911,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
 
         elif ('Tricky Shot' in player2.character_under_card_by_level[x].lv_type
             or 'Slash' in player2.character_under_card_by_level[x].lv_type
+            or 'Crush' in player2.character_under_card_by_level[x].lv_type
             ):
             user.character_card.health = str(int(user.character_card.health)-20)
 
@@ -2950,16 +2974,23 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
 
     # Which stage to go when user at stage-4-end-turn
     elif screen_status.battle_screen_action_indicator == 'player2-stage-4-end-turn':
-            button_status.battle_screen_instruction_bar_text = "Opponent's turn has end"
-            #pygame.time.delay(3000)
-            screen_status.battle_screen_action_indicator = 'stage-1'
-            screen_status.battle_screen_player2_action_display_indicator = False # No longer doing player2 loops
-            button_status.battle_screen_instruction_bar_yes_display = True
-            button_status.battle_screen_instruction_bar_yes_backend = True
-            button_status.battle_screen_instruction_bar_skip_display = True
-            button_status.battle_screen_instruction_bar_skip_backend = True
+        button_status.battle_screen_instruction_bar_text = "Opponent's turn has end with " + player2.item_in_play_length + " item. Deal " + str(int(player2.item_in_play_length)*10) + ' damage. Gain ' + str(int(player2.item_in_play_length)*10) + ' hp.'
+
+        #pygame.time.delay(3000)
+        screen_status.battle_screen_action_indicator = 'player2-stage-4-end-turn-transfer'
 
 
+    elif screen_status.battle_screen_action_indicator == 'player2-stage-4-end-turn-transfer':
+
+        player2.character_card.health = str(int(player2.character_card.health) + 10*int(player2.item_in_play_length))
+        user.character_card.health = str(int(user.character_card.health) - 10*int(player2.item_in_play_length))
+
+        screen_status.battle_screen_action_indicator = 'stage-1'
+        screen_status.battle_screen_player2_action_display_indicator = False # No longer doing player2 loops
+        button_status.battle_screen_instruction_bar_yes_display = True
+        button_status.battle_screen_instruction_bar_yes_backend = True
+        button_status.battle_screen_instruction_bar_skip_display = True
+        button_status.battle_screen_instruction_bar_skip_backend = True
 
 
 

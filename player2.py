@@ -83,6 +83,7 @@ class Player2():
             '5' : '',
             '6' : '',
         }
+        self.item_in_play_length = '0'
 
         self.random_deck_list = random.sample(self.deck_list, len(self.deck_list))
 

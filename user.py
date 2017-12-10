@@ -72,6 +72,9 @@ class User():
             '6' : '',
         }
 
+
+        self.item_in_play_length = '0'
+
         self.character_under_card_by_level = {
             '10' : '',
             '20' : '',
