@@ -48,7 +48,7 @@ class User():
 
             ]
 
-        self.character_card = card_05_61
+        self.character_card = card_01_64
 
         self.random_deck_list = random.sample(self.deck_list, len(self.deck_list))
 
