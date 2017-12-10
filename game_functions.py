@@ -378,10 +378,13 @@ def card_zoom_update(ai_settings, screen, buttons,screen_status, button_status, 
         if button_status.card_zoom_active:
             if button_status.card_zoom_screen_indicator == 'battle_screen':
                 if button_status.card_zoom_part_indicator == 'hand':
-                    located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.card_zoom_position_indicator)-1)]
-                    located_card.rect_zoom.x = located_card.rect.x - 85
-                    located_card.rect_zoom.y = located_card.rect.y - 210
-                    screen.blit(located_card.image_zoom, located_card.rect_zoom)
+                    if len(user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1):7 * screen_status.battle_screen_my_hand_page_id]) < int(button_status.card_zoom_position_indicator):
+                        pass
+                    else:
+                        located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.card_zoom_position_indicator)-1)]
+                        located_card.rect_zoom.x = located_card.rect.x - 85
+                        located_card.rect_zoom.y = located_card.rect.y - 210
+                        screen.blit(located_card.image_zoom, located_card.rect_zoom)
 
                 elif button_status.card_zoom_part_indicator == 'character 1':
                     located_card = user.character_card
