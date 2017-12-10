@@ -808,7 +808,7 @@ def battle_screen_instruction_bar_display(screen,buttons, screen_status, button_
         button_status.battle_screen_instruction_bar_skip_backend = True
 
     elif screen_status.battle_screen_action_indicator == 'stage-4-end-turn':
-        button_status.battle_screen_instruction_bar_text = "Your turn has end with " + user.item_in_play_length + " item. Deal " + str(int(user.item_in_play_length)*10) + ' damage. Gain ' + str(int(user.item_in_play_length)*10) + ' hp.'   
+        button_status.battle_screen_instruction_bar_text = "Your turn has end with " + user.item_in_play_length + " item. Deal " + str(int(user.item_in_play_length)*10) + ' damage. Gain ' + str(int(user.item_in_play_length)*10) + ' hp.'
         button_status.battle_screen_instruction_bar_yes_display = True
         button_status.battle_screen_instruction_bar_yes_backend = True
         button_status.battle_screen_instruction_bar_skip_display = False
@@ -2807,7 +2807,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
             located_card = []
             for card in player2.hand_list:
                 if ((card.card_type == 'monster' or card.card_type == 'item')
-                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a monster/item lv','').replace(' to play','')))):
+                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a card lv','').replace(' to play','')))):
                     located_card = card
                     break
             if located_card == []:
