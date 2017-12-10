@@ -45,43 +45,52 @@ class Action():
 
 
 
-    def stage_2_spawn(self, under_position,  action_level, screen, buttons, screen_status, button_status, card_database_filter, user):
+    def stage_2_spawn(self, caster_type,  action_level, screen, buttons, screen_status, button_status, card_database_filter, user, under_position = '1'):
         """ input spawn number, output spawn action"""
-        screen_status.battle_screen_action_indicator = 'stage-2-other-action-detail-spawn'
+        if caster_type == 'character':
+            screen_status.battle_screen_action_indicator = 'stage-2-character-action-' + under_position + '-detail-spawn'
+        elif caster_type == 'other':
+            screen_status.battle_screen_action_indicator = 'stage-2-other-action-detail-spawn'
         button_status.battle_screen_instruction_bar_yes_display = False
         button_status.battle_screen_instruction_bar_yes_backend = False
         button_status.battle_screen_instruction_bar_text = 'Pick a monster lv' + str(int(action_level)) + ' or less and click yes to play.'
 
 
-    def stage_2_think_fast(self, under_position,  action_level, screen, buttons, screen_status, button_status, card_database_filter, user):
+    def stage_2_think_fast(self, caster_type,  action_level, screen, buttons, screen_status, button_status, card_database_filter, user, under_position = '1'):
         """ input spawn number, output spawn action"""
-        screen_status.battle_screen_action_indicator = 'stage-2-other-action-detail-think-fast'
+        if caster_type == 'character':
+            screen_status.battle_screen_action_indicator = 'stage-2-character-action-' + under_position + '-detail-think-fast'
+        elif caster_type == 'other':
+            screen_status.battle_screen_action_indicator = 'stage-2-other-action-detail-think-fast'
         button_status.battle_screen_instruction_bar_yes_display = False
         button_status.battle_screen_instruction_bar_yes_backend = False
         button_status.battle_screen_instruction_bar_text = 'Pick a tactic lv' + str(int(action_level)) + ' or less and click yes to play.'
 
-    def stage_2_equip(self, under_position,  action_level, screen, buttons, screen_status, button_status, card_database_filter, user):
+    def stage_2_equip(self, caster_type,  action_level, screen, buttons, screen_status, button_status, card_database_filter, user, under_position = '1'):
         """ input spawn number, output spawn action"""
-        screen_status.battle_screen_action_indicator = 'stage-2-other-action-detail-equip'
+        if caster_type == 'character':
+            screen_status.battle_screen_action_indicator = 'stage-2-character-action-' + under_position + '-detail-equip'
+        elif caster_type == 'other':
+            screen_status.battle_screen_action_indicator = 'stage-2-other-action-detail-equip'
         button_status.battle_screen_instruction_bar_yes_display = False
         button_status.battle_screen_instruction_bar_yes_backend = False
         button_status.battle_screen_instruction_bar_text = 'Pick a item lv' + str(int(action_level)) + ' or less and click yes to play.'
 
-    def stage_2_spawn_and_think_fast(self, under_position,  action_level, screen, buttons, screen_status, button_status, card_database_filter, user):
+    def stage_2_spawn_and_think_fast(self, caster_type,  action_level, screen, buttons, screen_status, button_status, card_database_filter, user):
         """ input spawn number, output spawn action"""
         screen_status.battle_screen_action_indicator = 'stage-2-other-action-detail-spawn-and-think-fast'
         button_status.battle_screen_instruction_bar_yes_display = False
         button_status.battle_screen_instruction_bar_yes_backend = False
         button_status.battle_screen_instruction_bar_text = 'Pick a monster/tactic lv' + str(int(action_level)) + ' or less and click yes to play.'
 
-    def stage_2_spawn_and_equip(self, under_position,  action_level, screen, buttons, screen_status, button_status, card_database_filter, user):
+    def stage_2_spawn_and_equip(self, caster_type,  action_level, screen, buttons, screen_status, button_status, card_database_filter, user):
         """ input spawn number, output spawn action"""
         screen_status.battle_screen_action_indicator = 'stage-2-other-action-detail-spawn-and-equip'
         button_status.battle_screen_instruction_bar_yes_display = False
         button_status.battle_screen_instruction_bar_yes_backend = False
         button_status.battle_screen_instruction_bar_text = 'Pick a monster/item lv' + str(int(action_level)) + ' or less and click yes to play.'
 
-    def stage_2_think_fast_and_equip(self, under_position,  action_level, screen, buttons, screen_status, button_status, card_database_filter, user):
+    def stage_2_think_fast_and_equip(self, caster_type,  action_level, screen, buttons, screen_status, button_status, card_database_filter, user):
         """ input spawn number, output spawn action"""
         screen_status.battle_screen_action_indicator = 'stage-2-other-action-detail-think-fast-and-equip'
         button_status.battle_screen_instruction_bar_yes_display = False

@@ -477,7 +477,7 @@ card_05_25 = Monster(set_number='05',card_number='25',card_type='monster',job='m
 attack='30',health='90',lv_type='lalalala',lv_active_level='0',special_effect='')
 
 card_05_30 = Character(set_number='05',card_number='30',card_type='character',job='magician',level='0',
-health='190',skill_1_lv = '10', skill_1_type = 'Quest',skill_2_lv = '20', skill_2_type = 'Wand Thwack',skill_3_lv = '80', skill_3_type = 'Think Fast 10000')
+health='190',skill_1_lv = '10', skill_1_type = 'Quest',skill_2_lv = '20', skill_2_type = 'Wand Thwack',skill_3_lv = '80', skill_3_type = 'Think Fast 999')
 
 card_05_32 = Monster(set_number='05',card_number='32',card_type='monster',job='magician',level='62',
 attack='60',health='60',lv_type='lalalala',lv_active_level='80',special_effect='')
