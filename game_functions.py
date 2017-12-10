@@ -1170,6 +1170,17 @@ def battle_screen_battleground_button_display(ai_settings, screen, buttons,scree
 
 def battle_screen_result_update(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ update result in each cycle"""
+    # Monster list update
+    for card in user.monster_in_play_dict.values():
+        if card != '' and int(card.health) <= 0:
+            card = ''
+
+    for card in player2.monster_in_play_dict.values():
+        if card != '' and int(card.health) <= 0:
+            card = ''
+
+
+    # Win/Lost situations
     if int(user.character_card.health) <= 0:
         print('You Lost!')
     if int(player2.character_card.health) <= 0:
