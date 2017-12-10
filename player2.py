@@ -75,6 +75,9 @@ class Player2():
             '5' : '',
             '6' : '',
         }
+
+        self.monster_in_play_length = '0'
+
         self.item_in_play_dict = {
             '1' : '',
             '2' : '',

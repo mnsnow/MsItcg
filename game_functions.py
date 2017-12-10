@@ -306,6 +306,9 @@ def update_screen(ai_settings,grid, screen, buttons, screen_status, button_statu
     if screen_status.welcome_screen_display:
         welcome_screen_update(ai_settings,screen, buttons, screen_status)
 
+    if screen_status.prepare_screen_display:
+        prepare_screen_update(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2)
+
     if screen_status.build_deck_screen_display:
         build_deck_screen_update(ai_settings, grid, screen, buttons, screen_status, button_status, card_database_filter, user)
 
@@ -332,6 +335,10 @@ def welcome_screen_update(ai_settings,screen, buttons, screen_status):
     if screen_status.welcome_screen_backend:
         buttons.extend((button1, button2, button3))
         screen_status.welcome_screen_backend = False
+
+def prepare_screen_update(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2):
+    """ Update prepare screen"""
+    screen.fill(ai_settings.bg_color)
 
 def build_deck_screen_update(ai_settings, grid, screen, buttons, screen_status, button_status, card_database_filter, user):
     """ Build deck screen update"""
@@ -415,6 +422,9 @@ def card_zoom_update(ai_settings, screen, buttons,screen_status, button_status, 
                         screen.blit(located_card.bottom_image_zoom, located_card.bottom_rect_zoom)
                     else:
                         pass
+
+
+
 
 
 
@@ -1160,6 +1170,9 @@ def battle_screen_player2_display(ai_settings, screen, buttons,screen_status, bu
 def battle_screen_battleground_button_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ Display buttons on battleground"""
     if ('stage-2-other-action-detail-tactic-1' in screen_status.battle_screen_action_indicator
+        or ('stage-2-character-action-' in screen_status.battle_screen_action_indicator and '-detail-tactic-1' in screen_status.battle_screen_action_indicator)
+        or ('stage-2-character-action-' in screen_status.battle_screen_action_indicator and 'easy-shot' in screen_status.battle_screen_action_indicator)
+        or ('stage-2-character-action-' in screen_status.battle_screen_action_indicator and 'tricky-shot' in screen_status.battle_screen_action_indicator)
         or 'stage-3-monster-' in screen_status.battle_screen_action_indicator
         or 'stage-2-other-action-detail-easy-shot' in screen_status.battle_screen_action_indicator
         or 'stage-2-other-action-detail-tricky-shot' in screen_status.battle_screen_action_indicator
@@ -1209,10 +1222,15 @@ def battle_screen_result_update(ai_settings, screen, buttons,screen_status, butt
         if card != '':
             player2.item_in_play_length = position
 
-    if int(user.item_in_play_length) > 6:
-        user.item_in_play_length = '6'
-    if int(player2.item_in_play_length) > 6:
-        player2.item_in_play_length = '6'
+    # monster list length update
+
+    for position,card in user.monster_in_play_dict.items():
+        if card != '':
+            user.monster_in_play_length = position
+
+    for position,card in player2.monster_in_play_dict.items():
+        if card != '':
+            player2.monster_in_play_length = position
 
     # Monster list update
     for position, card in user.monster_in_play_dict.items():
@@ -1256,7 +1274,8 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
                     button_status.battle_screen_my_hand_indicator_display = True
                     located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.battle_screen_my_hand_indicator_position)-1)]
                     if (located_card.card_type == 'monster'
-                        and (int(located_card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Pick a monster lv','').replace(' or less and click yes to play.','')))):
+                        and (int(located_card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Pick a monster lv','').replace(' or less and click yes to play.','')))
+                        and int(user.monster_in_play_length) < 6):
                         button_status.battle_screen_instruction_bar_yes_display = True
                         button_status.battle_screen_instruction_bar_yes_backend = True
                     else:
@@ -1288,7 +1307,8 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
                     button_status.battle_screen_my_hand_indicator_display = True
                     located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.battle_screen_my_hand_indicator_position)-1)]
                     if (located_card.card_type == 'item'
-                        and (int(located_card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Pick a item lv','').replace(' or less and click yes to play.','')))):
+                        and (int(located_card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Pick a item lv','').replace(' or less and click yes to play.','')))
+                        and int(user.item_in_play_length) < 6):
                         button_status.battle_screen_instruction_bar_yes_display = True
                         button_status.battle_screen_instruction_bar_yes_backend = True
                     else:
@@ -1303,7 +1323,19 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
                     button_status.battle_screen_my_hand_indicator_position = position
                     button_status.battle_screen_my_hand_indicator_display = True
                     located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.battle_screen_my_hand_indicator_position)-1)]
-                    if int(located_card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Pick a card lv','').replace(' or less and click yes to play.','')):
+                    if (located_card.card_type == 'monster'
+                        and int(located_card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Pick a card lv','').replace(' or less and click yes to play.',''))
+                        and int(user.monster_in_play_length) < 6):
+                        button_status.battle_screen_instruction_bar_yes_display = True
+                        button_status.battle_screen_instruction_bar_yes_backend = True
+                    elif (located_card.card_type == 'item'
+                        and int(located_card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Pick a card lv','').replace(' or less and click yes to play.',''))
+                        and int(user.item_in_play_length) < 6):
+                        button_status.battle_screen_instruction_bar_yes_display = True
+                        button_status.battle_screen_instruction_bar_yes_backend = True
+                    elif (located_card.card_type == 'tactic'
+                        and int(located_card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Pick a card lv','').replace(' or less and click yes to play.',''))
+                        ):
                         button_status.battle_screen_instruction_bar_yes_display = True
                         button_status.battle_screen_instruction_bar_yes_backend = True
                     else:
@@ -1318,8 +1350,14 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
                     button_status.battle_screen_my_hand_indicator_position = position
                     button_status.battle_screen_my_hand_indicator_display = True
                     located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.battle_screen_my_hand_indicator_position)-1)]
-                    if ((located_card.card_type == 'monster' or located_card.card_type == 'tactic')
-                        and (int(located_card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Pick a monster/tactic lv','').replace(' or less and click yes to play.','')))):
+                    if (located_card.card_type == 'monster'
+                        and int(located_card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Pick a monster/tactic lv','').replace(' or less and click yes to play.',''))
+                        and int(user.monster_in_play_length) < 6):
+                        button_status.battle_screen_instruction_bar_yes_display = True
+                        button_status.battle_screen_instruction_bar_yes_backend = True
+                    elif (located_card.card_type == 'tactic'
+                        and int(located_card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Pick a monster/tactic lv','').replace(' or less and click yes to play.',''))
+                        ):
                         button_status.battle_screen_instruction_bar_yes_display = True
                         button_status.battle_screen_instruction_bar_yes_backend = True
                     else:
@@ -1333,8 +1371,14 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
                     button_status.battle_screen_my_hand_indicator_position = position
                     button_status.battle_screen_my_hand_indicator_display = True
                     located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.battle_screen_my_hand_indicator_position)-1)]
-                    if ((located_card.card_type == 'monster' or located_card.card_type == 'item')
-                        and (int(located_card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Pick a monster/item lv','').replace(' or less and click yes to play.','')))):
+                    if (located_card.card_type == 'monster'
+                        and int(located_card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Pick a monster/item lv','').replace(' or less and click yes to play.',''))
+                        and int(user.monster_in_play_length) < 6):
+                        button_status.battle_screen_instruction_bar_yes_display = True
+                        button_status.battle_screen_instruction_bar_yes_backend = True
+                    elif (located_card.card_type == 'item'
+                        and int(located_card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Pick a monster/item lv','').replace(' or less and click yes to play.',''))
+                        and int(user.item_in_play_length) < 6):
                         button_status.battle_screen_instruction_bar_yes_display = True
                         button_status.battle_screen_instruction_bar_yes_backend = True
                     else:
@@ -1348,8 +1392,14 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
                     button_status.battle_screen_my_hand_indicator_position = position
                     button_status.battle_screen_my_hand_indicator_display = True
                     located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.battle_screen_my_hand_indicator_position)-1)]
-                    if ((located_card.card_type == 'tactic' or located_card.card_type == 'item')
-                    and (int(located_card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Pick a tactic/item lv','').replace(' or less and click yes to play.','')))):
+                    if (located_card.card_type == 'item'
+                        and int(located_card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Pick a tactic/item lv','').replace(' or less and click yes to play.',''))
+                        and int(user.item_in_play_length) < 6):
+                        button_status.battle_screen_instruction_bar_yes_display = True
+                        button_status.battle_screen_instruction_bar_yes_backend = True
+                    elif (located_card.card_type == 'tactic'
+                        and int(located_card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Pick a tactic/item lv','').replace(' or less and click yes to play.',''))
+                        ):
                         button_status.battle_screen_instruction_bar_yes_display = True
                         button_status.battle_screen_instruction_bar_yes_backend = True
                     else:
@@ -1363,7 +1413,9 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
                     button_status.battle_screen_my_hand_indicator_position = position
                     button_status.battle_screen_my_hand_indicator_display = True
                     located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.battle_screen_my_hand_indicator_position)-1)]
-                    if located_card.card_type == 'monster' and int(located_card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Pick a monster lv','').replace(' or less and click yes to play.','')):
+                    if (located_card.card_type == 'monster'
+                        and int(located_card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Pick a monster lv','').replace(' or less and click yes to play.',''))
+                        and int(user.monster_in_play_length) < 6):
                         button_status.battle_screen_instruction_bar_yes_display = True
                         button_status.battle_screen_instruction_bar_yes_backend = True
                     else:
@@ -1377,7 +1429,9 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
                     button_status.battle_screen_my_hand_indicator_position = position
                     button_status.battle_screen_my_hand_indicator_display = True
                     located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.battle_screen_my_hand_indicator_position)-1)]
-                    if located_card.card_type == 'tactic' and int(located_card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Pick a tactic lv','').replace(' or less and click yes to play.','')):
+                    if (located_card.card_type == 'tactic'
+                        and int(located_card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Pick a tactic lv','').replace(' or less and click yes to play.',''))
+                        ):
                         button_status.battle_screen_instruction_bar_yes_display = True
                         button_status.battle_screen_instruction_bar_yes_backend = True
                     else:
@@ -1391,7 +1445,9 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
                     button_status.battle_screen_my_hand_indicator_position = position
                     button_status.battle_screen_my_hand_indicator_display = True
                     located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.battle_screen_my_hand_indicator_position)-1)]
-                    if located_card.card_type == 'item' and int(located_card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Pick a item lv','').replace(' or less and click yes to play.','')):
+                    if (located_card.card_type == 'item'
+                        and int(located_card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Pick a item lv','').replace(' or less and click yes to play.',''))
+                        and int(user.item_in_play_length) < 6):
                         button_status.battle_screen_instruction_bar_yes_display = True
                         button_status.battle_screen_instruction_bar_yes_backend = True
                     else:
@@ -1406,7 +1462,19 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
                     button_status.battle_screen_my_hand_indicator_position = position
                     button_status.battle_screen_my_hand_indicator_display = True
                     located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.battle_screen_my_hand_indicator_position)-1)]
-                    if int(located_card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Pick a card lv','').replace(' or less and click yes to play.','')):
+                    if (located_card.card_type == 'monster'
+                        and int(located_card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Pick a card lv','').replace(' or less and click yes to play.',''))
+                        and int(user.monster_in_play_length) < 6):
+                        button_status.battle_screen_instruction_bar_yes_display = True
+                        button_status.battle_screen_instruction_bar_yes_backend = True
+                    elif (located_card.card_type == 'item'
+                        and int(located_card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Pick a card lv','').replace(' or less and click yes to play.',''))
+                        and int(user.item_in_play_length) < 6):
+                        button_status.battle_screen_instruction_bar_yes_display = True
+                        button_status.battle_screen_instruction_bar_yes_backend = True
+                    elif (located_card.card_type == 'tactic'
+                        and int(located_card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Pick a card lv','').replace(' or less and click yes to play.',''))
+                        ):
                         button_status.battle_screen_instruction_bar_yes_display = True
                         button_status.battle_screen_instruction_bar_yes_backend = True
                     else:
@@ -1730,6 +1798,7 @@ def battle_screen_battleground_click_action(click_type,screen,buttons, screen_st
     """ battleground click action """
     # If click on player2's character
     if click_type == 'player2-character':
+        button_status.battle_screen_player2_battleground_indicator_display = False
         if (('stage-2-character-action-' in screen_status.battle_screen_action_indicator
             and 'detail-easy-shot' in screen_status.battle_screen_action_indicator)
 
@@ -2487,7 +2556,8 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
             located_card = []
             for card in player2.hand_list:
                 if ((card.card_type == 'monster')
-                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a monster lv','').replace(' to play','')))):
+                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a monster lv','').replace(' to play','')))
+                    and int(player2.monster_in_play_length) < 6):
                     located_card = card
                     break
             if located_card == []:
@@ -2516,7 +2586,8 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
             located_card = []
             for card in player2.hand_list:
                 if ((card.card_type == 'item')
-                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a item lv','').replace(' to play','')))):
+                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a item lv','').replace(' to play','')))
+                    and int(player2.item_in_play_length) < 6):
                     located_card = card
                     break
             if located_card == []:
@@ -2531,8 +2602,19 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
         elif screen_status.battle_screen_action_indicator == 'player2-stage-2-character-action-detail-sneak':
             located_card = []
             for card in player2.hand_list:
-                if ((card.card_type == 'monster' or card.card_type == 'item')
-                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a monster/item lv','').replace(' to play','')))):
+                if ((card.card_type == 'monster')
+                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a card lv','').replace(' to play','')))
+                    and int(player2.monster_in_play_length) < 6):
+                    located_card = card
+                    break
+                elif ((card.card_type == 'item')
+                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a card lv','').replace(' to play','')))
+                    and int(player2.item_in_play_length) < 6):
+                    located_card = card
+                    break
+                elif ((card.card_type == 'tactic')
+                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a card lv','').replace(' to play','')))
+                    ):
                     located_card = card
                     break
             if located_card == []:
@@ -2697,8 +2779,14 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
         if screen_status.battle_screen_action_indicator == 'player2-stage-2-other-action-detail-spawn-and-think-fast':
             located_card = []
             for card in player2.hand_list:
-                if ((card.card_type == 'monster' or card.card_type == 'tactic')
-                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a monster/tactic lv','').replace(' to play','')))):
+                if ((card.card_type == 'monster')
+                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a monster/tactic lv','').replace(' to play','')))
+                    and int(player2.monster_in_play_length) < 6):
+                    located_card = card
+                    break
+                elif ((card.card_type == 'tactic')
+                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a monster/tactic lv','').replace(' to play','')))
+                    ):
                     located_card = card
                     break
             if located_card == []:
@@ -2717,10 +2805,17 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
         elif screen_status.battle_screen_action_indicator == 'player2-stage-2-other-action-detail-spawn-and-equip':
             located_card = []
             for card in player2.hand_list:
-                if ((card.card_type == 'monster' or card.card_type == 'item')
-                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a monster/item lv','').replace(' to play','')))):
+                if ((card.card_type == 'monster')
+                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a monster/item lv','').replace(' to play','')))
+                    and int(player2.monster_in_play_length) < 6):
                     located_card = card
                     break
+                elif ((card.card_type == 'item')
+                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a monster/item lv','').replace(' to play','')))
+                    and int(player2.item_in_play_length) < 6):
+                    located_card = card
+                    break
+
             if located_card == []:
                 pass
             else:
@@ -2740,8 +2835,14 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
         elif screen_status.battle_screen_action_indicator == 'player2-stage-2-other-action-detail-think-fast-and-equip':
             located_card = []
             for card in player2.hand_list:
-                if ((card.card_type == 'tactic' or card.card_type == 'item')
-                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a tactic/item lv','').replace(' to play','')))):
+                if ((card.card_type == 'item')
+                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a tactic/item lv','').replace(' to play','')))
+                    and int(player2.item_in_play_length) < 6):
+                    located_card = card
+                    break
+                elif ((card.card_type == 'tactic')
+                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a tactic/item lv','').replace(' to play','')))
+                    ):
                     located_card = card
                     break
             if located_card == []:
@@ -2761,7 +2862,8 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
             located_card = []
             for card in player2.hand_list:
                 if ((card.card_type == 'monster')
-                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a monster lv','').replace(' to play','')))):
+                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a monster lv','').replace(' to play','')))
+                    and int(player2.monster_in_play_length) < 6):
                     located_card = card
                     break
             if located_card == []:
@@ -2791,7 +2893,8 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
             located_card = []
             for card in player2.hand_list:
                 if ((card.card_type == 'item')
-                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a item lv','').replace(' to play','')))):
+                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a item lv','').replace(' to play','')))
+                    and int(player2.item_in_play_length) < 6):
                     located_card = card
                     break
             if located_card == []:
@@ -2806,8 +2909,19 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
         elif screen_status.battle_screen_action_indicator == 'player2-stage-2-other-action-detail-sneak':
             located_card = []
             for card in player2.hand_list:
-                if ((card.card_type == 'monster' or card.card_type == 'item')
-                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a card lv','').replace(' to play','')))):
+                if ((card.card_type == 'monster')
+                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a card lv','').replace(' to play','')))
+                    and int(player2.monster_in_play_length) < 6):
+                    located_card = card
+                    break
+                elif ((card.card_type == 'item')
+                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a card lv','').replace(' to play','')))
+                    and int(player2.item_in_play_length) < 6):
+                    located_card = card
+                    break
+                elif ((card.card_type == 'tactic')
+                    and (int(card.level) <= int(button_status.battle_screen_instruction_bar_text.replace('Opponent is choosing a card lv','').replace(' to play','')))
+                    ):
                     located_card = card
                     break
             if located_card == []:
