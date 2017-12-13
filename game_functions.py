@@ -59,17 +59,25 @@ def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, butt
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
 
+            # back
             if Rect(0,0,50,50).collidepoint(pygame.mouse.get_pos()):
                 screen_status.welcome_screen_display = True
                 screen_status.prepare_screen_display = False
 
+            # play
             elif Rect(1150,0,50,50).collidepoint(pygame.mouse.get_pos()):
                 screen_status.battle_screen_display = True
                 screen_status.prepare_screen_display = False
 
+            # create new deck
             elif Rect(1020, 110, 120, 35).collidepoint(pygame.mouse.get_pos()):
-                screen_status.build_deck_screen_display = True
-                screen_status.prepare_screen_display = False
+                if int(user.deck_list_total_number) >= 6:
+                    pass
+                else:
+                    user.deck_list = []
+                    user.character_card = ''
+                    screen_status.build_deck_screen_display = True
+                    screen_status.prepare_screen_display = False
 
 
 
@@ -154,8 +162,10 @@ def check_events_build_deck_screen(ai_settings, screen, buttons,screen_status, b
 
                         if button.text == 'Save':
                             if screen_status.build_deck_screen_to_battle_screen_all_clear:
+                                build_deck_screen_save_deck_to_file(screen,buttons, screen_status, button_status, card_database_filter, user)
                                 screen_status.build_deck_screen_display = False
                                 screen_status.prepare_screen_display = True
+
                             else:
                                 build_deck_screen_to_battle_screen_error_display(screen,user)
                         elif button.text == 'Back':
@@ -368,7 +378,12 @@ def prepare_screen_update(ai_settings,grid, screen, buttons, screen_status, butt
 
     prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
-
+    # with open('user_deck_list_string.txt', 'r') as f:
+    #     f_lines = f.readlines()
+    # if len(f_lines) == 0:
+    #     user.deck_list_total_number = '0'
+    # else:
+    #     user.deck_list_total_number = str(int(len(f_lines)/2))
 
 def build_deck_screen_update(ai_settings, grid, screen, buttons, screen_status, button_status, card_database_filter, user):
     """ Build deck screen update"""
@@ -472,7 +487,6 @@ def prepare_screen_grid_display(grid, screen):
     screen.blit(grid.prepare_screen_pick_deck_grid, grid.prepare_screen_pick_deck_grid_rect)
     screen.blit(grid.prepare_screen_ai_setup_grid, grid.prepare_screen_ai_setup_grid_rect)
 
-
 def prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ Display stable buttons"""
     button_back = Button('Back','', (0,0,0),0, 0, 50, 50)
@@ -487,9 +501,12 @@ def prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_sta
     button_text_1.update()
     button_text_1.draw(screen)
 
-    button_new_deck = Button('+ New Deck','', (0,0,0),1020, 110, 120, 35)
-    button_new_deck.update()
-    button_new_deck.draw(screen)
+    if int(user.deck_list_total_number) >= 6:
+        pass
+    else:
+        button_new_deck = Button('+ New Deck','', (0,0,0),1020, 110, 120, 35)
+        button_new_deck.update()
+        button_new_deck.draw(screen)
 
     button_deck_1 = Button('Empty','', (200,200,200),85, 165, 130, 110)
     button_deck_1.update()
@@ -752,6 +769,15 @@ def build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button
             if row_number >= 7:
                 row_number = 1
 
+def build_deck_screen_my_deck_duplicate_number_display(card, screen):
+    """Input Card instance, output how many copies of that card as a button above that card"""
+    if card.duplicate <= 4:
+        button_dup = Button(str(card.duplicate) + 'x','', (122,113,178),(card.rect.x + 50),(card.rect.y - 30) , 30, 30)
+    else:
+        button_dup = Button(str(card.duplicate) + 'x','', (122,113,178),(card.rect.x + 50),(card.rect.y - 30) , 30, 30, font_color = (255,60,60))
+    button_dup.update()
+    button_dup.draw(screen)
+
 def build_deck_screen_add_card_to_deck(card_gallery_position ,screen, screen_status,card_database_filter, user):
     """Add card from gallery to user.deck_list"""
     # Check to avoid errors when click on empty rect preventing adding card.
@@ -796,15 +822,31 @@ def build_deck_screen_my_deck_check_duplicate(card, local_store_list):
             break
     return False
 
-def build_deck_screen_my_deck_duplicate_number_display(card, screen):
-    """Input Card instance, output how many copies of that card as a button above that card"""
-    if card.duplicate <= 4:
-        button_dup = Button(str(card.duplicate) + 'x','', (122,113,178),(card.rect.x + 50),(card.rect.y - 30) , 30, 30)
-    else:
-        button_dup = Button(str(card.duplicate) + 'x','', (122,113,178),(card.rect.x + 50),(card.rect.y - 30) , 30, 30, font_color = (255,60,60))
-    button_dup.update()
-    button_dup.draw(screen)
+def build_deck_screen_save_deck_to_file(screen,buttons, screen_status, button_status, card_database_filter, user):
+    """ save user deck list into txt file as string"""
+    deck_list_string = []
+    character_string = 'CARD_' + user.character_card.set_number + '_' + user.character_card.card_number
+    for card in user.deck_list:
+        deck_list_string.append('CARD_' + card.set_number + '_' + card.card_number)
 
+    with open('user_deck_list_string.txt','a+') as f:
+        f.seek(0)
+        x = len(f.readlines())
+        y = 0
+        deck_list_index = 0
+        for i in range(1,7):
+            f.seek(0)
+            for line in f:
+                if 'DECK_LIST_' + str(i) not in line:
+                    y += 1
+            if y < x:
+                y = 0
+            else:
+                deck_list_index = i
+                break
+
+        f.write('DECK_LIST_' + str(deck_list_index) + ' = ' + str(deck_list_string) + '\n')
+        f.write('CHARACTER_' + str(deck_list_index) + ' = ' + str(character_string) + '\n')
 
 
 

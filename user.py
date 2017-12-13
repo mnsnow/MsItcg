@@ -48,6 +48,10 @@ class User():
 
             ]
 
+
+        self.deck_list_index = '1' # indicate which deck list we are working on
+        self.deck_list_total_number = '0' # how many deck user has saved
+
         self.character_card = card_01_64
 
         self.random_deck_list = random.sample(self.deck_list, len(self.deck_list))
@@ -96,6 +100,11 @@ class User():
             '150' : '',
         }
         self.stage_2_other_card_usable_list = []
+
+
+
+
+
 
 
     def get_stage_2_other_card_usable_list(self):
