@@ -49,8 +49,7 @@ class User():
             ]
 
 
-        self.deck_list_index = '1' # indicate which deck list we are working on
-        self.deck_list_total_number = '0' # how many deck user has saved
+        self.deck_list_index = '0' # indicate which deck list we are working on
 
         self.character_card = card_01_64
 

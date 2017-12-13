@@ -59,6 +59,11 @@ def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, butt
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
 
+            for i in range(1,7):
+                if Rect(85 + 180* (i-1), 165, 130,110).collidepoint(pygame.mouse.get_pos()):
+                    user.deck_list_index = str(i)
+
+
             # back
             if Rect(0,0,50,50).collidepoint(pygame.mouse.get_pos()):
                 screen_status.welcome_screen_display = True
@@ -71,13 +76,18 @@ def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, butt
 
             # create new deck
             elif Rect(1020, 110, 120, 35).collidepoint(pygame.mouse.get_pos()):
-                if int(user.deck_list_total_number) >= 6:
-                    pass
-                else:
-                    user.deck_list = []
-                    user.character_card = ''
-                    screen_status.build_deck_screen_display = True
-                    screen_status.prepare_screen_display = False
+                with open('user_deck_list_string.txt','r') as f:
+                    f.seek(0)
+                    if len(f.readlines()) >= 12:
+                        pass
+
+                    else:
+                        user.deck_list = []
+                        user.character_card = ''
+                        screen_status.build_deck_screen_display = True
+                        screen_status.prepare_screen_display = False
+
+
 
 
 
@@ -378,12 +388,8 @@ def prepare_screen_update(ai_settings,grid, screen, buttons, screen_status, butt
 
     prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
-    # with open('user_deck_list_string.txt', 'r') as f:
-    #     f_lines = f.readlines()
-    # if len(f_lines) == 0:
-    #     user.deck_list_total_number = '0'
-    # else:
-    #     user.deck_list_total_number = str(int(len(f_lines)/2))
+    prepare_screen_button_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
 
 def build_deck_screen_update(ai_settings, grid, screen, buttons, screen_status, button_status, card_database_filter, user):
     """ Build deck screen update"""
@@ -501,39 +507,75 @@ def prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_sta
     button_text_1.update()
     button_text_1.draw(screen)
 
-    if int(user.deck_list_total_number) >= 6:
-        pass
-    else:
-        button_new_deck = Button('+ New Deck','', (0,0,0),1020, 110, 120, 35)
-        button_new_deck.update()
-        button_new_deck.draw(screen)
-
-    button_deck_1 = Button('Empty','', (200,200,200),85, 165, 130, 110)
-    button_deck_1.update()
-    button_deck_1.draw(screen)
-
-    button_deck_2 = Button('Empty','', (200,200,200),265, 165, 130, 110)
-    button_deck_2.update()
-    button_deck_2.draw(screen)
-
-    button_deck_3 = Button('Empty','', (200,200,200),445, 165, 130, 110)
-    button_deck_3.update()
-    button_deck_3.draw(screen)
-
-    button_deck_4 = Button('Empty','', (200,200,200),625, 165, 130, 110)
-    button_deck_4.update()
-    button_deck_4.draw(screen)
-
-    button_deck_5 = Button('Empty','', (200,200,200),805, 165, 130, 110)
-    button_deck_5.update()
-    button_deck_5.draw(screen)
-
-    button_deck_6 = Button('Empty','', (200,200,200),985, 165, 130, 110)
-    button_deck_6.update()
-    button_deck_6.draw(screen)
+    with open('user_deck_list_string.txt','r') as f:
+        f.seek(0)
+        if len(f.readlines()) >= 12:
+            pass
+        else:
+            button_new_deck = Button('+ New Deck','', (0,0,0),1020, 110, 120, 35)
+            button_new_deck.update()
+            button_new_deck.draw(screen)
 
 
+        f.seek(0)
+        x = len(f.readlines())
+        y = 0
+        deck_list_index = 0
 
+        for i in range(1,7):
+            f.seek(0)
+            for line in f:
+                if 'DECK_LIST_' + str(i) not in line:
+                    y += 1
+            if y < x: # DECK_LIST_i exist
+                f.seek(0)
+                for line in f:
+                    if 'DECK_LIST_' + str(i) in line:
+                        deck_length = int((len(line.replace('DECK_LIST_' + str(i) + ' = ', '')) -1)/14)
+                    if 'CHARACTER_' + str(i) in line:
+                        character_length = 1
+
+                if user.deck_list_index == str(i):
+
+                    button_top = Button('Deck ' + str(i) + ': ','', (100,30,130),85 + 180* (i-1), 165, 130, 60)
+                    button_top.update()
+                    button_top.draw(screen)
+
+                    button_bottom = Button(str(character_length) + '/1  |  ' + str(deck_length) +'/40','', (100,30,130),85 + 180* (i-1), 225, 130, 50)
+                    button_bottom.update()
+                    button_bottom.draw(screen)
+
+                else:
+
+                    button_top = Button('Deck ' + str(i) + ': ','', (160,160,160),85 + 180* (i-1), 165, 130, 60)
+                    button_top.update()
+                    button_top.draw(screen)
+
+                    button_bottom = Button(str(character_length) + '/1  |  ' + str(deck_length) +'/40','', (160,160,160),85 + 180* (i-1), 225, 130, 50)
+                    button_bottom.update()
+                    button_bottom.draw(screen)
+
+                y = 0
+
+            else: # DECK_LIST_i not exist
+
+                button = Button('Empty','', (200,200,200),85 + 180* (i-1), 165, 130, 110)
+                button.update()
+                button.draw(screen)
+
+                y = 0
+
+def prepare_screen_button_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
+    """ Display unstable buttons of prepare screen"""
+    for i in range(1,7):
+        if user.deck_list_index == str(i):
+            button_edit = Button('Edit','', (50,50,170),85 + 180* (i-1), 282, 60, 30)
+            button_edit.update()
+            button_edit.draw(screen)
+
+            button_delete = Button('Delete','', (160,30,30), 155 + 180* (i-1), 282, 60, 30)
+            button_delete.update()
+            button_delete.draw(screen)
 
 
 #-----------------------------Build deck screen actions----------------------------------------------------
@@ -825,7 +867,7 @@ def build_deck_screen_my_deck_check_duplicate(card, local_store_list):
 def build_deck_screen_save_deck_to_file(screen,buttons, screen_status, button_status, card_database_filter, user):
     """ save user deck list into txt file as string"""
     deck_list_string = []
-    character_string = 'CARD_' + user.character_card.set_number + '_' + user.character_card.card_number
+    character_string = ['CARD_' + user.character_card.set_number + '_' + user.character_card.card_number]
     for card in user.deck_list:
         deck_list_string.append('CARD_' + card.set_number + '_' + card.card_number)
 
