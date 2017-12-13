@@ -21,6 +21,9 @@ def check_events(ai_settings,grid, screen, buttons,screen_status, button_status,
     if screen_status.welcome_screen_display:
         check_events_welcome_screen(ai_settings, screen, buttons,screen_status, button_status)
 
+    if screen_status.prepare_screen_display:
+        check_events_prepare_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
+
     if screen_status.build_deck_screen_display:
         check_events_build_deck_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user)
 
@@ -38,14 +41,37 @@ def check_events_welcome_screen(ai_settings, screen, buttons,screen_status, butt
                 sys.exit()
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            if rect_union(buttons).collidepoint(pygame.mouse.get_pos()):
-                for button in buttons:
-                    if button.rect.collidepoint(pygame.mouse.get_pos()):
+            if Rect(300, 350, 250, 100).collidepoint(pygame.mouse.get_pos()):
+                screen_status.welcome_screen_display = False
+                screen_status.prepare_screen_display = True
 
-                        if button.text == 'Play':
-                            welcome_screen_play(buttons, screen_status)
-                        elif button.text == 'Quit':
-                            welcome_screen_quit(buttons, screen_status)
+
+def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
+    """ Check events in prepare screen"""
+
+    for event in pygame.event.get():
+
+        if event.type == pygame.QUIT:
+            sys.exit()
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                sys.exit()
+
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+
+            if Rect(0,0,50,50).collidepoint(pygame.mouse.get_pos()):
+                screen_status.welcome_screen_display = True
+                screen_status.prepare_screen_display = False
+
+            elif Rect(1150,0,50,50).collidepoint(pygame.mouse.get_pos()):
+                screen_status.battle_screen_display = True
+                screen_status.prepare_screen_display = False
+
+            elif Rect(1020, 110, 120, 35).collidepoint(pygame.mouse.get_pos()):
+                screen_status.build_deck_screen_display = True
+                screen_status.prepare_screen_display = False
+
+
 
 def check_events_build_deck_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user):
     """ Check all events on the build deck screen"""
@@ -126,11 +152,10 @@ def check_events_build_deck_screen(ai_settings, screen, buttons,screen_status, b
                 for button in buttons:
                     if button.rect.collidepoint(pygame.mouse.get_pos()):
 
-                        if button.text == 'Next':
+                        if button.text == 'Save':
                             if screen_status.build_deck_screen_to_battle_screen_all_clear:
-                                screen_status.welcome_screen_display = False
                                 screen_status.build_deck_screen_display = False
-                                screen_status.battle_screen_display = True
+                                screen_status.prepare_screen_display = True
                             else:
                                 build_deck_screen_to_battle_screen_error_display(screen,user)
                         elif button.text == 'Back':
@@ -208,8 +233,7 @@ def check_events_battle_screen(ai_settings, screen, buttons,screen_status, butto
                 for button in buttons:
                     if button.rect.collidepoint(pygame.mouse.get_pos()):
                         if button.text == 'Back':
-                            screen_status.welcome_screen_display = False
-                            screen_status.build_deck_screen_display = True
+                            screen_status.prepare_screen_display = True
                             screen_status.battle_screen_display = False
                         elif button.text == '>':
                             screen_status.battle_screen_my_hand_page_id += 1
@@ -340,6 +364,12 @@ def prepare_screen_update(ai_settings,grid, screen, buttons, screen_status, butt
     """ Update prepare screen"""
     screen.fill(ai_settings.bg_color)
 
+    prepare_screen_grid_display(grid, screen)
+
+    prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
+
+
 def build_deck_screen_update(ai_settings, grid, screen, buttons, screen_status, button_status, card_database_filter, user):
     """ Build deck screen update"""
     screen.fill(ai_settings.bg_color)
@@ -429,22 +459,62 @@ def card_zoom_update(ai_settings, screen, buttons,screen_status, button_status, 
 
 
 
-#-----------------------------Welcome screen actions----------------------------------------------------
-def welcome_screen_play(buttons, screen_status):
-    """ What happen after click play button"""
-    screen_status.welcome_screen_display = False
-    screen_status.build_deck_screen_display = True
-    screen_status.battle_screen_display = False
-    bts = []
-    for button in buttons:
-        if button.group == 'welcome_screen':
-            bts.append(button)
-    for bt in bts:
-        buttons.remove(bt)
-    screen_status.welcome_screen_backend = True
+#-----------------------------Welcome screen display----------------------------------------------------
 
-def welcome_screen_quit(buttons, screen_status):
-    print('quit!!!!')
+
+
+
+
+#-----------------------------Prepare screen display----------------------------------------------------
+def prepare_screen_grid_display(grid, screen):
+    """ Display grid system on prepare screen"""
+    screen.blit(grid.prepare_screen_menu_grid, grid.prepare_screen_menu_grid_rect)
+    screen.blit(grid.prepare_screen_pick_deck_grid, grid.prepare_screen_pick_deck_grid_rect)
+    screen.blit(grid.prepare_screen_ai_setup_grid, grid.prepare_screen_ai_setup_grid_rect)
+
+
+def prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
+    """ Display stable buttons"""
+    button_back = Button('Back','', (0,0,0),0, 0, 50, 50)
+    button_back.update()
+    button_back.draw(screen)
+
+    button_play = Button('Play!','', (0,0,0),1150, 0, 50, 50)
+    button_play.update()
+    button_play.draw(screen)
+
+    button_text_1 = Button('Pick an exist deck or create a new one: ','', (200,100,170),400, 100, 400, 35)
+    button_text_1.update()
+    button_text_1.draw(screen)
+
+    button_new_deck = Button('+ New Deck','', (0,0,0),1020, 110, 120, 35)
+    button_new_deck.update()
+    button_new_deck.draw(screen)
+
+    button_deck_1 = Button('Empty','', (200,200,200),85, 165, 130, 110)
+    button_deck_1.update()
+    button_deck_1.draw(screen)
+
+    button_deck_2 = Button('Empty','', (200,200,200),265, 165, 130, 110)
+    button_deck_2.update()
+    button_deck_2.draw(screen)
+
+    button_deck_3 = Button('Empty','', (200,200,200),445, 165, 130, 110)
+    button_deck_3.update()
+    button_deck_3.draw(screen)
+
+    button_deck_4 = Button('Empty','', (200,200,200),625, 165, 130, 110)
+    button_deck_4.update()
+    button_deck_4.draw(screen)
+
+    button_deck_5 = Button('Empty','', (200,200,200),805, 165, 130, 110)
+    button_deck_5.update()
+    button_deck_5.draw(screen)
+
+    button_deck_6 = Button('Empty','', (200,200,200),985, 165, 130, 110)
+    button_deck_6.update()
+    button_deck_6.draw(screen)
+
 
 
 
@@ -460,7 +530,7 @@ def build_deck_screen_stable_button_display(screen, buttons,screen_status,button
     button1 = Button('Back','build_deck_screen', (0,0,0),0, 0, 50, 50)
     button1.update()
     button1.draw(screen)
-    button2 = Button('Next','build_deck_screen', (0,0,0),1150, 0, 50, 50)
+    button2 = Button('Save','build_deck_screen', (0,0,0),1150, 0, 50, 50)
     button2.update()
     button2.draw(screen)
     button3 = Button('Build your deck by picking 40 cards below: ', 'build_deck_screen', (0,0,0),300, 0, 600, 50)
@@ -1247,7 +1317,6 @@ def battle_screen_result_update(ai_settings, screen, buttons,screen_status, butt
         print('You Lost!')
     if int(player2.character_card.health) <= 0:
         print('You Win!')
-
 
 
 
@@ -2488,7 +2557,6 @@ def battle_screen_stage_3_action(position, screen,buttons, screen_status, button
     button_status.battle_screen_instruction_bar_text = "Pick a target to attack with monster: " + position
     button_status.battle_screen_instruction_bar_yes_display = False
     button_status.battle_screen_instruction_bar_yes_backend = False
-
 
 
 

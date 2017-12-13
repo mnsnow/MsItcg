@@ -6,6 +6,34 @@ class Grid():
     def __init__(self):
 
 
+#------------------Prepare Screen----------------------------------------------------
+        self.prepare_screen_menu_grid_size = (800,30)
+        self.prepare_screen_menu_grid_position = (200,0)
+        self.prepare_screen_menu_grid = pygame.Surface(self.prepare_screen_menu_grid_size)
+        self.prepare_screen_menu_grid.fill((123,163,48))
+        self.prepare_screen_menu_grid_rect = self.prepare_screen_menu_grid.get_rect()
+        self.prepare_screen_menu_grid.blit(self.prepare_screen_menu_grid, self.prepare_screen_menu_grid_rect)
+        self.prepare_screen_menu_grid_rect.topleft = self.prepare_screen_menu_grid_position
+
+        self.prepare_screen_pick_deck_grid_size = (1100,220)
+        self.prepare_screen_pick_deck_grid_position = (50,100)
+        self.prepare_screen_pick_deck_grid = pygame.Surface(self.prepare_screen_pick_deck_grid_size)
+        self.prepare_screen_pick_deck_grid.fill((255,255,140))
+        self.prepare_screen_pick_deck_grid_rect = self.prepare_screen_pick_deck_grid.get_rect()
+        self.prepare_screen_pick_deck_grid.blit(self.prepare_screen_pick_deck_grid, self.prepare_screen_pick_deck_grid_rect)
+        self.prepare_screen_pick_deck_grid_rect.topleft = self.prepare_screen_pick_deck_grid_position
+
+        self.prepare_screen_ai_setup_grid_size = (1100,400)
+        self.prepare_screen_ai_setup_grid_position = (50,350)
+        self.prepare_screen_ai_setup_grid = pygame.Surface(self.prepare_screen_ai_setup_grid_size)
+        self.prepare_screen_ai_setup_grid.fill((23,163,148))
+        self.prepare_screen_ai_setup_grid_rect = self.prepare_screen_ai_setup_grid.get_rect()
+        self.prepare_screen_ai_setup_grid.blit(self.prepare_screen_ai_setup_grid, self.prepare_screen_ai_setup_grid_rect)
+        self.prepare_screen_ai_setup_grid_rect.topleft = self.prepare_screen_ai_setup_grid_position
+
+
+
+
 
 
 #------------------Building deck Screen----------------------------------------------------
