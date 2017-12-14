@@ -88,7 +88,7 @@ def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, butt
                         f.seek(0)
                         for line in f:
                             if 'DECK_LIST_' + str(i) in line:
-                                                
+
                                 with open('user_deck_list_string.txt','a+') as f:
 
                                     f.seek(0)
@@ -137,9 +137,6 @@ def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, butt
                         screen_status.prepare_screen_display = False
 
 
-
-
-
 def check_events_build_deck_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user):
     """ Check all events on the build deck screen"""
     for event in pygame.event.get():
@@ -152,6 +149,9 @@ def check_events_build_deck_screen(ai_settings, screen, buttons,screen_status, b
                 sys.exit()
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
+
+            if Rect(1100, 62, 40, 30).collidepoint(pygame.mouse.get_pos()):
+                button_status.build_deck_screen_end_screen_warning_button_display = ''
 
             if Rect(100,130,130,180).collidepoint(pygame.mouse.get_pos()):
                 build_deck_screen_add_card_to_deck('1',screen, screen_status,card_database_filter, user)
@@ -222,8 +222,9 @@ def check_events_build_deck_screen(ai_settings, screen, buttons,screen_status, b
                         if button.text == 'Save':
                             if screen_status.build_deck_screen_to_battle_screen_all_clear:
                                 build_deck_screen_save_deck_to_file(screen,buttons, screen_status, button_status, card_database_filter, user)
-                                screen_status.build_deck_screen_display = False
-                                screen_status.prepare_screen_display = True
+                                if button_status.build_deck_screen_end_screen_warning_button_display == '':
+                                    screen_status.build_deck_screen_display = False
+                                    screen_status.prepare_screen_display = True
 
                             else:
                                 build_deck_screen_to_battle_screen_error_display(screen,user)
@@ -452,6 +453,8 @@ def build_deck_screen_update(ai_settings, grid, screen, buttons, screen_status, 
 
     build_deck_screen_my_deck_display(screen,buttons, screen_status, button_status, card_database_filter, user)
 
+    build_deck_screen_end_screen_warning_display(screen,buttons, screen_status, button_status, card_database_filter, user)
+
 def battle_screen_update(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2):
     """ Battle screen update"""
     screen.fill(ai_settings.bg_color)
@@ -591,9 +594,14 @@ def prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_sta
                     button_top.update()
                     button_top.draw(screen)
 
-                    button_bottom = Button(str(character_length) + '/1  |  ' + str(deck_length) +'/40','', (100,30,130),85 + 180* (i-1), 225, 130, 50)
-                    button_bottom.update()
-                    button_bottom.draw(screen)
+                    if deck_length < 40:
+                        button_bottom = Button(str(character_length) + '/1  |  ' + str(deck_length) +'/40','', (100,30,130),85 + 180* (i-1), 225, 130, 50, font_color = (250,0,0))
+                        button_bottom.update()
+                        button_bottom.draw(screen)
+                    else:
+                        button_bottom = Button(str(character_length) + '/1  |  ' + str(deck_length) +'/40','', (100,30,130),85 + 180* (i-1), 225, 130, 50)
+                        button_bottom.update()
+                        button_bottom.draw(screen)
 
                 else:
 
@@ -601,9 +609,14 @@ def prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_sta
                     button_top.update()
                     button_top.draw(screen)
 
-                    button_bottom = Button(str(character_length) + '/1  |  ' + str(deck_length) +'/40','', (160,160,160),85 + 180* (i-1), 225, 130, 50)
-                    button_bottom.update()
-                    button_bottom.draw(screen)
+                    if deck_length < 40:
+                        button_bottom = Button(str(character_length) + '/1  |  ' + str(deck_length) +'/40','', (160,160,160),85 + 180* (i-1), 225, 130, 50, font_color = (200,0,0))
+                        button_bottom.update()
+                        button_bottom.draw(screen)
+                    else:
+                        button_bottom = Button(str(character_length) + '/1  |  ' + str(deck_length) +'/40','', (160,160,160),85 + 180* (i-1), 225, 130, 50)
+                        button_bottom.update()
+                        button_bottom.draw(screen)
 
                 y = 0
 
@@ -861,6 +874,8 @@ def build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button
             if row_number >= 7:
                 row_number = 1
 
+
+
 def build_deck_screen_my_deck_duplicate_number_display(card, screen):
     """Input Card instance, output how many copies of that card as a button above that card"""
     if card.duplicate <= 4:
@@ -869,6 +884,42 @@ def build_deck_screen_my_deck_duplicate_number_display(card, screen):
         button_dup = Button(str(card.duplicate) + 'x','', (122,113,178),(card.rect.x + 50),(card.rect.y - 30) , 30, 30, font_color = (255,60,60))
     button_dup.update()
     button_dup.draw(screen)
+
+def build_deck_screen_end_screen_warning_display(screen,buttons, screen_status, button_status, card_database_filter, user):
+    """ Display build deck screen end turn warining button"""
+    if button_status.build_deck_screen_end_screen_warning_button_display == 'character card':
+        button = Button('Missing A','' ,(122,33,38),1050, 0, 150, 30,font_size = 18)
+        button.update()
+        button.draw(screen)
+
+        button = Button('Character Card!','' ,(122,33,38),1050, 30, 150, 30,font_size = 18)
+        button.update()
+        button.draw(screen)
+
+        button = Button('','' ,(122,33,38),1050, 60, 150, 40,font_size = 18)
+        button.update()
+        button.draw(screen)
+
+        button = Button('ok','' ,(22,143,78),1100, 62, 40, 30,font_size = 16)
+        button.update()
+        button.draw(screen)
+
+    elif button_status.build_deck_screen_end_screen_warning_button_display == '4 copy each':
+        button = Button('No More Than 4','' ,(122,33,38),1050, 0, 150, 30,font_size = 15)
+        button.update()
+        button.draw(screen)
+
+        button = Button('Copies For Each Card!','' ,(122,33,38),1050, 30, 150, 30,font_size = 13)
+        button.update()
+        button.draw(screen)
+
+        button = Button('','' ,(122,33,38),1050, 60, 150, 40,font_size = 18)
+        button.update()
+        button.draw(screen)
+
+        button = Button('ok','' ,(22,143,78),1100, 62, 40, 30,font_size = 16)
+        button.update()
+        button.draw(screen)
 
 def build_deck_screen_add_card_to_deck(card_gallery_position ,screen, screen_status,card_database_filter, user):
     """Add card from gallery to user.deck_list"""
@@ -916,56 +967,79 @@ def build_deck_screen_my_deck_check_duplicate(card, local_store_list):
 
 def build_deck_screen_save_deck_to_file(screen,buttons, screen_status, button_status, card_database_filter, user):
     """ save user deck list into txt file as string"""
-    if user.deck_list_index == 'new':
+    save_pass = True
+    # Clear dup number each call
+    for card_new in user.deck_list:
+        card_new.duplicate = 1
+    local_store_list = build_deck_screen_my_deck_card_list_refine(user)
+    print(len(user.deck_list))
+    for card in local_store_list:
+        print(card.duplicate)
+        if card.duplicate > 4:
 
-        deck_list_string = []
-        character_string = ['CARD_' + user.character_card.set_number + '_' + user.character_card.card_number]
-        for card in user.deck_list:
-            deck_list_string.append('CARD_' + card.set_number + '_' + card.card_number)
+            button_status.build_deck_screen_end_screen_warning_button_display = '4 copy each'
+            save_pass = False
 
-        with open('user_deck_list_string.txt','a+') as f:
-            f.seek(0)
-            x = len(f.readlines())
-            y = 0
-            deck_list_index = 0
-            for i in range(1,7):
+
+    if user.character_card == '':
+        button_status.build_deck_screen_end_screen_warning_button_display = 'character card'
+        save_pass = False
+
+
+    if save_pass:
+
+        if user.deck_list_index == 'new':
+
+            deck_list_string = []
+            character_string = ['CARD_' + user.character_card.set_number + '_' + user.character_card.card_number]
+            for card in user.deck_list:
+                deck_list_string.append('CARD_' + card.set_number + '_' + card.card_number)
+
+            with open('user_deck_list_string.txt','a+') as f:
                 f.seek(0)
-                for line in f:
-                    if 'DECK_LIST_' + str(i) not in line:
-                        y += 1
-                if y < x:
-                    y = 0
-                else:
-                    deck_list_index = i
-                    break
-
-            f.write('DECK_LIST_' + str(deck_list_index) + ' = ' + str(deck_list_string) + '\n')
-            f.write('CHARACTER_' + str(deck_list_index) + ' = ' + str(character_string) + '\n')
-
-    else:
-        for i in range(1,7):
-            if user.deck_list_index == str(i):
-
-                deck_list_string = []
-                character_string = ['CARD_' + user.character_card.set_number + '_' + user.character_card.card_number]
-                for card in user.deck_list:
-                    deck_list_string.append('CARD_' + card.set_number + '_' + card.card_number)
-
-                with open('user_deck_list_string.txt','a+') as f:
-                    f.seek(0)
-                    x = f.readlines()
-                    y = 1
+                x = len(f.readlines())
+                y = 0
+                deck_list_index = 0
+                for i in range(1,7):
                     f.seek(0)
                     for line in f:
-                        if 'DECK_LIST_' + user.deck_list_index not in line:
+                        if 'DECK_LIST_' + str(i) not in line:
                             y += 1
-                        else:
-                            break
-                    x[y-1] = 'DECK_LIST_' + str(user.deck_list_index) + ' = ' + str(deck_list_string) + '\n'
-                    x[y] = 'CHARACTER_' + str(user.deck_list_index) + ' = ' + str(character_string) + '\n'
+                    if y < x:
+                        y = 0
+                    else:
+                        deck_list_index = i
+                        break
 
-                with open('user_deck_list_string.txt','w') as f:
-                    f.writelines(x)
+                f.write('DECK_LIST_' + str(deck_list_index) + ' = ' + str(deck_list_string) + '\n')
+                f.write('CHARACTER_' + str(deck_list_index) + ' = ' + str(character_string) + '\n')
+
+        else:
+            for i in range(1,7):
+                if user.deck_list_index == str(i):
+
+                    deck_list_string = []
+                    character_string = ['CARD_' + user.character_card.set_number + '_' + user.character_card.card_number]
+                    for card in user.deck_list:
+                        deck_list_string.append('CARD_' + card.set_number + '_' + card.card_number)
+
+                    with open('user_deck_list_string.txt','a+') as f:
+                        f.seek(0)
+                        x = f.readlines()
+                        y = 1
+                        f.seek(0)
+                        for line in f:
+                            if 'DECK_LIST_' + user.deck_list_index not in line:
+                                y += 1
+                            else:
+                                break
+                        x[y-1] = 'DECK_LIST_' + str(user.deck_list_index) + ' = ' + str(deck_list_string) + '\n'
+                        x[y] = 'CHARACTER_' + str(user.deck_list_index) + ' = ' + str(character_string) + '\n'
+
+                    with open('user_deck_list_string.txt','w') as f:
+                        f.writelines(x)
+
+
 
 
 

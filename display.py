@@ -37,6 +37,7 @@ class Button_status():
         self.build_deck_screen_stable_button_backend = True
         self.build_deck_screen_card_gallery_button_backend = True
         self.build_deck_screen_my_deck_button_backend = True
+        self.build_deck_screen_end_screen_warning_button_display = ''
 
         self.battle_screen_instruction_bar_text = 'Welcome to Maplestory Itcg Alpha!'
         self.battle_screen_instruction_bar_yes_display = True
