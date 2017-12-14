@@ -62,9 +62,15 @@ def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, butt
         elif event.type == pygame.MOUSEBUTTONDOWN:
 
             for i in range(1,7):
+                # Display edit/delete buttons
                 if Rect(85 + 180* (i-1), 165, 130,110).collidepoint(pygame.mouse.get_pos()):
-                    user.deck_list_index = str(i)
+                    with open('user_deck_list_string.txt','r') as f:
+                        f.seek(0)
+                        for line in f:
+                            if 'DECK_LIST_' + str(i) in line:
+                                user.deck_list_index = str(i)
 
+                # Click on Edit
                 elif Rect(85 + 180* (i-1), 282, 60, 30).collidepoint(pygame.mouse.get_pos()):
                     with open('user_deck_list_string.txt','r') as f:
                         f.seek(0)
@@ -73,19 +79,37 @@ def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, butt
                                 user.deck_list = make_card_list_from_string(line.replace('DECK_LIST_' + str(i) + ' = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
                             if 'CHARACTER_' + str(i) in line:
                                 user.character_card = eval('card_' + line.replace('CHARACTER_' + str(i) + ' = ', '')[7:9] + '_' + line.replace('CHARACTER_' + user.deck_list_index + ' = ', '')[10:12])
+                                screen_status.build_deck_screen_display = True
+                                screen_status.prepare_screen_display = False
 
+                # Click on Delete
+                elif Rect(155 + 180* (i-1), 282, 60, 30).collidepoint(pygame.mouse.get_pos()):
+                    with open('user_deck_list_string.txt','r') as f:
+                        f.seek(0)
+                        for line in f:
+                            if 'DECK_LIST_' + str(i) in line:
+                                                
+                                with open('user_deck_list_string.txt','a+') as f:
 
-                    screen_status.build_deck_screen_display = True
-                    screen_status.prepare_screen_display = False
+                                    f.seek(0)
+                                    x = f.readlines()
+                                    y = 1
 
+                                    f.seek(0)
+                                    for line in f:
+                                        if 'DECK_LIST_' + str(i) not in line:
+                                            y += 1
+                                        else:
+                                            break
 
-                        # button_edit = Button('Edit','', (50,50,170),85 + 180* (i-1), 282, 60, 30)
-                        # button_edit.update()
-                        # button_edit.draw(screen)
-                        #
-                        # button_delete = Button('Delete','', (160,30,30), 155 + 180* (i-1), 282, 60, 30)
-                        # button_delete.update()
-                        # button_delete.draw(screen)
+                                    del x[y-1] # Delete DECK_LIST_
+                                    del x[y-1] # Delete CHARACTER_
+
+                                with open('user_deck_list_string.txt','w') as f:
+                                    f.writelines(x)
+
+                                user.deck_list_index = 'new'
+
 
 
             # back
