@@ -47,7 +47,6 @@ def check_events_welcome_screen(ai_settings, screen, buttons,screen_status, butt
                 screen_status.welcome_screen_display = False
                 screen_status.prepare_screen_display = True
 
-
 def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ Check events in prepare screen"""
 
@@ -119,8 +118,20 @@ def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, butt
 
             # play
             elif Rect(1150,0,50,50).collidepoint(pygame.mouse.get_pos()):
-                screen_status.battle_screen_display = True
-                screen_status.prepare_screen_display = False
+                prepare_screen_to_battle_screen_action(ai_settings, screen,buttons, screen_status, button_status, card_database_filter, user, player2)
+                if button_status.prepare_screen_end_screen_warning_button_display == '':
+                    screen_status.battle_screen_display = True
+                    screen_status.prepare_screen_display = False
+
+                    user.random_deck_list = random.sample(user.deck_list, len(user.deck_list))
+                    user.remain_deck_list = user.random_deck_list[6:]
+                    user.hand_list = user.random_deck_list[0:6]
+
+            elif Rect(1100, 62, 40, 30).collidepoint(pygame.mouse.get_pos()):
+                button_status.prepare_screen_end_screen_warning_button_display = ''
+
+
+
 
             # create new deck
             elif Rect(1020, 110, 120, 35).collidepoint(pygame.mouse.get_pos()):
@@ -136,7 +147,6 @@ def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, butt
                         screen_status.build_deck_screen_display = True
                         screen_status.prepare_screen_display = False
 
-
 def check_events_build_deck_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user):
     """ Check all events on the build deck screen"""
     for event in pygame.event.get():
@@ -150,84 +160,32 @@ def check_events_build_deck_screen(ai_settings, screen, buttons,screen_status, b
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
 
+            for i in range(1,8):
+                if Rect(100 + 145*(i-1),130,130,180).collidepoint(pygame.mouse.get_pos()):
+                    build_deck_screen_add_card_to_deck(str(i),screen, screen_status,card_database_filter, user)
+            for i in range(8,15):
+                if Rect(100 + 145*(i-8),330,130,180).collidepoint(pygame.mouse.get_pos()):
+                    build_deck_screen_add_card_to_deck(str(i),screen, screen_status,card_database_filter, user)
+
+            for i in range(1,7):
+                if Rect(245 + 145*(i-1),600,130,180).collidepoint(pygame.mouse.get_pos()):
+                    build_deck_screen_remove_card_from_deck(str(i),screen, screen_status,card_database_filter, user)
+
+            # ok sign on warning
             if Rect(1100, 62, 40, 30).collidepoint(pygame.mouse.get_pos()):
                 button_status.build_deck_screen_end_screen_warning_button_display = ''
-
-            if Rect(100,130,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_add_card_to_deck('1',screen, screen_status,card_database_filter, user)
-
-            if Rect(245,130,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_add_card_to_deck('2',screen, screen_status,card_database_filter, user)
-
-            if Rect(390,130,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_add_card_to_deck('3',screen, screen_status,card_database_filter, user)
-
-            if Rect(535,130,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_add_card_to_deck('4',screen, screen_status,card_database_filter, user)
-
-            if Rect(680,130,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_add_card_to_deck('5',screen, screen_status,card_database_filter, user)
-
-            if Rect(825,130,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_add_card_to_deck('6',screen, screen_status,card_database_filter, user)
-
-            if Rect(970,130,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_add_card_to_deck('7',screen, screen_status,card_database_filter, user)
-
-            if Rect(100,330,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_add_card_to_deck('8',screen, screen_status,card_database_filter, user)
-
-            if Rect(245,330,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_add_card_to_deck('9',screen, screen_status,card_database_filter, user)
-
-            if Rect(390,330,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_add_card_to_deck('10',screen, screen_status,card_database_filter, user)
-
-            if Rect(535,330,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_add_card_to_deck('11',screen, screen_status,card_database_filter, user)
-
-            if Rect(680,330,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_add_card_to_deck('12',screen, screen_status,card_database_filter, user)
-
-            if Rect(825,330,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_add_card_to_deck('13',screen, screen_status,card_database_filter, user)
-
-            if Rect(970,330,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_add_card_to_deck('14',screen, screen_status,card_database_filter, user)
-
-            if Rect(245,600,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_remove_card_from_deck('1',screen, screen_status,card_database_filter, user)
-
-            if Rect(390,600,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_remove_card_from_deck('2',screen, screen_status,card_database_filter, user)
-
-            if Rect(535,600,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_remove_card_from_deck('3',screen, screen_status,card_database_filter, user)
-
-            if Rect(680,600,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_remove_card_from_deck('4',screen, screen_status,card_database_filter, user)
-
-            if Rect(825,600,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_remove_card_from_deck('5',screen, screen_status,card_database_filter, user)
-
-            if Rect(970,600,130,180).collidepoint(pygame.mouse.get_pos()):
-                build_deck_screen_remove_card_from_deck('6',screen, screen_status,card_database_filter, user)
-
-
 
             elif rect_union(buttons).collidepoint(pygame.mouse.get_pos()):
                 for button in buttons:
                     if button.rect.collidepoint(pygame.mouse.get_pos()):
 
                         if button.text == 'Save':
-                            if screen_status.build_deck_screen_to_battle_screen_all_clear:
-                                build_deck_screen_save_deck_to_file(screen,buttons, screen_status, button_status, card_database_filter, user)
-                                if button_status.build_deck_screen_end_screen_warning_button_display == '':
-                                    screen_status.build_deck_screen_display = False
-                                    screen_status.prepare_screen_display = True
+                            build_deck_screen_save_deck_to_file(screen,buttons, screen_status, button_status, card_database_filter, user)
+                            if button_status.build_deck_screen_end_screen_warning_button_display == '':
+                                screen_status.build_deck_screen_display = False
+                                screen_status.prepare_screen_display = True
 
-                            else:
-                                build_deck_screen_to_battle_screen_error_display(screen,user)
+
                         elif button.text == 'Back':
                             screen_status.welcome_screen_display = True
                             screen_status.build_deck_screen_display = False
@@ -255,10 +213,6 @@ def check_events_build_deck_screen(ai_settings, screen, buttons,screen_status, b
 
 
 
-
-
-        # elif event.type == pygame.MOUSEMOTION:
-        #     print(pygame.mouse.get_pos())
 
 
         elif event.type == pygame.MOUSEBUTTONUP:
@@ -440,6 +394,7 @@ def prepare_screen_update(ai_settings,grid, screen, buttons, screen_status, butt
 
     prepare_screen_button_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
+    prepare_screen_end_screen_warning_display(screen,buttons, screen_status, button_status, card_database_filter, user)
 
 def build_deck_screen_update(ai_settings, grid, screen, buttons, screen_status, button_status, card_database_filter, user):
     """ Build deck screen update"""
@@ -640,6 +595,53 @@ def prepare_screen_button_display(ai_settings, screen, buttons,screen_status, bu
             button_delete.update()
             button_delete.draw(screen)
 
+def prepare_screen_end_screen_warning_display(screen,buttons, screen_status, button_status, card_database_filter, user):
+    """ Display warning when end prepare screen"""
+    if button_status.prepare_screen_end_screen_warning_button_display == 'deck less than 40 cards':
+        button = Button('You Need At Least 40','' ,(122,33,38),1050, 0, 150, 30,font_size = 13)
+        button.update()
+        button.draw(screen)
+
+        button = Button('Cards In Your Deck!','' ,(122,33,38),1050, 30, 150, 30,font_size = 13)
+        button.update()
+        button.draw(screen)
+
+        button = Button('','' ,(122,33,38),1050, 60, 150, 40,font_size = 18)
+        button.update()
+        button.draw(screen)
+
+        button = Button('ok','' ,(22,143,78),1100, 62, 40, 30,font_size = 16)
+        button.update()
+        button.draw(screen)
+
+
+def prepare_screen_to_battle_screen_action(ai_settings, screen,buttons, screen_status, button_status, card_database_filter, user, player2):
+    """ Actions when click on play!"""
+    save_pass = True
+    # Clear dup number each call
+    with open('user_deck_list_string.txt','r') as f:
+        f.seek(0)
+        for line in f:
+            if 'DECK_LIST_' + user.deck_list_index in line:
+                list1 = make_deck_from_string(line.replace('DECK_LIST_' + user.deck_list_index + ' = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
+    if len(list1) < 40:
+
+        button_status.prepare_screen_end_screen_warning_button_display = 'deck less than 40 cards'
+        save_pass = False
+
+    if save_pass:
+
+        with open('user_deck_list_string.txt','r') as f:
+            f.seek(0)
+            for line in f:
+                if 'DECK_LIST_' + user.deck_list_index in line:
+                    user.deck_list = make_deck_from_string(line.replace('DECK_LIST_' + user.deck_list_index + ' = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                if 'CHARACTER_' + user.deck_list_index in line:
+                    user.character_card = eval('card_' + line.replace('CHARACTER_' + user.deck_list_index + ' = ', '')[7:9] + '_' + line.replace('CHARACTER_' + user.deck_list_index + ' = ', '')[10:12])
+
+
+
 
 #-----------------------------Build deck screen actions----------------------------------------------------
 def build_deck_screen_grid_display(grid, screen):
@@ -661,13 +663,6 @@ def build_deck_screen_stable_button_display(screen, buttons,screen_status,button
     if button_status.build_deck_screen_stable_button_backend:
         buttons.extend((button1, button2, button3))
         button_status.build_deck_screen_stable_button_backend = False
-
-def build_deck_screen_to_battle_screen_error_display(screen,user):
-    """ Display error message when entering battle screen with incomplete deck"""
-    button4 = Button('why?','', (0,0,0),510,350, 300, 300)
-    button4.update()
-    button4.draw(screen)
-    print('what!!!!')
 
 
 # - - - - - - - - - - - - -
@@ -972,9 +967,9 @@ def build_deck_screen_save_deck_to_file(screen,buttons, screen_status, button_st
     for card_new in user.deck_list:
         card_new.duplicate = 1
     local_store_list = build_deck_screen_my_deck_card_list_refine(user)
-    print(len(user.deck_list))
+
     for card in local_store_list:
-        print(card.duplicate)
+
         if card.duplicate > 4:
 
             button_status.build_deck_screen_end_screen_warning_button_display = '4 copy each'
@@ -3437,7 +3432,6 @@ def make_card_list_from_string(string, ai_settings, screen, buttons,screen_statu
 
 
     return deck_list
-
 
 def make_deck_from_string(string, ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ Input string from text file, output deck list with different class instance """
