@@ -2,6 +2,8 @@ import sys
 import random
 import pygame
 from pygame.locals import *
+from card_database import *
+from card import Character, Monster, Tactic, Item
 from settings import Settings
 from button import Button
 from display import Screen_status, Button_status
@@ -63,6 +65,28 @@ def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, butt
                 if Rect(85 + 180* (i-1), 165, 130,110).collidepoint(pygame.mouse.get_pos()):
                     user.deck_list_index = str(i)
 
+                elif Rect(85 + 180* (i-1), 282, 60, 30).collidepoint(pygame.mouse.get_pos()):
+                    with open('user_deck_list_string.txt','r') as f:
+                        f.seek(0)
+                        for line in f:
+                            if 'DECK_LIST_' + str(i) in line:
+                                user.deck_list = make_card_list_from_string(line.replace('DECK_LIST_' + str(i) + ' = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                            if 'CHARACTER_' + str(i) in line:
+                                user.character_card = eval('card_' + line.replace('CHARACTER_' + str(i) + ' = ', '')[7:9] + '_' + line.replace('CHARACTER_' + user.deck_list_index + ' = ', '')[10:12])
+
+
+                    screen_status.build_deck_screen_display = True
+                    screen_status.prepare_screen_display = False
+
+
+                        # button_edit = Button('Edit','', (50,50,170),85 + 180* (i-1), 282, 60, 30)
+                        # button_edit.update()
+                        # button_edit.draw(screen)
+                        #
+                        # button_delete = Button('Delete','', (160,30,30), 155 + 180* (i-1), 282, 60, 30)
+                        # button_delete.update()
+                        # button_delete.draw(screen)
+
 
             # back
             if Rect(0,0,50,50).collidepoint(pygame.mouse.get_pos()):
@@ -82,6 +106,7 @@ def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, butt
                         pass
 
                     else:
+                        user.deck_list_index = 'new'
                         user.deck_list = []
                         user.character_card = ''
                         screen_status.build_deck_screen_display = True
@@ -531,7 +556,8 @@ def prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_sta
                 f.seek(0)
                 for line in f:
                     if 'DECK_LIST_' + str(i) in line:
-                        deck_length = int((len(line.replace('DECK_LIST_' + str(i) + ' = ', '')) -1)/14)
+                        deck_length = len(make_card_list_from_string(line.replace('DECK_LIST_' + str(i) + ' = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2))
+                        # deck_length = int((len(line.replace('DECK_LIST_' + str(i) + ' = ', '')) -1)/14)
                     if 'CHARACTER_' + str(i) in line:
                         character_length = 1
 
@@ -866,29 +892,58 @@ def build_deck_screen_my_deck_check_duplicate(card, local_store_list):
 
 def build_deck_screen_save_deck_to_file(screen,buttons, screen_status, button_status, card_database_filter, user):
     """ save user deck list into txt file as string"""
-    deck_list_string = []
-    character_string = ['CARD_' + user.character_card.set_number + '_' + user.character_card.card_number]
-    for card in user.deck_list:
-        deck_list_string.append('CARD_' + card.set_number + '_' + card.card_number)
+    if user.deck_list_index == 'new':
 
-    with open('user_deck_list_string.txt','a+') as f:
-        f.seek(0)
-        x = len(f.readlines())
-        y = 0
-        deck_list_index = 0
-        for i in range(1,7):
+        deck_list_string = []
+        character_string = ['CARD_' + user.character_card.set_number + '_' + user.character_card.card_number]
+        for card in user.deck_list:
+            deck_list_string.append('CARD_' + card.set_number + '_' + card.card_number)
+
+        with open('user_deck_list_string.txt','a+') as f:
             f.seek(0)
-            for line in f:
-                if 'DECK_LIST_' + str(i) not in line:
-                    y += 1
-            if y < x:
-                y = 0
-            else:
-                deck_list_index = i
-                break
+            x = len(f.readlines())
+            y = 0
+            deck_list_index = 0
+            for i in range(1,7):
+                f.seek(0)
+                for line in f:
+                    if 'DECK_LIST_' + str(i) not in line:
+                        y += 1
+                if y < x:
+                    y = 0
+                else:
+                    deck_list_index = i
+                    break
 
-        f.write('DECK_LIST_' + str(deck_list_index) + ' = ' + str(deck_list_string) + '\n')
-        f.write('CHARACTER_' + str(deck_list_index) + ' = ' + str(character_string) + '\n')
+            f.write('DECK_LIST_' + str(deck_list_index) + ' = ' + str(deck_list_string) + '\n')
+            f.write('CHARACTER_' + str(deck_list_index) + ' = ' + str(character_string) + '\n')
+
+    else:
+        for i in range(1,7):
+            if user.deck_list_index == str(i):
+
+                deck_list_string = []
+                character_string = ['CARD_' + user.character_card.set_number + '_' + user.character_card.card_number]
+                for card in user.deck_list:
+                    deck_list_string.append('CARD_' + card.set_number + '_' + card.card_number)
+
+                with open('user_deck_list_string.txt','a+') as f:
+                    f.seek(0)
+                    x = f.readlines()
+                    y = 1
+                    f.seek(0)
+                    for line in f:
+                        if 'DECK_LIST_' + user.deck_list_index not in line:
+                            y += 1
+                        else:
+                            break
+                    x[y-1] = 'DECK_LIST_' + str(user.deck_list_index) + ' = ' + str(deck_list_string) + '\n'
+                    x[y] = 'CHARACTER_' + str(user.deck_list_index) + ' = ' + str(character_string) + '\n'
+
+                with open('user_deck_list_string.txt','w') as f:
+                    f.writelines(x)
+
+
 
 
 
@@ -3272,6 +3327,40 @@ def rect_union(class_list):
     else:
         return Rect(0,0,0,0)
 
+def make_card_list_from_string(string, ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
+    """ Input string from text file, output normal deck list with duplicate with same class instance"""
+    deck_list = []
+    while len(string) >= 14:
+        x = 'card_' + string[7:9] + '_' + string[10:12]
+        card = eval (x)
+        deck_list.append(card)
+
+        string = string[14:]
+
+
+    return deck_list
+
+
+def make_deck_from_string(string, ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
+    """ Input string from text file, output deck list with different class instance """
+    deck_list = []
+    while len(string) >= 14:
+        x = 'card_' + string[7:9] + '_' + string[10:12]
+        card = eval (x)
+        if card.card_type == 'monster':
+            deck_list.append(Monster(set_number= card.set_number,card_number= card.card_number,card_type= card.card_type,job= card.job,level= card.level,
+            attack= card.attack, health= card.health,lv_type= card.lv_type,lv_active_level= card.lv_active_level, special_effect= card.special_effect))
+        elif card.card_type == 'tactic':
+            deck_list.append(Tactic(set_number= card.set_number,card_number= card.card_number,card_type= card.card_type,job= card.job,level= card.level,
+            lv_type= card.lv_type,lv_active_level= card.lv_active_level, special_effect= card.special_effect))
+        elif card.card_type == 'item':
+            deck_list.append(Item(set_number= card.set_number,card_number= card.card_number,card_type= card.card_type,job= card.job,level= card.level,
+            lv_type= card.lv_type,lv_active_level= card.lv_active_level, special_effect= card.special_effect))
+
+        string = string[14:]
+
+
+    return deck_list
 
 
 
