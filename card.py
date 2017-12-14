@@ -5,9 +5,10 @@ from settings import Settings
 
 class Character():
 
-    def __init__(self, set_number, card_number, card_type, job, level,
+    def __init__(self, name, set_number, card_number, card_type, job, level,
     health, skill_1_lv, skill_1_type, skill_2_lv, skill_2_type, skill_3_lv, skill_3_type,
     ai_settings = Settings(), duplicate = 1 ):
+        self.name = name
         self.set_number = set_number
         self.card_number = card_number
         self.card_type = card_type

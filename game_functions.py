@@ -77,7 +77,7 @@ def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, butt
                             if 'DECK_LIST_' + str(i) in line:
                                 user.deck_list = make_card_list_from_string(line.replace('DECK_LIST_' + str(i) + ' = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
                             if 'CHARACTER_' + str(i) in line:
-                                user.character_card = eval('card_' + line.replace('CHARACTER_' + str(i) + ' = ', '')[7:9] + '_' + line.replace('CHARACTER_' + user.deck_list_index + ' = ', '')[10:12])
+                                user.character_card = eval('card_' + line.replace('CHARACTER_' + str(i) + ' = ', '')[7:12])
                                 screen_status.build_deck_screen_display = True
                                 screen_status.prepare_screen_display = False
 
@@ -542,10 +542,11 @@ def prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_sta
                         # deck_length = int((len(line.replace('DECK_LIST_' + str(i) + ' = ', '')) -1)/14)
                     if 'CHARACTER_' + str(i) in line:
                         character_length = 1
+                        character_card = eval('card_' + line.replace('CHARACTER_' + str(i) + ' = ', '')[7:12])
 
                 if user.deck_list_index == str(i):
 
-                    button_top = Button('Deck ' + str(i) + ': ','', (100,30,130),85 + 180* (i-1), 165, 130, 60)
+                    button_top = Button(character_card.name + ': ','', (100,30,130),85 + 180* (i-1), 165, 130, 60)
                     button_top.update()
                     button_top.draw(screen)
 
@@ -560,7 +561,7 @@ def prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_sta
 
                 else:
 
-                    button_top = Button('Deck ' + str(i) + ': ','', (160,160,160),85 + 180* (i-1), 165, 130, 60)
+                    button_top = Button(character_card.name + ': ','', (160,160,160),85 + 180* (i-1), 165, 130, 60)
                     button_top.update()
                     button_top.draw(screen)
 
@@ -638,7 +639,7 @@ def prepare_screen_to_battle_screen_action(ai_settings, screen,buttons, screen_s
                 if 'DECK_LIST_' + user.deck_list_index in line:
                     user.deck_list = make_deck_from_string(line.replace('DECK_LIST_' + user.deck_list_index + ' = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
                 if 'CHARACTER_' + user.deck_list_index in line:
-                    user.character_card = eval('card_' + line.replace('CHARACTER_' + user.deck_list_index + ' = ', '')[7:9] + '_' + line.replace('CHARACTER_' + user.deck_list_index + ' = ', '')[10:12])
+                    user.character_card = eval('card_' + line.replace('CHARACTER_' + user.deck_list_index + ' = ', '')[7:12])
 
 
 
@@ -3424,7 +3425,7 @@ def make_card_list_from_string(string, ai_settings, screen, buttons,screen_statu
     """ Input string from text file, output normal deck list with duplicate with same class instance"""
     deck_list = []
     while len(string) >= 14:
-        x = 'card_' + string[7:9] + '_' + string[10:12]
+        x = 'card_' + string[7:12]
         card = eval (x)
         deck_list.append(card)
 
