@@ -137,9 +137,9 @@ def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, butt
                     screen_status.battle_screen_display = True
                     screen_status.prepare_screen_display = False
 
-                    user.random_deck_list = random.sample(user.deck_list, len(user.deck_list))
-                    user.remain_deck_list = user.random_deck_list[6:]
-                    user.hand_list = user.random_deck_list[0:6]
+                    # user.random_deck_list = random.sample(user.deck_list, len(user.deck_list))
+                    # user.remain_deck_list = user.random_deck_list[6:]
+                    # user.hand_list = user.random_deck_list[0:6]
 
             # click on ok
             elif Rect(1100, 62, 40, 30).collidepoint(pygame.mouse.get_pos()):
@@ -805,7 +805,6 @@ def prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_sta
         button_difficulty_4.update()
         button_difficulty_4.draw(screen)
 
-
 def prepare_screen_button_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ Display unstable buttons of prepare screen"""
     for i in range(1,7):
@@ -854,16 +853,14 @@ def prepare_screen_button_display(ai_settings, screen, buttons,screen_status, bu
                 button_right.update()
                 button_right.draw(screen)
 
-
-
 def prepare_screen_end_screen_warning_display(screen,buttons, screen_status, button_status, card_database_filter, user):
     """ Display warning when end prepare screen"""
     if button_status.prepare_screen_end_screen_warning_button_display == 'deck less than 40 cards':
-        button = Button('You Need At Least 40','' ,(122,33,38),1050, 0, 150, 30,font_size = 13)
+        button = Button('You need at least 40','' ,(122,33,38),1050, 0, 150, 30,font_size = 13)
         button.update()
         button.draw(screen)
 
-        button = Button('Cards In Your Deck!','' ,(122,33,38),1050, 30, 150, 30,font_size = 13)
+        button = Button('cards in your deck!','' ,(122,33,38),1050, 30, 150, 30,font_size = 13)
         button.update()
         button.draw(screen)
 
@@ -875,24 +872,143 @@ def prepare_screen_end_screen_warning_display(screen,buttons, screen_status, but
         button.update()
         button.draw(screen)
 
+    elif button_status.prepare_screen_end_screen_warning_button_display == 'no deck':
+        button = Button('Please pick a deck','' ,(122,33,38),1050, 0, 150, 30,font_size = 13)
+        button.update()
+        button.draw(screen)
+
+        button = Button('or build a new one!','' ,(122,33,38),1050, 30, 150, 30,font_size = 13)
+        button.update()
+        button.draw(screen)
+
+        button = Button('','' ,(122,33,38),1050, 60, 150, 40,font_size = 18)
+        button.update()
+        button.draw(screen)
+
+        button = Button('ok','' ,(22,143,78),1100, 62, 40, 30,font_size = 16)
+        button.update()
+        button.draw(screen)
+
+    elif button_status.prepare_screen_end_screen_warning_button_display == 'no character':
+        button = Button('Please pick a character','' ,(122,33,38),1050, 0, 150, 30,font_size = 13)
+        button.update()
+        button.draw(screen)
+
+        button = Button('for your opponent!','' ,(122,33,38),1050, 30, 150, 30,font_size = 13)
+        button.update()
+        button.draw(screen)
+
+        button = Button('','' ,(122,33,38),1050, 60, 150, 40,font_size = 18)
+        button.update()
+        button.draw(screen)
+
+        button = Button('ok','' ,(22,143,78),1100, 62, 40, 30,font_size = 16)
+        button.update()
+        button.draw(screen)
+
+    elif button_status.prepare_screen_end_screen_warning_button_display == 'no difficulty':
+        button = Button('Please pick a difficulty','' ,(122,33,38),1050, 0, 150, 30,font_size = 13)
+        button.update()
+        button.draw(screen)
+
+        button = Button('for your opponent!','' ,(122,33,38),1050, 30, 150, 30,font_size = 13)
+        button.update()
+        button.draw(screen)
+
+        button = Button('','' ,(122,33,38),1050, 60, 150, 40,font_size = 18)
+        button.update()
+        button.draw(screen)
+
+        button = Button('ok','' ,(22,143,78),1100, 62, 40, 30,font_size = 16)
+        button.update()
+        button.draw(screen)
 
 def prepare_screen_to_battle_screen_action(ai_settings, screen,buttons, screen_status, button_status, card_database_filter, user, player2):
     """ Actions when click on play!"""
     save_pass = True
     # Clear dup number each call
-    list1 = []
+
     with open('user_deck_list_string.txt','r') as f:
         f.seek(0)
         for line in f:
             if 'DECK_LIST_' + user.deck_list_index in line:
                 list1 = make_deck_from_string(line.replace('DECK_LIST_' + user.deck_list_index + ' = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
-    if len(list1) < 40:
+    if user.deck_list_index == '0':
+        button_status.prepare_screen_end_screen_warning_button_display = 'no deck'
+        save_pass = False
+
+    elif len(list1) < 40:
 
         button_status.prepare_screen_end_screen_warning_button_display = 'deck less than 40 cards'
         save_pass = False
 
+    elif player2.character_ai_index == '0':
+        button_status.prepare_screen_end_screen_warning_button_display = 'no character'
+        save_pass = False
+
+    elif player2.ai_difficulty_index == '0':
+        button_status.prepare_screen_end_screen_warning_button_display = 'no difficulty'
+        save_pass = False
+
     if save_pass:
+
+        if player2.character_ai_index == '1':
+            player2.character_card = make_deck_from_string(str(['CARD_01_16']), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
+            player2.deck_list = make_deck_from_string(player2.NIXIE_DECK, ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
+        elif player2.character_ai_index == '2':
+            player2.character_card = make_deck_from_string(str(['CARD_01_37']), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
+            player2.deck_list = make_deck_from_string(player2.MAYA_DECK, ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
+        elif player2.character_ai_index == '3':
+            player2.character_card = make_deck_from_string(str(['CARD_01_59']), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
+            player2.deck_list = make_deck_from_string(player2.IVAN_DECK, ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
+        elif player2.character_ai_index == '4':
+            player2.character_card = make_deck_from_string(str(['CARD_01_89']), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
+            player2.deck_list = make_deck_from_string(player2.SHERMAN_DECK, ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
+        elif player2.character_ai_index == '5':
+            player2.character_card = make_deck_from_string(str(['CARD_03_11']), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
+            player2.deck_list = make_deck_from_string(player2.MOBY_DECK, ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
+        elif player2.character_ai_index == '6':
+            player2.character_card = make_deck_from_string(str(['CARD_05_30']), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
+            player2.deck_list = make_deck_from_string(player2.MAHIBANG_DECK, ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
+        elif player2.character_ai_index == '7':
+            player2.character_card = make_deck_from_string(str(['CARD_01_64']), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
+            player2.deck_list = make_deck_from_string(player2.MISTMOON_DECK, ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
+        elif player2.character_ai_index == '8':
+            player2.character_card = make_deck_from_string(str(['CARD_05_61']), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
+            player2.deck_list = make_deck_from_string(player2.FANGBLADE_DECK, ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
+
+        if player2.ai_difficulty_index == '1':
+            player2.random_deck_list = random.sample(player2.deck_list, len(player2.deck_list))
+            player2.remain_deck_list = player2.random_deck_list[3:]
+            player2.hand_list = player2.random_deck_list[0:3]
+            player2.character_card.health = str(int(int(player2.character_card.health)*0.5))
+
+        elif player2.ai_difficulty_index == '2':
+            player2.random_deck_list = random.sample(player2.deck_list, len(player2.deck_list))
+            player2.remain_deck_list = player2.random_deck_list[6:]
+            player2.hand_list = player2.random_deck_list[0:6]
+            player2.character_card.health = str(int(player2.character_card.health)*1)
+
+        elif player2.ai_difficulty_index == '3':
+            player2.random_deck_list = random.sample(player2.deck_list, len(player2.deck_list))
+            player2.remain_deck_list = player2.random_deck_list[10:]
+            player2.hand_list = player2.random_deck_list[0:10]
+            player2.character_card.health = str(int(player2.character_card.health)*2)
+
+        elif player2.ai_difficulty_index == '4':
+            player2.random_deck_list = random.sample(player2.deck_list, len(player2.deck_list))
+            player2.remain_deck_list = player2.random_deck_list[30:]
+            player2.hand_list = player2.random_deck_list[0:30]
+            player2.character_card.health = str(int(player2.character_card.health)*4)
 
 
 
@@ -905,7 +1021,9 @@ def prepare_screen_to_battle_screen_action(ai_settings, screen,buttons, screen_s
                     user.character_card = make_deck_from_string(line.replace('CHARACTER_' + user.deck_list_index + ' = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
                     #user.character_card = eval('card_' + line.replace('CHARACTER_' + user.deck_list_index + ' = ', '')[7:12])
 
-
+        user.random_deck_list = random.sample(user.deck_list, len(user.deck_list))
+        user.remain_deck_list = user.random_deck_list[6:]
+        user.hand_list = user.random_deck_list[0:6]
 
 
 #-----------------------------Build deck screen actions----------------------------------------------------
