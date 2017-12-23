@@ -1034,9 +1034,9 @@ def build_deck_screen_grid_display(grid, screen):
 
 def build_deck_screen_stable_button_display(screen, buttons,screen_status,button_status):
     """ Display all stable buttons for build deck screen"""
-    button1 = Button('Back','build_deck_screen', (0,0,0),0, 0, 50, 50)
-    button1.update()
-    button1.draw(screen)
+    # button1 = Button('Back','build_deck_screen', (0,0,0),0, 0, 50, 50)
+    # button1.update()
+    # button1.draw(screen)
     button2 = Button('Save','build_deck_screen', (0,0,0),1150, 0, 50, 50)
     button2.update()
     button2.draw(screen)
@@ -1044,7 +1044,7 @@ def build_deck_screen_stable_button_display(screen, buttons,screen_status,button
     button3.update()
     button3.draw(screen)
     if button_status.build_deck_screen_stable_button_backend:
-        buttons.extend((button1, button2, button3))
+        buttons.extend((button2, button3))
         button_status.build_deck_screen_stable_button_backend = False
 
 
@@ -1667,9 +1667,25 @@ def battle_screen_my_hand_button_display(screen,buttons, screen_status, button_s
         and (screen_status.battle_screen_player2_action_display_indicator == False)):
         if button_status.battle_screen_my_hand_indicator_display == True:
             located_card = user.hand_list[7*(screen_status.battle_screen_my_hand_page_id - 1)+(int(button_status.battle_screen_my_hand_indicator_position)-1)]
-            button_level_up = Button('***','battle_screen_handaction_****', (70,70,150),located_card.rect.x+10, located_card.rect.y - 27, 115, 27)
-            button_level_up.update()
-            button_level_up.draw(screen)
+
+            button_top = Button('','', (250,0,0),located_card.rect.x-5, located_card.rect.y - 5, 140, 5)
+            button_top.update()
+            button_top.draw(screen)
+
+            button_bottom = Button('','', (250,0,0),located_card.rect.x-5, located_card.rect.y + 180, 140, 5)
+            button_bottom.update()
+            button_bottom.draw(screen)
+
+            button_left = Button('','', (250,0,0),located_card.rect.x-5, located_card.rect.y, 5, 180)
+            button_left.update()
+            button_left.draw(screen)
+
+            button_right = Button('','', (250,0,0),located_card.rect.x + 130, located_card.rect.y , 5, 180)
+            button_right.update()
+            button_right.draw(screen)
+            # button_level_up = Button('***','battle_screen_handaction_****', (70,70,150),located_card.rect.x+10, located_card.rect.y - 27, 115, 27)
+            # button_level_up.update()
+            # button_level_up.draw(screen)
 
 def battle_screen_character_1_card_display(screen,buttons, screen_status, button_status, card_database_filter, user):
     """ Display character 1 card layout"""
@@ -1891,7 +1907,6 @@ def battle_screen_battleground_button_display(ai_settings, screen, buttons,scree
                 button = Button('***','', (70,70,150),monster_rect_x + 50, monster_rect_y - 27, 30, 27)
                 button.update()
                 button.draw(screen)
-
 
 def battle_screen_result_update(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ update result in each cycle"""
