@@ -226,6 +226,43 @@ def check_events_build_deck_screen(ai_settings, screen, buttons,screen_status, b
                             screen_status.build_deck_screen_my_deck_page_id -= 1
 
 
+        elif event.type == pygame.MOUSEMOTION: # Mostly for zoom in
+            x = 0 # indicator helps remove zoom in.
+
+            # Card gallery
+            for i in range(1,8):
+                if Rect(100 + 145*(i-1),130,130,180).collidepoint(pygame.mouse.get_pos()):
+                    button_status.card_zoom_active = True
+                    button_status.card_zoom_screen_indicator = 'build_deck_screen'
+                    button_status.card_zoom_part_indicator = 'card gallery'
+                    button_status.card_zoom_position_indicator = str(i)
+                    x = 1
+            for i in range(8,15):
+                if Rect(100 + 145*(i-8),330,130,180).collidepoint(pygame.mouse.get_pos()):
+                    button_status.card_zoom_active = True
+                    button_status.card_zoom_screen_indicator = 'build_deck_screen'
+                    button_status.card_zoom_part_indicator = 'card gallery'
+                    button_status.card_zoom_position_indicator = str(i)
+                    x = 1
+
+            # Hand zoom
+            for i in range(1,7):
+                if Rect(245 + 145*(i-1),600,130,180).collidepoint(pygame.mouse.get_pos()):
+                    button_status.card_zoom_active = True
+                    button_status.card_zoom_screen_indicator = 'build_deck_screen'
+                    button_status.card_zoom_part_indicator = 'hand'
+                    button_status.card_zoom_position_indicator = str(i)
+                    x = 1
+
+            if Rect(65,600,130,180).collidepoint(pygame.mouse.get_pos()):
+                button_status.card_zoom_active = True
+                button_status.card_zoom_screen_indicator = 'build_deck_screen'
+                button_status.card_zoom_part_indicator = 'character'
+                button_status.card_zoom_position_indicator = str(i)
+                x = 1
+
+            if x == 0:
+                button_status.card_zoom_active = False
 
 
 
@@ -453,6 +490,53 @@ def battle_screen_update(ai_settings,grid, screen, buttons, screen_status, butto
 
 def card_zoom_update(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ display card details (zoom in) any card"""
+    if button_status.card_zoom_active:
+        if button_status.card_zoom_screen_indicator == 'build_deck_screen':
+            if button_status.card_zoom_part_indicator == 'card gallery':
+                if len(cdf.request_card_list(card_database_filter)[14*(screen_status.build_deck_screen_card_gallery_page_id - 1):14 * screen_status.build_deck_screen_card_gallery_page_id]) >= int(button_status.card_zoom_position_indicator):
+                    located_card = cdf.request_card_list(card_database_filter)[14*(screen_status.build_deck_screen_card_gallery_page_id - 1)+(int(button_status.card_zoom_position_indicator)-1)]
+
+                    if int(button_status.card_zoom_position_indicator) <= 7:
+                        rect_x = 100 + 145*(int(button_status.card_zoom_position_indicator)-1)
+                        rect_y = 130
+                    else:
+                        rect_x = 100 + 145*(int(button_status.card_zoom_position_indicator)-8)
+                        rect_y = 330
+
+                    located_card.rect_zoom.x = rect_x - 85
+                    located_card.rect_zoom.y = rect_y - 110
+                    screen.blit(located_card.image_zoom, located_card.rect_zoom)
+
+                else:
+                    pass
+
+            if button_status.card_zoom_part_indicator == 'hand':
+                local_store_list = build_deck_screen_my_deck_card_list_refine(user)
+                # Check to avoid errors when click on empty rect preventing removing card.
+                if len(local_store_list[6*(screen_status.build_deck_screen_my_deck_page_id - 1):6 * screen_status.build_deck_screen_my_deck_page_id]) >= int(button_status.card_zoom_position_indicator):
+                    located_card = local_store_list[6*(screen_status.build_deck_screen_my_deck_page_id - 1)+(int(button_status.card_zoom_position_indicator)-1)]
+
+                    rect_x = 245 + 145*(int(button_status.card_zoom_position_indicator)-1)
+                    rect_y = 600
+
+                    located_card.rect_zoom.x = rect_x - 85
+                    located_card.rect_zoom.y = rect_y - 210
+                    screen.blit(located_card.image_zoom, located_card.rect_zoom)
+                else:
+                    pass
+
+            if button_status.card_zoom_part_indicator == 'character':
+                located_card = user.character_card
+
+                rect_x = 100
+                rect_y = 600
+
+                located_card.rect_zoom.x = rect_x - 85
+                located_card.rect_zoom.y = rect_y - 210
+                screen.blit(located_card.image_zoom, located_card.rect_zoom)
+
+
+
     if screen_status.battle_screen_action_indicator != 'stage-0':
         if button_status.card_zoom_active:
             if button_status.card_zoom_screen_indicator == 'battle_screen':
@@ -494,6 +578,8 @@ def card_zoom_update(ai_settings, screen, buttons,screen_status, button_status, 
                         screen.blit(located_card.bottom_image_zoom, located_card.bottom_rect_zoom)
                     else:
                         pass
+
+
 
 
 
@@ -671,8 +757,6 @@ def prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_sta
         button_difficulty_4.draw(screen)
 
 
-
-
 def prepare_screen_button_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ Display unstable buttons of prepare screen"""
     for i in range(1,7):
@@ -760,6 +844,8 @@ def prepare_screen_to_battle_screen_action(ai_settings, screen,buttons, screen_s
         save_pass = False
 
     if save_pass:
+
+
 
         with open('user_deck_list_string.txt','r') as f:
             f.seek(0)
@@ -998,7 +1084,6 @@ def build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button
             build_deck_screen_my_deck_duplicate_number_display(card, screen)
             if row_number >= 7:
                 row_number = 1
-
 
 
 def build_deck_screen_my_deck_duplicate_number_display(card, screen):
