@@ -161,6 +161,29 @@ def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, butt
                         screen_status.build_deck_screen_display = True
                         screen_status.prepare_screen_display = False
 
+        elif event.type == pygame.MOUSEMOTION: # Mostly for zoom in
+            x = 0 # indicator helps remove zoom in.
+
+            # Opponent characters
+            for i in range(1,5):
+                if Rect(70 + 160* (i-1), 395, 130,180).collidepoint(pygame.mouse.get_pos()):
+                    button_status.card_zoom_active = True
+                    button_status.card_zoom_screen_indicator = 'prepare_screen'
+                    button_status.card_zoom_part_indicator = 'opponent character'
+                    button_status.card_zoom_position_indicator = str(i)
+                    x = 1
+            for i in range(5,9):
+                if Rect(70 + 160* (i-5), 585, 130,180).collidepoint(pygame.mouse.get_pos()):
+                    button_status.card_zoom_active = True
+                    button_status.card_zoom_screen_indicator = 'prepare_screen'
+                    button_status.card_zoom_part_indicator = 'opponent character'
+                    button_status.card_zoom_position_indicator = str(i)
+                    x = 1
+
+
+            if x == 0:
+                button_status.card_zoom_active = False
+
 def check_events_build_deck_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user):
     """ Check all events on the build deck screen"""
     for event in pygame.event.get():
@@ -490,6 +513,32 @@ def battle_screen_update(ai_settings,grid, screen, buttons, screen_status, butto
 
 def card_zoom_update(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ display card details (zoom in) any card"""
+    # Prepare screen
+    if button_status.card_zoom_active:
+        if button_status.card_zoom_screen_indicator == 'prepare_screen':
+            if button_status.card_zoom_part_indicator == 'opponent character':
+                character_list = [card_01_16, card_01_37, card_01_59, card_01_89, card_03_11, card_05_30, card_01_64, card_05_61]
+                if int(button_status.card_zoom_position_indicator) <= 4:
+                    located_card = character_list[int(button_status.card_zoom_position_indicator)-1]
+                    rect_x = 70 + 160* (int(button_status.card_zoom_position_indicator)-1)
+                    rect_y = 395
+
+                    located_card.rect_zoom.x = rect_x - 60
+                    located_card.rect_zoom.y = rect_y - 210
+                    screen.blit(located_card.image_zoom, located_card.rect_zoom)
+
+                else:
+                    located_card = character_list[int(button_status.card_zoom_position_indicator)-1]
+                    rect_x = 70 + 160* (int(button_status.card_zoom_position_indicator)-5)
+                    rect_y = 585
+
+                    located_card.rect_zoom.x = rect_x - 60
+                    located_card.rect_zoom.y = rect_y - 210
+                    screen.blit(located_card.image_zoom, located_card.rect_zoom)
+
+
+
+    # Build deck screen
     if button_status.card_zoom_active:
         if button_status.card_zoom_screen_indicator == 'build_deck_screen':
             if button_status.card_zoom_part_indicator == 'card gallery':
@@ -536,7 +585,7 @@ def card_zoom_update(ai_settings, screen, buttons,screen_status, button_status, 
                 screen.blit(located_card.image_zoom, located_card.rect_zoom)
 
 
-
+    # Battle Screen
     if screen_status.battle_screen_action_indicator != 'stage-0':
         if button_status.card_zoom_active:
             if button_status.card_zoom_screen_indicator == 'battle_screen':
@@ -1084,7 +1133,6 @@ def build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button
             build_deck_screen_my_deck_duplicate_number_display(card, screen)
             if row_number >= 7:
                 row_number = 1
-
 
 def build_deck_screen_my_deck_duplicate_number_display(card, screen):
     """Input Card instance, output how many copies of that card as a button above that card"""
