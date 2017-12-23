@@ -330,7 +330,7 @@ def check_events_battle_screen(ai_settings, screen, buttons,screen_status, butto
             elif rect_union(buttons).collidepoint(pygame.mouse.get_pos()):
                 for button in buttons:
                     if button.rect.collidepoint(pygame.mouse.get_pos()):
-                        if button.text == 'Back':
+                        if button.text == 'Menu':
                             screen_status.prepare_screen_display = True
                             screen_status.battle_screen_display = False
                         elif button.text == '>':
@@ -410,8 +410,13 @@ def check_events_battle_screen(ai_settings, screen, buttons,screen_status, butto
                 button_status.card_zoom_part_indicator = 'character 2'
                 x = 1
 
+            if Rect(880, 5, 50, 20).collidepoint(pygame.mouse.get_pos()):
+                button_status.battle_screen_history_bar_detail_display = True
+                x = 1
+
             if x == 0:
                 button_status.card_zoom_active = False
+                button_status.battle_screen_history_bar_detail_display = False
 
 
 
@@ -493,6 +498,8 @@ def battle_screen_update(ai_settings,grid, screen, buttons, screen_status, butto
     battle_screen_instruction_bar_display(screen,buttons, screen_status, button_status, card_database_filter, user)
 
     battle_screen_stable_button_display(screen, buttons,screen_status, button_status)
+
+    battle_screen_history_bar_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
     battle_screen_my_hand_card_display(screen,buttons, screen_status, button_status, card_database_filter, user)
 
@@ -1588,20 +1595,50 @@ def battle_screen_stable_button_display(screen, buttons,screen_status, button_st
     """ Display all stable button on battle screen"""
 
     #
-    button1 = Button('Back','', (0,0,0),300, 0, 50, 30)
+    button1 = Button('Menu','', (0,0,0),950, 0, 50, 30)
     button1.update()
     button1.draw(screen)
-    #
-    button2 = Button('Rules','', (0,0,0),400, 0, 100, 30)
-    button2.update()
-    button2.draw(screen)
-    #
-    button3 = Button('Surrender', '', (0,0,0),800, 0, 100, 30)
-    button3.update()
-    button3.draw(screen)
+
     if button_status.battle_screen_stable_button_backend:
-        buttons.extend((button1, button2, button3))
+        buttons.append(button1)
         button_status.battle_screen_stable_button_backend = False
+
+def battle_screen_history_bar_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
+    """ Display action history for both players"""
+    button_1 = Button('Rules','', (0,0,0),200, 0, 50, 30)
+    button_1.update()
+    button_1.draw(screen)
+
+    for number,text in button_status.battle_screen_history_bar_text_dict.items():
+        if int(number) == 1:
+            button_text = Button(text,'', (40,90,180),250, 0, 700, 30)
+            button_text.update()
+            button_text.draw(screen)
+        else:
+            pass
+
+    button_details = Button('More','', (10,190,120),880, 5, 50, 20)
+    button_details.update()
+    button_details.draw(screen)
+
+    if button_status.battle_screen_history_bar_detail_display == True:
+        i = 0
+        for number,text in button_status.battle_screen_history_bar_text_dict.items():
+            if int(number) % 2 == 1 and text != '':
+                button_odd = Button(text,'', (227,133,0),500, 30 + 30*(i), 500, 30)
+                button_odd.update()
+                button_odd.draw(screen)
+                i += 1
+            elif int(number) % 2 == 0 and text != '':
+                button_even = Button(text,'', (162,90,144),500, 60 + 30 * (i-1), 500, 30)
+                button_even.update()
+                button_even.draw(screen)
+                i += 1
+
+
+
+
+
 
 def battle_screen_my_hand_card_display(screen,buttons, screen_status, button_status, card_database_filter, user):
     """ Display my deck on battle screen"""

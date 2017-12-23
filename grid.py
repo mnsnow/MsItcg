@@ -61,7 +61,7 @@ class Grid():
         self.battle_screen_menu_grid_size = (800,30)
         self.battle_screen_menu_grid_position = (200,0)
         self.battle_screen_menu_grid = pygame.Surface(self.battle_screen_menu_grid_size)
-        self.battle_screen_menu_grid.fill((123,163,48))
+        self.battle_screen_menu_grid.fill((0,0,0))
         self.battle_screen_menu_grid_rect = self.battle_screen_menu_grid.get_rect()
         self.battle_screen_menu_grid.blit(self.battle_screen_menu_grid, self.battle_screen_menu_grid_rect)
         self.battle_screen_menu_grid_rect.topleft = self.battle_screen_menu_grid_position
