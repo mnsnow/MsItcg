@@ -23,7 +23,7 @@ class Grid():
         self.prepare_screen_pick_deck_grid.blit(self.prepare_screen_pick_deck_grid, self.prepare_screen_pick_deck_grid_rect)
         self.prepare_screen_pick_deck_grid_rect.topleft = self.prepare_screen_pick_deck_grid_position
 
-        self.prepare_screen_ai_setup_grid_size = (1100,400)
+        self.prepare_screen_ai_setup_grid_size = (1100,430)
         self.prepare_screen_ai_setup_grid_position = (50,350)
         self.prepare_screen_ai_setup_grid = pygame.Surface(self.prepare_screen_ai_setup_grid_size)
         self.prepare_screen_ai_setup_grid.fill((23,163,148))

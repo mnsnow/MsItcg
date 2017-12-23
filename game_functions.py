@@ -502,18 +502,20 @@ def prepare_screen_grid_display(grid, screen):
 
 def prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ Display stable buttons"""
+    # Back
     button_back = Button('Back','', (0,0,0),0, 0, 50, 50)
     button_back.update()
     button_back.draw(screen)
-
+    # Play
     button_play = Button('Play!','', (0,0,0),1150, 0, 50, 50)
     button_play.update()
     button_play.draw(screen)
-
+    # Pick deck text
     button_text_1 = Button('Pick an exist deck or create a new one: ','', (200,100,170),400, 100, 400, 35)
     button_text_1.update()
     button_text_1.draw(screen)
 
+    # Deck list buttons
     with open('user_deck_list_string.txt','r') as f:
         f.seek(0)
         if len(f.readlines()) >= 12:
@@ -583,6 +585,35 @@ def prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_sta
                 button.draw(screen)
 
                 y = 0
+
+    # Pick opponents buttons
+    # Pick opponents text
+    button_text_2 = Button('Pick an opponent to play against','', (200,100,170),400, 350, 400, 35)
+    button_text_2.update()
+    button_text_2.draw(screen)
+
+    # 8 characters available
+    character_list = [card_01_16, card_01_37, card_01_59, card_01_64, card_01_89, card_03_11, card_05_30, card_05_61]
+    row_number = 1
+    rect_position_x = 70
+    rect_position_y = 395
+    for card in character_list:
+        if row_number <= 4:
+            card.rect.x = rect_position_x
+            card.rect.y = rect_position_y
+            screen.blit(card.image, card.rect)
+            rect_position_x += 160
+            row_number += 1
+        elif row_number <= 8:
+            card.rect.x = rect_position_x - 640
+            card.rect.y = rect_position_y + 190
+            screen.blit(card.image, card.rect)
+            rect_position_x += 160
+            row_number += 1
+            if row_number >= 9:
+                row_number = 1
+
+
 
 def prepare_screen_button_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ Display unstable buttons of prepare screen"""
