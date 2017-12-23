@@ -47,6 +47,9 @@ class Player2():
 
             ]
 
+        self.character_ai_index = '0'
+        self.ai_difficulty_index = '0'
+
         self.character_card = card_01_16
 
         self.character_under_card_by_level = {

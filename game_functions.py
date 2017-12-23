@@ -109,6 +109,20 @@ def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, butt
 
                                 user.deck_list_index = 'new'
 
+            # Click on one of the opponent's deck
+            for i in range(1,9):
+                if i <= 4:
+                    if Rect(70 + 160* (i-1), 395, 130,180).collidepoint(pygame.mouse.get_pos()):
+                        player2.character_ai_index = str(i)
+                else:
+                    if Rect(70 + 160* (i-5), 585, 130,180).collidepoint(pygame.mouse.get_pos()):
+                        player2.character_ai_index = str(i)
+
+            # Click and pick a difficulty
+            for i in range(1,5):
+                if Rect(710, 445 + 80*(i-1),410,70).collidepoint(pygame.mouse.get_pos()):
+                    player2.ai_difficulty_index = str(i)
+
 
 
             # back
@@ -588,12 +602,13 @@ def prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_sta
 
     # Pick opponents buttons
     # Pick opponents text
-    button_text_2 = Button('Pick an opponent to play against','', (200,100,170),400, 350, 400, 35)
+    button_text_2 = Button('Pick an opponent to play against: ','', (200,100,170),400, 350, 400, 35)
     button_text_2.update()
     button_text_2.draw(screen)
 
+
     # 8 characters available
-    character_list = [card_01_16, card_01_37, card_01_59, card_01_64, card_01_89, card_03_11, card_05_30, card_05_61]
+    character_list = [card_01_16, card_01_37, card_01_59, card_01_89, card_03_11, card_05_30, card_01_64, card_05_61]
     row_number = 1
     rect_position_x = 70
     rect_position_y = 395
@@ -614,6 +629,49 @@ def prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_sta
                 row_number = 1
 
 
+    # Pick a difficulty
+    button_text_3 = Button('Pick a difficulty: ','', (100,100,170),810, 400, 200, 35)
+    button_text_3.update()
+    button_text_3.draw(screen)
+
+    if player2.ai_difficulty_index == '1':
+        button_difficulty_1 = Button('Beginner  (Opponent start with 3 cards, 50% Hp)','', (100,30,130),710, 445, 410, 70)
+        button_difficulty_1.update()
+        button_difficulty_1.draw(screen)
+    else:
+        button_difficulty_1 = Button('Beginner  (Opponent start with 3 cards, 50% Hp)','', (160,160,160),710, 445, 410, 70)
+        button_difficulty_1.update()
+        button_difficulty_1.draw(screen)
+
+    if player2.ai_difficulty_index == '2':
+        button_difficulty_2 = Button('Normal  (Opponent start with 6 cards, 100% Hp)','', (100,30,130),710, 525, 410, 70)
+        button_difficulty_2.update()
+        button_difficulty_2.draw(screen)
+    else:
+        button_difficulty_2 = Button('Normal  (Opponent start with 6 cards, 100% Hp)','', (160,160,160),710, 525, 410, 70)
+        button_difficulty_2.update()
+        button_difficulty_2.draw(screen)
+
+    if player2.ai_difficulty_index == '3':
+        button_difficulty_3 = Button('Hard  (Opponent start with 10 cards, 200% Hp)','', (100,30,130),710, 605, 410, 70)
+        button_difficulty_3.update()
+        button_difficulty_3.draw(screen)
+    else:
+        button_difficulty_3 = Button('Hard  (Opponent start with 10 cards, 200% Hp)','', (160,160,160),710, 605, 410, 70)
+        button_difficulty_3.update()
+        button_difficulty_3.draw(screen)
+
+    if player2.ai_difficulty_index == '4':
+        button_difficulty_4 = Button('Impossible  (Opponent start with 30 cards, 400% Hp)','', (100,30,130),710, 685, 410, 70)
+        button_difficulty_4.update()
+        button_difficulty_4.draw(screen)
+    else:
+        button_difficulty_4 = Button('Impossible  (Opponent start with 30 cards, 400% Hp)','', (160,160,160),710, 685, 410, 70)
+        button_difficulty_4.update()
+        button_difficulty_4.draw(screen)
+
+
+
 
 def prepare_screen_button_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ Display unstable buttons of prepare screen"""
@@ -626,6 +684,44 @@ def prepare_screen_button_display(ai_settings, screen, buttons,screen_status, bu
             button_delete = Button('Delete','', (160,30,30), 155 + 180* (i-1), 282, 60, 30)
             button_delete.update()
             button_delete.draw(screen)
+
+    # Red rectangle around opponent card
+    for i in range(1,9):
+        if player2.character_ai_index == str(i):
+            if i <= 4:
+                button_top = Button('','', (250,0,0), 65 + 160*(i-1), 390, 140, 5)
+                button_top.update()
+                button_top.draw(screen)
+
+                button_bottom = Button('','', (250,0,0),65 + 160*(i-1), 575, 140, 5)
+                button_bottom.update()
+                button_bottom.draw(screen)
+
+                button_left = Button('','', (250,0,0), 65 + 160*(i-1), 395, 5, 180)
+                button_left.update()
+                button_left.draw(screen)
+
+                button_right = Button('','', (250,0,0), 200 + 160*(i-1), 395, 5, 180)
+                button_right.update()
+                button_right.draw(screen)
+            else:
+                button_top = Button('','', (250,0,0), 65 + 160*(i-5), 580, 140, 5)
+                button_top.update()
+                button_top.draw(screen)
+
+                button_bottom = Button('','', (250,0,0),65 + 160*(i-5), 765, 140, 5)
+                button_bottom.update()
+                button_bottom.draw(screen)
+
+                button_left = Button('','', (250,0,0), 65 + 160*(i-5), 585, 5, 180)
+                button_left.update()
+                button_left.draw(screen)
+
+                button_right = Button('','', (250,0,0), 200 + 160*(i-5), 585, 5, 180)
+                button_right.update()
+                button_right.draw(screen)
+
+
 
 def prepare_screen_end_screen_warning_display(screen,buttons, screen_status, button_status, card_database_filter, user):
     """ Display warning when end prepare screen"""
