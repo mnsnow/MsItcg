@@ -127,9 +127,9 @@ def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, butt
                     user.remain_deck_list = user.random_deck_list[6:]
                     user.hand_list = user.random_deck_list[0:6]
 
+            # click on ok
             elif Rect(1100, 62, 40, 30).collidepoint(pygame.mouse.get_pos()):
                 button_status.prepare_screen_end_screen_warning_button_display = ''
-
 
 
 
@@ -620,6 +620,7 @@ def prepare_screen_to_battle_screen_action(ai_settings, screen,buttons, screen_s
     """ Actions when click on play!"""
     save_pass = True
     # Clear dup number each call
+    list1 = []
     with open('user_deck_list_string.txt','r') as f:
         f.seek(0)
         for line in f:
@@ -639,7 +640,8 @@ def prepare_screen_to_battle_screen_action(ai_settings, screen,buttons, screen_s
                 if 'DECK_LIST_' + user.deck_list_index in line:
                     user.deck_list = make_deck_from_string(line.replace('DECK_LIST_' + user.deck_list_index + ' = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
                 if 'CHARACTER_' + user.deck_list_index in line:
-                    user.character_card = eval('card_' + line.replace('CHARACTER_' + user.deck_list_index + ' = ', '')[7:12])
+                    user.character_card = make_deck_from_string(line.replace('CHARACTER_' + user.deck_list_index + ' = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
+                    #user.character_card = eval('card_' + line.replace('CHARACTER_' + user.deck_list_index + ' = ', '')[7:12])
 
 
 
@@ -3422,7 +3424,7 @@ def rect_union(class_list):
         return Rect(0,0,0,0)
 
 def make_card_list_from_string(string, ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
-    """ Input string from text file, output normal deck list with duplicate with same class instance"""
+    """ Input string from text file, output normal deck list with duplicate with same class instance, mainly for build deck screen use"""
     deck_list = []
     while len(string) >= 14:
         x = 'card_' + string[7:12]
@@ -3435,7 +3437,7 @@ def make_card_list_from_string(string, ai_settings, screen, buttons,screen_statu
     return deck_list
 
 def make_deck_from_string(string, ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
-    """ Input string from text file, output deck list with different class instance """
+    """ Input string from text file, output deck list with different class instance, for battle screen use """
     deck_list = []
     while len(string) >= 14:
         x = 'card_' + string[7:9] + '_' + string[10:12]
@@ -3449,6 +3451,9 @@ def make_deck_from_string(string, ai_settings, screen, buttons,screen_status, bu
         elif card.card_type == 'item':
             deck_list.append(Item(set_number= card.set_number,card_number= card.card_number,card_type= card.card_type,job= card.job,level= card.level,
             lv_type= card.lv_type,lv_active_level= card.lv_active_level, special_effect= card.special_effect))
+        elif card.card_type == 'character':
+            deck_list.append(Character(name = card.name,set_number= card.set_number,card_number= card.card_number,card_type= card.card_type,job= card.job,level= card.level,
+            health= card.health,skill_1_lv = card.skill_1_lv, skill_1_type = card.skill_1_type,skill_2_lv = card.skill_2_lv, skill_2_type = card.skill_2_type,skill_3_lv = card.skill_3_lv, skill_3_type = card.skill_3_type))
 
         string = string[14:]
 
