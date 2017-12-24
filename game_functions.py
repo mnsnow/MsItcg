@@ -499,8 +499,6 @@ def battle_screen_update(ai_settings,grid, screen, buttons, screen_status, butto
 
     battle_screen_stable_button_display(screen, buttons,screen_status, button_status)
 
-    battle_screen_history_bar_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-
     battle_screen_my_hand_card_display(screen,buttons, screen_status, button_status, card_database_filter, user)
 
     battle_screen_my_hand_button_display(screen,buttons, screen_status, button_status, card_database_filter, user)
@@ -517,6 +515,8 @@ def battle_screen_update(ai_settings,grid, screen, buttons, screen_status, butto
     battle_screen_battleground_button_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
     # Update result in each cycle
     battle_screen_result_update(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
+    battle_screen_history_bar_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
 def card_zoom_update(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ display card details (zoom in) any card"""
@@ -1611,13 +1611,13 @@ def battle_screen_history_bar_display(ai_settings, screen, buttons,screen_status
 
     for number,text in button_status.battle_screen_history_bar_text_dict.items():
         if int(number) == 1:
-            button_text = Button(text,'', (40,90,180),250, 0, 700, 30)
+            button_text = Button(text,'', (40,90,180),250, 0, 700, 30, font_size = 13)
             button_text.update()
             button_text.draw(screen)
         else:
             pass
 
-    button_details = Button('More','', (10,190,120),880, 5, 50, 20)
+    button_details = Button('More','', (10,190,120),895, 5, 50, 20)
     button_details.update()
     button_details.draw(screen)
 
@@ -1625,18 +1625,15 @@ def battle_screen_history_bar_display(ai_settings, screen, buttons,screen_status
         i = 0
         for number,text in button_status.battle_screen_history_bar_text_dict.items():
             if int(number) % 2 == 1 and text != '':
-                button_odd = Button(text,'', (227,133,0),400, 30 + 30*(i), 600, 30, font_size = 13)
+                button_odd = Button(text,'', (227,133,0),350, 30 + 30*(i), 650, 30, font_size = 13)
                 button_odd.update()
                 button_odd.draw(screen)
                 i += 1
             elif int(number) % 2 == 0 and text != '':
-                button_even = Button(text,'', (162,90,144),400, 60 + 30 * (i-1), 600, 30, font_size = 13)
+                button_even = Button(text,'', (162,90,144),350, 60 + 30 * (i-1), 650, 30, font_size = 13)
                 button_even.update()
                 button_even.draw(screen)
                 i += 1
-
-
-
 
 def battle_screen_my_hand_card_display(screen,buttons, screen_status, button_status, card_database_filter, user):
     """ Display my deck on battle screen"""
@@ -1896,7 +1893,7 @@ def battle_screen_player2_display(ai_settings, screen, buttons,screen_status, bu
     # Display actions cooldown
     if screen_status.battle_screen_player2_action_display_indicator:
         now = pygame.time.get_ticks()
-        cooldown = 1000
+        cooldown = 2200
         if now - screen_status.time_last >= cooldown:
             screen_status.time_last = now
             battle_screen_player2_action(screen, buttons,screen_status, button_status, card_database_filter, user, player2)
@@ -3117,7 +3114,7 @@ def battle_screen_instruction_bar_yes_skip_action(yes_skip_indicator, screen,but
 
         player2.character_card.health = str(int(player2.character_card.health) - 10*int(user.item_in_play_length))
         user.character_card.health = str(int(user.character_card.health) + 10*int(user.item_in_play_length))
-        add_text_to_action_history('Your turn has end', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+        add_text_to_action_history('You have '+user.item_in_play_length+' items, your HP: '+str(int(user.character_card.health) - 10*int(user.item_in_play_length))+' --> '+user.character_card.health+ ", opponent's HP: "+str(int(player2.character_card.health) + 10*int(user.item_in_play_length))+' --> '+player2.character_card.health+' . Your turn has end', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
         button_status.battle_screen_instruction_bar_yes_display = False
         button_status.battle_screen_instruction_bar_yes_backend = False
@@ -3250,7 +3247,6 @@ def battle_screen_stage_3_action(position, screen,buttons, screen_status, button
     button_status.battle_screen_instruction_bar_yes_backend = False
 
 
-
 # For offline AI player2 only
 def battle_screen_player2_action(screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ Actions of player2"""
@@ -3262,6 +3258,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
     elif screen_status.battle_screen_action_indicator == 'player2-stage-1':
         screen_status.battle_screen_action_indicator = 'player2-stage-1-level-up'
         button_status.battle_screen_instruction_bar_text = 'Opponent is deciding whether to level up '
+        add_text_to_action_history("Opponent's turn has started", screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
 
     elif screen_status.battle_screen_action_indicator == 'player2-stage-1-level-up':
@@ -3277,6 +3274,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
             player2.hand_list.remove(located_card)
             player2.character_card.level = str(int(player2.character_card.level) + 10)
             player2.character_card.health = str(int(player2.character_card.health) + 20)
+            add_text_to_action_history('Opponent has leveled up, Lv: '+str(int(player2.character_card.level) - 10)+' --> '+player2.character_card.level+', HP: '+str(int(player2.character_card.health) - 20)+' --> '+player2.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
             button_status.battle_screen_instruction_bar_text = 'Opponent has leveled up to lv ' + player2.character_card.level
             player2.stage_2_other_card_usable_list = player2.get_stage_2_other_card_usable_list()
@@ -3327,6 +3325,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                         player2.monster_in_play_dict[str(i)] = located_card
                         break
                 player2.hand_list.remove(located_card)
+                add_text_to_action_history('Opponent has spawned the monster: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
         elif screen_status.battle_screen_action_indicator == 'player2-stage-2-character-action-detail-think-fast':
             located_card = []
@@ -3357,6 +3356,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                         player2.item_in_play_dict[str(i)] = located_card
                         break
                 player2.hand_list.remove(located_card)
+                add_text_to_action_history('Opponent has equiped the item: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
         elif screen_status.battle_screen_action_indicator == 'player2-stage-2-character-action-detail-sneak':
             located_card = []
@@ -3385,12 +3385,14 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                             player2.monster_in_play_dict[str(i)] = located_card
                             break
                     player2.hand_list.remove(located_card)
+                    add_text_to_action_history('Opponent has spawned the monster: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
                 elif located_card.card_type == 'item':
                     for i in range(1,7):
                         if player2.item_in_play_dict[str(i)] == '':
                             player2.item_in_play_dict[str(i)] = located_card
                             break
                     player2.hand_list.remove(located_card)
+                    add_text_to_action_history('Opponent has equiped the item: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
                 elif located_card.card_type == 'tactic':
                     player2.hand_list.remove(located_card)
                     print('Opponent use tactic')
@@ -3430,18 +3432,21 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
             or 'Wand Thwack' in character_skill_name
             ):
             user.character_card.health = str(int(user.character_card.health)-10)
+            add_text_to_action_history('Opponent has used the ability: '+character_skill_name+', and dealt 10 damage to you, HP: '+str(int(user.character_card.health)+10)+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
         elif ('Tricky Shot' in character_skill_name
             or 'Crush' in character_skill_name
             or 'Slash' in character_skill_name
             ):
             user.character_card.health = str(int(user.character_card.health)-20)
+            add_text_to_action_history('Opponent has used the ability: '+character_skill_name+', and dealt 20 damage to you, HP: '+str(int(user.character_card.health)+20)+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
         elif ('Quest' in character_skill_name
 
             ):
             player2.hand_list.append(player2.remain_deck_list[0])
             del player2.remain_deck_list[0]
+            add_text_to_action_history('Opponent has used the ability: Quest and drawn a card', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
 
         elif 'Spawn' in character_skill_name:
@@ -3557,6 +3562,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                             player2.monster_in_play_dict[str(i)] = located_card
                             break
                     player2.hand_list.remove(located_card)
+                    add_text_to_action_history('Opponent has spawned the monster: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
                 else:
                     player2.hand_list.remove(located_card)
                     print('Opponent use tactic')
@@ -3584,12 +3590,14 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                             player2.monster_in_play_dict[str(i)] = located_card
                             break
                     player2.hand_list.remove(located_card)
+                    add_text_to_action_history('Opponent has spawned the monster: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
                 else:
                     for i in range(1,7):
                         if player2.item_in_play_dict[str(i)] == '':
                             player2.item_in_play_dict[str(i)] = located_card
                             break
                     player2.hand_list.remove(located_card)
+                    add_text_to_action_history('Opponent has equiped the item: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
         elif screen_status.battle_screen_action_indicator == 'player2-stage-2-other-action-detail-think-fast-and-equip':
             located_card = []
@@ -3613,6 +3621,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                             player2.item_in_play_dict[str(i)] = located_card
                             break
                     player2.hand_list.remove(located_card)
+                    add_text_to_action_history('Opponent has equiped the item: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
                 else:
                     player2.hand_list.remove(located_card)
                     print('Opponent use tactic')
@@ -3633,6 +3642,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                         player2.monster_in_play_dict[str(i)] = located_card
                         break
                 player2.hand_list.remove(located_card)
+                add_text_to_action_history('Opponent has spawned the monster: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
 
         elif screen_status.battle_screen_action_indicator == 'player2-stage-2-other-action-detail-think-fast':
@@ -3664,6 +3674,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                         player2.item_in_play_dict[str(i)] = located_card
                         break
                 player2.hand_list.remove(located_card)
+                add_text_to_action_history('Opponent has equiped the item: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
         elif screen_status.battle_screen_action_indicator == 'player2-stage-2-other-action-detail-sneak':
             located_card = []
@@ -3692,12 +3703,14 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                             player2.monster_in_play_dict[str(i)] = located_card
                             break
                     player2.hand_list.remove(located_card)
+                    add_text_to_action_history('Opponent has spawned the monster: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
                 elif located_card.card_type == 'item':
                     for i in range(1,7):
                         if player2.item_in_play_dict[str(i)] == '':
                             player2.item_in_play_dict[str(i)] = located_card
                             break
                     player2.hand_list.remove(located_card)
+                    add_text_to_action_history('Opponent has equiped the item: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
                 elif located_card.card_type == 'tactic':
                     player2.hand_list.remove(located_card)
                     print('Opponent use tactic')
@@ -3781,24 +3794,29 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
 
             ):
             user.character_card.health = str(int(user.character_card.health)-10)
+            add_text_to_action_history('Opponent has used the ability: '+player2.character_under_card_by_level[x].lv_type+', and dealt 10 damage to you, HP: '+str(int(user.character_card.health)+10)+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
         elif ('Tricky Shot' in player2.character_under_card_by_level[x].lv_type
             or 'Slash' in player2.character_under_card_by_level[x].lv_type
             or 'Crush' in player2.character_under_card_by_level[x].lv_type
             ):
             user.character_card.health = str(int(user.character_card.health)-20)
+            add_text_to_action_history('Opponent has used the ability: '+player2.character_under_card_by_level[x].lv_type+', and dealt 20 damage to you, HP: '+str(int(user.character_card.health)+20)+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
 
         elif ('Quest' in player2.character_under_card_by_level[x].lv_type
 
             ):
             player2.hand_list.append(player2.remain_deck_list[0])
             del player2.remain_deck_list[0]
+            add_text_to_action_history('Opponent has used the ability: Quest and drawn a card', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
 
         elif ('Refresh' in player2.character_under_card_by_level[x].lv_type
 
             ):
             player2.character_card.health = str(int(player2.character_card.health)+10)
+            add_text_to_action_history('Opponent has used the ability: Refresh and heal for 10 hp, HP: '+str(int(player2.character_card.health)-10)+' --> '+player2.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
 
         if screen_status.battle_screen_action_indicator == 'player2-stage-2-other-action-' + x:
@@ -3835,6 +3853,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
 
         x = screen_status.battle_screen_action_indicator.replace('player2-stage-3-monster-','')[0]
         user.character_card.health = str(int(user.character_card.health) - int(player2.monster_in_play_dict[x].attack))
+        add_text_to_action_history('Opponent has attacked with the monster: '+player2.monster_in_play_dict[x].name+', dealt '+player2.monster_in_play_dict[x].attack+' damage to your character, HP: '+str(int(user.character_card.health) + int(player2.monster_in_play_dict[x].attack))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
         if player2.monster_in_play_dict[str(int(x)+1)] != '':
             screen_status.battle_screen_action_indicator = 'player2-stage-3-monster-' + str(int(x)+1) + '-action'
@@ -3857,6 +3876,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
 
         player2.character_card.health = str(int(player2.character_card.health) + 10*int(player2.item_in_play_length))
         user.character_card.health = str(int(user.character_card.health) - 10*int(player2.item_in_play_length))
+        add_text_to_action_history('Opponent have '+player2.item_in_play_length+' items, your HP: '+str(int(user.character_card.health) + 10*int(player2.item_in_play_length))+' --> '+user.character_card.health+ ", opponent's HP: "+str(int(player2.character_card.health) - 10*int(player2.item_in_play_length))+' --> '+player2.character_card.health+" . Opponent's turn has end", screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
         screen_status.battle_screen_action_indicator = 'stage-1'
         screen_status.battle_screen_player2_action_display_indicator = False # No longer doing player2 loops
@@ -3864,7 +3884,6 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
         button_status.battle_screen_instruction_bar_yes_backend = True
         button_status.battle_screen_instruction_bar_skip_display = True
         button_status.battle_screen_instruction_bar_skip_backend = True
-
 
 
 
