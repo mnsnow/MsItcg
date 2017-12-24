@@ -1013,7 +1013,7 @@ def prepare_screen_to_battle_screen_action(ai_settings, screen,buttons, screen_s
 
         elif player2.ai_difficulty_index == '4':
             player2.random_deck_list = random.sample(player2.deck_list, len(player2.deck_list))
-            player2.remain_deck_list = player2.random_deck_list[30:]
+            player2.remain_deck_list = player2.random_deck_list[6:]
             player2.hand_list = player2.random_deck_list[0:30]
             player2.character_card.health = str(int(player2.character_card.health)*4)
 
@@ -1611,13 +1611,13 @@ def battle_screen_history_bar_display(ai_settings, screen, buttons,screen_status
 
     for number,text in button_status.battle_screen_history_bar_text_dict.items():
         if int(number) == 1:
-            button_text = Button(text,'', (40,90,180),250, 0, 700, 30, font_size = 13)
+            button_text = Button(text,'', (40,90,180),250, 0, 650, 30, font_size = 13)
             button_text.update()
             button_text.draw(screen)
         else:
             pass
 
-    button_details = Button('More','', (10,190,120),895, 5, 50, 20)
+    button_details = Button('History','', (43,93,67),900, 5, 46, 20,font_size = 13)
     button_details.update()
     button_details.draw(screen)
 
@@ -1625,15 +1625,16 @@ def battle_screen_history_bar_display(ai_settings, screen, buttons,screen_status
         i = 0
         for number,text in button_status.battle_screen_history_bar_text_dict.items():
             if int(number) % 2 == 1 and text != '':
-                button_odd = Button(text,'', (227,133,0),350, 30 + 30*(i), 650, 30, font_size = 13)
+                button_odd = Button(text,'', (227,133,0),300, 30 + 30*(i), 700, 30, font_size = 13)
                 button_odd.update()
                 button_odd.draw(screen)
                 i += 1
             elif int(number) % 2 == 0 and text != '':
-                button_even = Button(text,'', (162,90,144),350, 60 + 30 * (i-1), 650, 30, font_size = 13)
+                button_even = Button(text,'', (162,90,144),300, 60 + 30 * (i-1), 700, 30, font_size = 13)
                 button_even.update()
                 button_even.draw(screen)
                 i += 1
+
 
 def battle_screen_my_hand_card_display(screen,buttons, screen_status, button_status, card_database_filter, user):
     """ Display my deck on battle screen"""
@@ -3337,8 +3338,37 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
             if located_card == []:
                 pass
             else:
-                player2.hand_list.remove(located_card)
-                print('Opponent use tactic')
+
+                x = located_card.special_effect
+                if 'Quest/Quest' in x:
+                    player2.hand_list.append(player2.remain_deck_list[0])
+                    del player2.remain_deck_list[0]
+
+                    player2.hand_list.append(player2.remain_deck_list[0])
+                    del player2.remain_deck_list[0]
+
+                    player2.hand_list.remove(located_card)
+                    add_text_to_action_history('Opponent have played the tactic: '+located_card.name + ', drawn 2 cards', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
+                elif 'Heal 20/Quest' in x:
+                    player2.hand_list.append(player2.remain_deck_list[0])
+                    del player2.remain_deck_list[0]
+
+                    player2.character_card.health = str(int(player2.character_card.health) + 20)
+                    player2.hand_list.remove(located_card)
+
+                    add_text_to_action_history('Opponent have played the tactic: '+located_card.name+ ' ,heal for 20 HP, HP: '+str(int(player2.character_card.health)-20)+ ' --> '+player2.character_card.health+ ', and drawn a card', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
+                elif 'Dmg' in x:
+
+                    dmg = str(int(x[-3:]))
+                    user.character_card.health = str(int(user.character_card.health) - int(dmg))
+
+                    player2.hand_list.remove(located_card)
+                    add_text_to_action_history('Opponent have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to your character, HP: "+str(int(user..character_card.health)+int(dmg))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
+
+
 
         elif screen_status.battle_screen_action_indicator == 'player2-stage-2-character-action-detail-equip':
             located_card = []
@@ -3394,8 +3424,33 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                     player2.hand_list.remove(located_card)
                     add_text_to_action_history('Opponent has equiped the item: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
                 elif located_card.card_type == 'tactic':
-                    player2.hand_list.remove(located_card)
-                    print('Opponent use tactic')
+                    x = located_card.special_effect
+                    if 'Quest/Quest' in x:
+                        player2.hand_list.append(player2.remain_deck_list[0])
+                        del player2.remain_deck_list[0]
+
+                        player2.hand_list.append(player2.remain_deck_list[0])
+                        del player2.remain_deck_list[0]
+
+                        player2.hand_list.remove(located_card)
+                        add_text_to_action_history('Opponent have played the tactic: '+located_card.name + ', drawn 2 cards', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
+                    elif 'Heal 20/Quest' in x:
+                        player2.hand_list.append(player2.remain_deck_list[0])
+                        del player2.remain_deck_list[0]
+
+                        player2.character_card.health = str(int(player2.character_card.health) + 20)
+                        player2.hand_list.remove(located_card)
+
+                        add_text_to_action_history('Opponent have played the tactic: '+located_card.name+ ' ,heal for 20 HP, HP: '+str(int(player2.character_card.health)-20)+ ' --> '+player2.character_card.health+ ', and drawn a card', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
+                    elif 'Dmg' in x:
+
+                        dmg = str(int(x[-3:]))
+                        user.character_card.health = str(int(user.character_card.health) - int(dmg))
+
+                        player2.hand_list.remove(located_card)
+                        add_text_to_action_history('Opponent have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to your character, HP: "+str(int(user..character_card.health)+int(dmg))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
 
         if len(player2.stage_2_other_card_usable_list) >= 1:
@@ -3564,8 +3619,34 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                     player2.hand_list.remove(located_card)
                     add_text_to_action_history('Opponent has spawned the monster: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
                 else:
-                    player2.hand_list.remove(located_card)
-                    print('Opponent use tactic')
+                    x = located_card.special_effect
+                    if 'Quest/Quest' in x:
+                        player2.hand_list.append(player2.remain_deck_list[0])
+                        del player2.remain_deck_list[0]
+
+                        player2.hand_list.append(player2.remain_deck_list[0])
+                        del player2.remain_deck_list[0]
+
+                        player2.hand_list.remove(located_card)
+                        add_text_to_action_history('Opponent have played the tactic: '+located_card.name + ', drawn 2 cards', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
+                    elif 'Heal 20/Quest' in x:
+                        player2.hand_list.append(player2.remain_deck_list[0])
+                        del player2.remain_deck_list[0]
+
+                        player2.character_card.health = str(int(player2.character_card.health) + 20)
+                        player2.hand_list.remove(located_card)
+
+                        add_text_to_action_history('Opponent have played the tactic: '+located_card.name+ ' ,heal for 20 HP, HP: '+str(int(player2.character_card.health)-20)+ ' --> '+player2.character_card.health+ ', and drawn a card', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
+                    elif 'Dmg' in x:
+
+                        dmg = str(int(x[-3:]))
+                        user.character_card.health = str(int(user.character_card.health) - int(dmg))
+
+                        player2.hand_list.remove(located_card)
+                        add_text_to_action_history('Opponent have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to your character, HP: "+str(int(user..character_card.health)+int(dmg))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
 
         elif screen_status.battle_screen_action_indicator == 'player2-stage-2-other-action-detail-spawn-and-equip':
             located_card = []
@@ -3623,8 +3704,34 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                     player2.hand_list.remove(located_card)
                     add_text_to_action_history('Opponent has equiped the item: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
                 else:
-                    player2.hand_list.remove(located_card)
-                    print('Opponent use tactic')
+                    x = located_card.special_effect
+                    if 'Quest/Quest' in x:
+                        player2.hand_list.append(player2.remain_deck_list[0])
+                        del player2.remain_deck_list[0]
+
+                        player2.hand_list.append(player2.remain_deck_list[0])
+                        del player2.remain_deck_list[0]
+
+                        player2.hand_list.remove(located_card)
+                        add_text_to_action_history('Opponent have played the tactic: '+located_card.name + ', drawn 2 cards', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
+                    elif 'Heal 20/Quest' in x:
+                        player2.hand_list.append(player2.remain_deck_list[0])
+                        del player2.remain_deck_list[0]
+
+                        player2.character_card.health = str(int(player2.character_card.health) + 20)
+                        player2.hand_list.remove(located_card)
+
+                        add_text_to_action_history('Opponent have played the tactic: '+located_card.name+ ' ,heal for 20 HP, HP: '+str(int(player2.character_card.health)-20)+ ' --> '+player2.character_card.health+ ', and drawn a card', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
+                    elif 'Dmg' in x:
+
+                        dmg = str(int(x[-3:]))
+                        user.character_card.health = str(int(user.character_card.health) - int(dmg))
+
+                        player2.hand_list.remove(located_card)
+                        add_text_to_action_history('Opponent have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to your character, HP: "+str(int(user..character_card.health)+int(dmg))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
 
         elif screen_status.battle_screen_action_indicator == 'player2-stage-2-other-action-detail-spawn':
             located_card = []
@@ -3655,8 +3762,34 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
             if located_card == []:
                 pass
             else:
-                player2.hand_list.remove(located_card)
-                print('Opponent use tactic')
+                x = located_card.special_effect
+                if 'Quest/Quest' in x:
+                    player2.hand_list.append(player2.remain_deck_list[0])
+                    del player2.remain_deck_list[0]
+
+                    player2.hand_list.append(player2.remain_deck_list[0])
+                    del player2.remain_deck_list[0]
+
+                    player2.hand_list.remove(located_card)
+                    add_text_to_action_history('Opponent have played the tactic: '+located_card.name + ', drawn 2 cards', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
+                elif 'Heal 20/Quest' in x:
+                    player2.hand_list.append(player2.remain_deck_list[0])
+                    del player2.remain_deck_list[0]
+
+                    player2.character_card.health = str(int(player2.character_card.health) + 20)
+                    player2.hand_list.remove(located_card)
+
+                    add_text_to_action_history('Opponent have played the tactic: '+located_card.name+ ' ,heal for 20 HP, HP: '+str(int(player2.character_card.health)-20)+ ' --> '+player2.character_card.health+ ', and drawn a card', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
+                elif 'Dmg' in x:
+
+                    dmg = str(int(x[-3:]))
+                    user.character_card.health = str(int(user.character_card.health) - int(dmg))
+
+                    player2.hand_list.remove(located_card)
+                    add_text_to_action_history('Opponent have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to your character, HP: "+str(int(user..character_card.health)+int(dmg))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
 
         elif screen_status.battle_screen_action_indicator == 'player2-stage-2-other-action-detail-equip':
             located_card = []
@@ -3712,8 +3845,34 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                     player2.hand_list.remove(located_card)
                     add_text_to_action_history('Opponent has equiped the item: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
                 elif located_card.card_type == 'tactic':
-                    player2.hand_list.remove(located_card)
-                    print('Opponent use tactic')
+                    x = located_card.special_effect
+                    if 'Quest/Quest' in x:
+                        player2.hand_list.append(player2.remain_deck_list[0])
+                        del player2.remain_deck_list[0]
+
+                        player2.hand_list.append(player2.remain_deck_list[0])
+                        del player2.remain_deck_list[0]
+
+                        player2.hand_list.remove(located_card)
+                        add_text_to_action_history('Opponent have played the tactic: '+located_card.name + ', drawn 2 cards', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
+                    elif 'Heal 20/Quest' in x:
+                        player2.hand_list.append(player2.remain_deck_list[0])
+                        del player2.remain_deck_list[0]
+
+                        player2.character_card.health = str(int(player2.character_card.health) + 20)
+                        player2.hand_list.remove(located_card)
+
+                        add_text_to_action_history('Opponent have played the tactic: '+located_card.name+ ' ,heal for 20 HP, HP: '+str(int(player2.character_card.health)-20)+ ' --> '+player2.character_card.health+ ', and drawn a card', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
+                    elif 'Dmg' in x:
+
+                        dmg = str(int(x[-3:]))
+                        user.character_card.health = str(int(user.character_card.health) - int(dmg))
+
+                        player2.hand_list.remove(located_card)
+                        add_text_to_action_history('Opponent have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to your character, HP: "+str(int(user..character_card.health)+int(dmg))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                        
 
 
         del player2.stage_2_other_card_usable_list[0]
