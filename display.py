@@ -12,9 +12,9 @@ class Screen_status():
         self.time_player2_cooldown = 3000
 
         self.welcome_screen_display = False
-        self.prepare_screen_display = False
+        self.prepare_screen_display = True
         self.build_deck_screen_display = False
-        self.battle_screen_display = True
+        self.battle_screen_display = False
 
         self.welcome_screen_backend = True
         self.build_deck_screen_card_gallery_page_id = 1

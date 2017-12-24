@@ -447,6 +447,7 @@ def update_screen(ai_settings,grid, screen, buttons, screen_status, button_statu
 
     pygame.display.flip()
 
+
 def welcome_screen_update(ai_settings,screen, buttons, screen_status):
     """ welcome screen update"""
     screen.fill(ai_settings.bg_color)
@@ -941,7 +942,7 @@ def prepare_screen_to_battle_screen_action(ai_settings, screen,buttons, screen_s
             if 'DECK_LIST_' + user.deck_list_index in line:
                 list1 = make_deck_from_string(line.replace('DECK_LIST_' + user.deck_list_index + ' = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
-    if user.deck_list_index == '0':
+    if user.deck_list_index == '0' or user.deck_list_index == 'new':
         button_status.prepare_screen_end_screen_warning_button_display = 'no deck'
         save_pass = False
 
@@ -1611,13 +1612,13 @@ def battle_screen_history_bar_display(ai_settings, screen, buttons,screen_status
 
     for number,text in button_status.battle_screen_history_bar_text_dict.items():
         if int(number) == 1:
-            button_text = Button(text,'', (40,90,180),250, 0, 650, 30, font_size = 13)
+            button_text = Button(text,'', (90,140,230),250, 0, 650, 30, font_size = 13)
             button_text.update()
             button_text.draw(screen)
         else:
             pass
 
-    button_details = Button('History','', (43,93,67),900, 5, 46, 20,font_size = 13)
+    button_details = Button('History','', (43,93,67),900, 3, 46, 24,font_size = 13)
     button_details.update()
     button_details.draw(screen)
 
@@ -3365,8 +3366,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                     user.character_card.health = str(int(user.character_card.health) - int(dmg))
 
                     player2.hand_list.remove(located_card)
-                    add_text_to_action_history('Opponent have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to your character, HP: "+str(int(user..character_card.health)+int(dmg))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-
+                    add_text_to_action_history('Opponent have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to your character, HP: "+str(int(user.character_card.health)+int(dmg))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
 
 
@@ -3450,7 +3450,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                         user.character_card.health = str(int(user.character_card.health) - int(dmg))
 
                         player2.hand_list.remove(located_card)
-                        add_text_to_action_history('Opponent have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to your character, HP: "+str(int(user..character_card.health)+int(dmg))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                        add_text_to_action_history('Opponent have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to your character, HP: "+str(int(user.character_card.health)+int(dmg))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
 
         if len(player2.stage_2_other_card_usable_list) >= 1:
@@ -3645,7 +3645,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                         user.character_card.health = str(int(user.character_card.health) - int(dmg))
 
                         player2.hand_list.remove(located_card)
-                        add_text_to_action_history('Opponent have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to your character, HP: "+str(int(user..character_card.health)+int(dmg))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                        add_text_to_action_history('Opponent have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to your character, HP: "+str(int(user.character_card.health)+int(dmg))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
 
         elif screen_status.battle_screen_action_indicator == 'player2-stage-2-other-action-detail-spawn-and-equip':
@@ -3730,7 +3730,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                         user.character_card.health = str(int(user.character_card.health) - int(dmg))
 
                         player2.hand_list.remove(located_card)
-                        add_text_to_action_history('Opponent have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to your character, HP: "+str(int(user..character_card.health)+int(dmg))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                        add_text_to_action_history('Opponent have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to your character, HP: "+str(int(user.character_card.health)+int(dmg))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
 
         elif screen_status.battle_screen_action_indicator == 'player2-stage-2-other-action-detail-spawn':
@@ -3788,7 +3788,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                     user.character_card.health = str(int(user.character_card.health) - int(dmg))
 
                     player2.hand_list.remove(located_card)
-                    add_text_to_action_history('Opponent have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to your character, HP: "+str(int(user..character_card.health)+int(dmg))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                    add_text_to_action_history('Opponent have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to your character, HP: "+str(int(user.character_card.health)+int(dmg))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
 
         elif screen_status.battle_screen_action_indicator == 'player2-stage-2-other-action-detail-equip':
@@ -3871,8 +3871,8 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                         user.character_card.health = str(int(user.character_card.health) - int(dmg))
 
                         player2.hand_list.remove(located_card)
-                        add_text_to_action_history('Opponent have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to your character, HP: "+str(int(user..character_card.health)+int(dmg))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-                        
+                        add_text_to_action_history('Opponent have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to your character, HP: "+str(int(user.character_card.health)+int(dmg))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
 
 
         del player2.stage_2_other_card_usable_list[0]
