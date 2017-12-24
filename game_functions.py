@@ -1625,12 +1625,12 @@ def battle_screen_history_bar_display(ai_settings, screen, buttons,screen_status
         i = 0
         for number,text in button_status.battle_screen_history_bar_text_dict.items():
             if int(number) % 2 == 1 and text != '':
-                button_odd = Button(text,'', (227,133,0),500, 30 + 30*(i), 500, 30, font_size = 13)
+                button_odd = Button(text,'', (227,133,0),400, 30 + 30*(i), 600, 30, font_size = 13)
                 button_odd.update()
                 button_odd.draw(screen)
                 i += 1
             elif int(number) % 2 == 0 and text != '':
-                button_even = Button(text,'', (162,90,144),500, 60 + 30 * (i-1), 500, 30, font_size = 13)
+                button_even = Button(text,'', (162,90,144),400, 60 + 30 * (i-1), 600, 30, font_size = 13)
                 button_even.update()
                 button_even.draw(screen)
                 i += 1
@@ -3117,6 +3117,7 @@ def battle_screen_instruction_bar_yes_skip_action(yes_skip_indicator, screen,but
 
         player2.character_card.health = str(int(player2.character_card.health) - 10*int(user.item_in_play_length))
         user.character_card.health = str(int(user.character_card.health) + 10*int(user.item_in_play_length))
+        add_text_to_action_history('Your turn has end', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
         button_status.battle_screen_instruction_bar_yes_display = False
         button_status.battle_screen_instruction_bar_yes_backend = False
