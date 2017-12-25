@@ -13,6 +13,10 @@ class Settings():
         self.sound_indicator = True
         self.music_indicator = True
 
+        self.theme_indicator = 'LITH HARBOR'
+
+        self.AI_speed_indicator = '2000'# fast = 1000, normal = 2000, slow = 3000
+
         #Cards Settings
         self.card_size_x = 130
         self.card_size_y = 180

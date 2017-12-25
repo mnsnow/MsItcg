@@ -43,33 +43,61 @@ def check_events_welcome_screen(ai_settings, screen, buttons,screen_status, butt
                 sys.exit()
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            if Rect(537, 370, 127, 61).collidepoint(pygame.mouse.get_pos()):
-                screen_status.welcome_screen_display = False
-                screen_status.prepare_screen_display = True
+            if button_status.welcome_screen_settings_display == False:
+                # Click on play
+                if Rect(537, 370, 127, 61).collidepoint(pygame.mouse.get_pos()):
+                    screen_status.welcome_screen_display = False
+                    screen_status.prepare_screen_display = True
+                # Click on settings
+                elif Rect(474, 469, 253, 62).collidepoint(pygame.mouse.get_pos()):
+                    button_status.welcome_screen_settings_display = True
 
-            elif Rect(474, 469, 253, 62).collidepoint(pygame.mouse.get_pos()):
-                button_status.welcome_screen_settings_display = not button_status.welcome_screen_settings_display
-
-            # Turn sound on
-            elif Rect(340, 455, 40, 40).collidepoint(pygame.mouse.get_pos()):
-                if button_status.welcome_screen_settings_display == True:
+                # click on exit
+                elif Rect(541, 670, 119, 61).collidepoint(pygame.mouse.get_pos()):
+                    sys.exit()
+            # If settings window is on
+            else:
+                # Turn sound on
+                if Rect(510, 333, 40, 40).collidepoint(pygame.mouse.get_pos()):
                     ai_settings.sound_indicator = True
-            # Turn sound off
-            elif Rect(390, 455, 40, 40).collidepoint(pygame.mouse.get_pos()):
-                if button_status.welcome_screen_settings_display == True:
+                # Turn sound off
+                elif Rect(560, 333, 40, 40).collidepoint(pygame.mouse.get_pos()):
                     ai_settings.sound_indicator = False
-            # Turn music on
-            elif Rect(340, 515, 40, 40).collidepoint(pygame.mouse.get_pos()):
-                if button_status.welcome_screen_settings_display == True:
+                # Turn music on
+                elif Rect(510, 403, 40, 40).collidepoint(pygame.mouse.get_pos()):
                     ai_settings.music_indicator = True
-            # Turn music off
-            elif Rect(390, 515, 40, 40).collidepoint(pygame.mouse.get_pos()):
-                if button_status.welcome_screen_settings_display == True:
+                # Turn music off
+                elif Rect(560, 403, 40, 40).collidepoint(pygame.mouse.get_pos()):
                     ai_settings.music_indicator = False
 
+                # Change Theme
+                elif Rect(510, 470, 140, 50).collidepoint(pygame.mouse.get_pos()):
+                    ai_settings.theme_indicator = 'LITH HARBOR'
 
-        elif Rect(541, 670, 119, 61).collidepoint(pygame.mouse.get_pos()):
-                sys.exit()
+                elif Rect(670, 470, 140, 50).collidepoint(pygame.mouse.get_pos()):
+                    ai_settings.theme_indicator = '1'
+
+                elif Rect(510, 540, 140, 50).collidepoint(pygame.mouse.get_pos()):
+                    ai_settings.theme_indicator = '2'
+
+                elif Rect(670, 540, 140, 50).collidepoint(pygame.mouse.get_pos()):
+                    ai_settings.theme_indicator = '3'
+
+                # change AI speeding
+                elif Rect(550, 620, 80, 50).collidepoint(pygame.mouse.get_pos()):
+                    ai_settings.AI_speed_indicator = '1000'
+
+                elif Rect(650, 620, 80, 50).collidepoint(pygame.mouse.get_pos()):
+                    ai_settings.AI_speed_indicator = '2000'
+
+                elif Rect(750, 620, 80, 50).collidepoint(pygame.mouse.get_pos()):
+                    ai_settings.AI_speed_indicator = '3000'
+
+                # Quit settings window
+                elif Rect(870, 300, 30, 30).collidepoint(pygame.mouse.get_pos()):
+                    button_status.welcome_screen_settings_display = False
+
+
 
 def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ Check events in prepare screen"""
@@ -707,53 +735,133 @@ def welcome_screen_stable_button_display(ai_settings,screen, buttons, screen_sta
 def welcome_screen_settings_menu_display(ai_settings,screen, buttons, screen_status, button_status):
     """ Display welcome screen settings menu"""
     if button_status.welcome_screen_settings_display == True:
+
+        button = Button('','', (0,0,0), 300, 300, 600, 400, alpha = 200)
+        button.update()
+        button.draw(screen)
         # Sound settings
-        font_1 = pygame.font.Font('freesansbold.ttf', 50)
-        text_image_1 = font_1.render('Sound: ', True, (255,255,255))
-        text_rect_1 = text_image_1.get_rect(center = (250,470))
-        screen.blit(text_image_1, text_rect_1)
+        button_sound = Button('Sound: ','', (0,0,0), 330, 330, 150, 50, font_size = 40, alpha = 0)
+        button_sound.update()
+        button_sound.draw(screen)
 
         if ai_settings.sound_indicator == True:
-            button_1 = Button('On','', (50,150,50), 340, 455, 40, 40)
+            button_1 = Button('On','', (50,150,50), 510, 333, 40, 40)
             button_1.update()
             button_1.draw(screen)
 
-            button_2 = Button('Off','', (150,150,150), 390, 455, 40, 40)
+            button_2 = Button('Off','', (150,150,150), 560, 333, 40, 40)
             button_2.update()
             button_2.draw(screen)
 
         else:
-            button_1 = Button('On','', (150,150,150), 340, 455, 40, 40)
+            button_1 = Button('On','', (150,150,150), 510, 333, 40, 40)
             button_1.update()
             button_1.draw(screen)
 
-            button_2 = Button('Off','', (150,50,50), 390, 455, 40, 40)
+            button_2 = Button('Off','', (150,50,50), 560, 333, 40, 40)
             button_2.update()
             button_2.draw(screen)
 
         # Music settings
-        font_2 = pygame.font.Font('freesansbold.ttf', 50)
-        text_image_2 = font_2.render('Music: ', True, (255,255,255))
-        text_rect_2 = text_image_2.get_rect(center = (250,530))
-        screen.blit(text_image_2, text_rect_2)
+        button_music = Button('Music: ','', (0,0,0), 330, 400, 150, 50, font_size = 40, alpha = 0)
+        button_music.update()
+        button_music.draw(screen)
 
         if ai_settings.music_indicator == True:
-            button_1 = Button('On','', (50,150,50), 340, 515, 40, 40)
+            button_1 = Button('On','', (50,150,50), 510, 403, 40, 40)
             button_1.update()
             button_1.draw(screen)
 
-            button_2 = Button('Off','', (150,150,150), 390, 515, 40, 40)
+            button_2 = Button('Off','', (150,150,150), 560, 403, 40, 40)
             button_2.update()
             button_2.draw(screen)
 
         else:
-            button_1 = Button('On','', (150,150,150), 340, 515, 40, 40)
+            button_1 = Button('On','', (150,150,150), 510, 403, 40, 40)
             button_1.update()
             button_1.draw(screen)
 
-            button_2 = Button('Off','', (150,50,50), 390, 515, 40, 40)
+            button_2 = Button('Off','', (150,50,50), 560, 403, 40, 40)
             button_2.update()
             button_2.draw(screen)
+
+        # Theme settings
+        button_theme = Button('Theme: ','', (0,0,0), 330, 470, 160, 50, font_size = 40, alpha = 0)
+        button_theme.update()
+        button_theme.draw(screen)
+
+        if ai_settings.theme_indicator == 'LITH HARBOR':
+            button_1 = Button('Lith Harbor','', (50,150,50), 510, 470, 140, 50, font_size = 18)
+            button_1.update()
+            button_1.draw(screen)
+        else:
+            button_1 = Button('Lith Harbor','', (150,150,150), 510, 470, 140, 50, font_size = 18)
+            button_1.update()
+            button_1.draw(screen)
+
+        if ai_settings.theme_indicator == '1':
+            button_1 = Button('1','', (50,150,50), 670, 470, 140, 50, font_size = 18)
+            button_1.update()
+            button_1.draw(screen)
+        else:
+            button_1 = Button('1','', (150,150,150), 670, 470, 140, 50, font_size = 18)
+            button_1.update()
+            button_1.draw(screen)
+
+        if ai_settings.theme_indicator == '2':
+            button_1 = Button('2','', (50,150,50), 510, 540, 140, 50, font_size = 18)
+            button_1.update()
+            button_1.draw(screen)
+        else:
+            button_1 = Button('2','', (150,150,150), 510, 540, 140, 50, font_size = 18)
+            button_1.update()
+            button_1.draw(screen)
+
+        if ai_settings.theme_indicator == '3':
+            button_1 = Button('3','', (50,150,50), 670, 540, 140, 50, font_size = 18)
+            button_1.update()
+            button_1.draw(screen)
+        else:
+            button_1 = Button('3','', (150,150,150), 670, 540, 140, 50, font_size = 18)
+            button_1.update()
+            button_1.draw(screen)
+
+        # AI speeding settings
+        button_ai_speed = Button('AI Speed: ','', (0,0,0), 330, 620, 200, 50, font_size = 40, alpha = 0)
+        button_ai_speed.update()
+        button_ai_speed.draw(screen)
+
+        if ai_settings.AI_speed_indicator == '1000':
+            button_1 = Button('Fast','', (50,150,50), 550, 620, 80, 50, font_size = 18)
+            button_1.update()
+            button_1.draw(screen)
+        else:
+            button_1 = Button('Fast','', (150,150,150), 550, 620, 80, 50, font_size = 18)
+            button_1.update()
+            button_1.draw(screen)
+
+        if ai_settings.AI_speed_indicator == '2000':
+            button_1 = Button('Normal','', (50,150,50), 650, 620, 80, 50, font_size = 18)
+            button_1.update()
+            button_1.draw(screen)
+        else:
+            button_1 = Button('Normal','', (150,150,150), 650, 620, 80, 50, font_size = 18)
+            button_1.update()
+            button_1.draw(screen)
+
+        if ai_settings.AI_speed_indicator == '3000':
+            button_1 = Button('Slow','', (50,150,50), 750, 620, 80, 50, font_size = 18)
+            button_1.update()
+            button_1.draw(screen)
+        else:
+            button_1 = Button('Slow','', (150,150,150), 750, 620, 80, 50, font_size = 18)
+            button_1.update()
+            button_1.draw(screen)
+
+        # Closed settings window button
+        button_1 = Button('X','', (250,100,100), 870, 300, 30, 30, font_size = 18)
+        button_1.update()
+        button_1.draw(screen)
 
 
 
@@ -767,15 +875,15 @@ def prepare_screen_grid_display(grid, screen):
 def prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ Display stable buttons"""
     # Back
-    button_back = Button('Back','', (0,0,0),0, 0, 50, 50, font_size = 18)
+    button_back = Button('Back','', (250,250,250),0, 0, 50, 50, font_size = 18, font_color = (0,0,0),alpha = 200)
     button_back.update()
     button_back.draw(screen)
     # Play
-    button_play = Button('Play!','', (0,0,0),1150, 0, 50, 50, font_size = 18)
+    button_play = Button('Play!','', (250,250,250),1150, 0, 50, 50, font_size = 18, font_color = (0,0,0), alpha = 150)
     button_play.update()
     button_play.draw(screen)
     # Pick deck text
-    button_text_1 = Button('Pick an exist deck or create a new one: ','', (0,0,0),400, 100, 400, 35)
+    button_text_1 = Button('Pick an exist deck or create a new one: ','', (250,250,250),400, 100, 400, 35, font_color = (0,0,0), alpha = 150)
     button_text_1.update()
     button_text_1.draw(screen)
 
@@ -785,7 +893,7 @@ def prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_sta
         if len(f.readlines()) >= 12:
             pass
         else:
-            button_new_deck = Button('+ New Deck','', (0,0,0),1020, 110, 120, 35)
+            button_new_deck = Button('+ New Deck','', (250,250,250),1020, 110, 120, 35, font_color = (0,0,0), alpha = 150)
             button_new_deck.update()
             button_new_deck.draw(screen)
 
@@ -852,7 +960,7 @@ def prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_sta
 
     # Pick opponents buttons
     # Pick opponents text
-    button_text_2 = Button('Pick an opponent to play against: ','', (0,0,0),400, 350, 400, 35) # (200,100,170)
+    button_text_2 = Button('Pick an opponent to play against: ','', (250,250,250),400, 350, 400, 35, font_color = (0,0,0), alpha = 150) # (200,100,170)
     button_text_2.update()
     button_text_2.draw(screen)
 
@@ -880,7 +988,7 @@ def prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_sta
 
 
     # Pick a difficulty
-    button_text_3 = Button('Pick a difficulty: ','', (0,0,0),810, 400, 200, 35)
+    button_text_3 = Button('Pick a difficulty: ','', (250,250,250),810, 400, 200, 35, font_color = (0,0,0), alpha = 150)
     button_text_3.update()
     button_text_3.draw(screen)
 
@@ -1277,10 +1385,10 @@ def build_deck_screen_stable_button_display(screen, buttons,screen_status,button
     # button1 = Button('Back','build_deck_screen', (0,0,0),0, 0, 50, 50)
     # button1.update()
     # button1.draw(screen)
-    button2 = Button('Save','build_deck_screen', (0,0,0),1150, 0, 50, 50)
+    button2 = Button('Save','build_deck_screen', (250,250,250),1150, 0, 50, 50, font_color = (0,0,0), alpha = 150)
     button2.update()
     button2.draw(screen)
-    button3 = Button('Build your deck by picking 40 cards below: ', 'build_deck_screen', (0,0,0),300, 0, 600, 50)
+    button3 = Button('Build your deck by picking 40 cards below: ', 'build_deck_screen', (250,250,250),300, 0, 600, 50, font_color = (0,0,0), alpha = 150)
     button3.update()
     button3.draw(screen)
     if button_status.build_deck_screen_stable_button_backend:
@@ -1298,7 +1406,7 @@ def build_deck_screen_card_gallery_display(screen, buttons, screen_status, butto
 def build_deck_screen_card_gallery_button_display(screen, buttons, screen_status, button_status, card_database_filter):
     """Display all buttons in the card gallery part"""
     # Page forward button
-    button1 = Button('>>','build_deck_screen_card_gallery_stable', (0,0,0),1100, 300, 50, 50)
+    button1 = Button('>>','build_deck_screen_card_gallery_stable', (250,250,250),1100, 300, 50, 50,font_color = (0,0,0), alpha = 150)
     # Edge cases when len() = 14,28,42 ...
     if len(cdf.request_card_list(card_database_filter)) % 14 == 0 and len(cdf.request_card_list(card_database_filter)) != 0:
         if screen_status.build_deck_screen_card_gallery_page_id != ((len(cdf.request_card_list(card_database_filter)))//14): # Make sure on the last page no foreward button shows up
@@ -1310,58 +1418,58 @@ def build_deck_screen_card_gallery_button_display(screen, buttons, screen_status
             button1.update()
             button1.draw(screen)
     # Page backward button
-    button2 = Button('<<', 'build_deck_screen_card_gallery_stable' ,(0,0,0),50, 300, 50, 50)
+    button2 = Button('<<', 'build_deck_screen_card_gallery_stable' ,(250,250,250),50, 300, 50, 50,font_color = (0,0,0), alpha = 150)
     if screen_status.build_deck_screen_card_gallery_page_id != 1: # Make sure on the first page no backward button shows up
         button2.update()
         button2.draw(screen)
     # button3: page button to display the current page number for card gallery
-    button3 = Button('page: ' + str(screen_status.build_deck_screen_card_gallery_page_id), 'build_deck_screen_card_gallery_stable' ,(0,0,0),560, 510, 80, 40)
+    button3 = Button('page: ' + str(screen_status.build_deck_screen_card_gallery_page_id), 'build_deck_screen_card_gallery_stable' ,(250,250,250),560, 510, 80, 40,font_color = (0,0,0), alpha = 150)
     button3.update()
     button3.draw(screen)
     # Class filter:
-    button4 = Button('Filter: ','' ,(0,0,0),80, 70, 90, 50)
+    button4 = Button('Filter: ','' ,(250,250,250),80, 70, 90, 50, font_color = (0,0,0), alpha = 150)
     button4.update()
     button4.draw(screen)
     # Character filter button
     if card_database_filter.character:
         button_character = Button('Character', '', (100,30,130),200,70,90,50)
     else:
-        button_character = Button('Character', '', (0,0,0),200,70,90,50)
+        button_character = Button('Character', '', (250,250,250),200,70,90,50,font_color = (0,0,0), alpha = 150)
     button_character.update()
     button_character.draw(screen)
     # Bowman filter button
     if card_database_filter.bowman:
         button_bowman = Button('Bowman', '', (100,30,130),300,70,90,50)
     else:
-        button_bowman = Button('Bowman', '', (0,0,0),300,70,90,50)
+        button_bowman = Button('Bowman', '', (250,250,250),300,70,90,50, font_color = (0,0,0), alpha = 150)
     button_bowman.update()
     button_bowman.draw(screen)
     # Magician filter button
     if card_database_filter.magician:
         button_magician = Button('Magician', '', (100,30,130),400,70,90,50)
     else:
-        button_magician = Button('Magician', '', (0,0,0),400,70,90,50)
+        button_magician = Button('Magician', '', (250,250,250),400,70,90,50, font_color = (0,0,0), alpha = 150)
     button_magician.update()
     button_magician.draw(screen)
     # Thief filter button
     if card_database_filter.thief:
         button_thief = Button('Thief', '', (100,30,130),500,70,90,50)
     else:
-        button_thief = Button('Thief', '', (0,0,0),500,70,90,50)
+        button_thief = Button('Thief', '', (250,250,250),500,70,90,50, font_color = (0,0,0), alpha = 150)
     button_thief.update()
     button_thief.draw(screen)
     # Warrior filter button
     if card_database_filter.warrior:
         button_warrior = Button('Warrior', '', (100,30,130),600,70,90,50)
     else:
-        button_warrior = Button('Warrior', '', (0,0,0),600,70,90,50)
+        button_warrior = Button('Warrior', '', (250,250,250),600,70,90,50,font_color = (0,0,0), alpha = 150)
     button_warrior.update()
     button_warrior.draw(screen)
     # Jobless filter button
     if card_database_filter.jobless:
         button_jobless = Button('Jobless', '', (100,30,130),700,70,90,50)
     else:
-        button_jobless = Button('Jobless', '', (0,0,0),700,70,90,50)
+        button_jobless = Button('Jobless', '', (250,250,250),700,70,90,50, font_color = (0,0,0), alpha = 150)
     button_jobless.update()
     button_jobless.draw(screen)
     # Add all buttons to buttons list so that check_events function can detect mouse click on those buttons.
@@ -1416,21 +1524,21 @@ def build_deck_screen_my_deck_button_display(screen,buttons, screen_status, butt
     local_store_list = build_deck_screen_my_deck_card_list_refine(user)
     #character number display
     if user.character_card == '':
-        button1 = Button('Character: 0/1','' ,(0,0,0),50, 560, 150, 30, font_color = (255,60,60))
+        button1 = Button('Character: 0/1','' ,(250,250,250),50, 560, 150, 30, font_color = (255,60,60), alpha = 150)
     else:
-        button1 = Button('Character: 1/1','' ,(0,0,0),50, 560, 150, 30)
+        button1 = Button('Character: 1/1','' ,(250,250,250),50, 560, 150, 30, font_color = (0,0,0), alpha = 150)
     button1.update()
     button1.draw(screen)
     #card number display
     if len(user.deck_list) >= 40:
-        button2 = Button('Total: ' + str(len(user.deck_list)) + '/40','' ,(0,0,0),620, 560, 100, 30)
+        button2 = Button('Total: ' + str(len(user.deck_list)) + '/40','' ,(250,250,250),620, 560, 100, 30,font_color = (0,0,0), alpha = 150)
     else:
-        button2 = Button('Total: ' + str(len(user.deck_list)) + '/40','' ,(0,0,0),620, 560, 100, 30, font_color = (255,60,60))
+        button2 = Button('Total: ' + str(len(user.deck_list)) + '/40','' ,(250,250,250),620, 560, 100, 30, font_color = (255,60,60), alpha = 150)
     button2.update()
     button2.draw(screen)
 
     # Page forward button
-    button3 = Button('>','', (0,0,0),1110,650, 30, 30)
+    button3 = Button('>','', (250,250,250),1110,650, 30, 30, font_color = (0,0,0), alpha = 150)
     # Edge cases when len() = 14,28,42 ...
     if len(local_store_list) % 6 == 0 and len(local_store_list) != 0:
         if screen_status.build_deck_screen_my_deck_page_id != ((len(local_store_list))//6): # Make sure on the last page no foreward button shows up
@@ -1442,7 +1550,7 @@ def build_deck_screen_my_deck_button_display(screen,buttons, screen_status, butt
             button3.update()
             button3.draw(screen)
     # Page backward button
-    button4 = Button('<','', (0,0,0),210,650, 30, 30)
+    button4 = Button('<','', (250,250,250),210,650, 30, 30, font_color = (0,0,0), alpha = 150)
     if screen_status.build_deck_screen_my_deck_page_id != 1: # Make sure on the first page no backward button shows up
         button4.update()
         button4.draw(screen)
@@ -1495,9 +1603,9 @@ def build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button
 def build_deck_screen_my_deck_duplicate_number_display(card, screen):
     """Input Card instance, output how many copies of that card as a button above that card"""
     if card.duplicate <= 4:
-        button_dup = Button(str(card.duplicate) + 'x','', (0,0,0),(card.rect.x + 50),(card.rect.y - 30) , 30, 30)
+        button_dup = Button(str(card.duplicate) + 'x','', (250,250,250),(card.rect.x + 50),(card.rect.y - 30) , 30, 30, font_color = (0,0,0), alpha = 150)
     else:
-        button_dup = Button(str(card.duplicate) + 'x','', (0,0,0),(card.rect.x + 50),(card.rect.y - 30) , 30, 30, font_color = (255,60,60))
+        button_dup = Button(str(card.duplicate) + 'x','', (250,250,250),(card.rect.x + 50),(card.rect.y - 30) , 30, 30, font_color = (255,60,60), alpha = 150)
     button_dup.update()
     button_dup.draw(screen)
 
@@ -2005,23 +2113,26 @@ def battle_screen_character_1_button_display(screen,buttons, screen_status, butt
     button_basic_info.update()
     button_basic_info.draw(screen)
 
-    if screen_status.battle_screen_action_indicator == 'stage-2-character-action-1':
-        button_action_pointer = Button('>>','',(92,13,78),1000,132,50,23)
+    if ('stage-2-character-action-1' in screen_status.battle_screen_action_indicator
+        and screen_status.battle_screen_player2_action_display_indicator == False):
+        button_action_pointer = Button('>>','',(92,13,78),1000,132,50,23,alpha = 0)
         button_action_pointer.update()
         button_action_pointer.draw(screen)
-    elif screen_status.battle_screen_action_indicator == 'stage-2-character-action-2':
-        button_action_pointer = Button('>>','',(92,13,78),1000,155,50,23)
+    elif ('stage-2-character-action-2' in screen_status.battle_screen_action_indicator
+        and screen_status.battle_screen_player2_action_display_indicator == False):
+        button_action_pointer = Button('>>','',(92,13,78),1000,155,50,23, alpha = 0)
         button_action_pointer.update()
         button_action_pointer.draw(screen)
-    elif screen_status.battle_screen_action_indicator == 'stage-2-character-action-3':
-        button_action_pointer = Button('>>','',(92,13,78),1000,178,50,23)
+    elif ('stage-2-character-action-3' in screen_status.battle_screen_action_indicator
+        and screen_status.battle_screen_player2_action_display_indicator == False):
+        button_action_pointer = Button('>>','',(92,13,78),1000,178,50,23, alpha = 0)
         button_action_pointer.update()
         button_action_pointer.draw(screen)
     elif ('stage-2-other-action-' in screen_status.battle_screen_action_indicator
         and screen_status.battle_screen_player2_action_display_indicator == False
         and 'detail' not in screen_status.battle_screen_action_indicator):
         x = screen_status.battle_screen_action_indicator.replace('stage-2-other-action-','')
-        button_action_pointer = Button('>>','',(92,13,78),1000,220+23*(int(x)/10-1),50,23)
+        button_action_pointer = Button('>>','',(92,13,78),1000,220+23*(int(x)/10-1),50,23, alpha = 0)
         button_action_pointer.update()
         button_action_pointer.draw(screen)
 
@@ -2088,26 +2199,26 @@ def battle_screen_player2_display(ai_settings, screen, buttons,screen_status, bu
 
     # Display the arrow when doing actions
     if screen_status.battle_screen_action_indicator == 'player2-stage-2-character-action-1':
-        button_action_pointer = Button('<<','',(92,13,78),150,132,50,23)
+        button_action_pointer = Button('<<','',(92,13,78),150,132,50,23, alpha = 0)
         button_action_pointer.update()
         button_action_pointer.draw(screen)
     elif screen_status.battle_screen_action_indicator == 'player2-stage-2-character-action-2':
-        button_action_pointer = Button('<<','',(92,13,78),150,155,50,23)
+        button_action_pointer = Button('<<','',(92,13,78),150,155,50,23, alpha = 0)
         button_action_pointer.update()
         button_action_pointer.draw(screen)
     elif screen_status.battle_screen_action_indicator == 'player2-stage-2-character-action-3':
-        button_action_pointer = Button('<<','',(92,13,78),150,178,50,23)
+        button_action_pointer = Button('<<','',(92,13,78),150,178,50,23, alpha = 0)
         button_action_pointer.update()
         button_action_pointer.draw(screen)
     elif 'player2-stage-2-other-action-' in screen_status.battle_screen_action_indicator:
         if len(screen_status.battle_screen_action_indicator.replace('player2-stage-2-other-action-','')) <= 2:
             x = screen_status.battle_screen_action_indicator.replace('player2-stage-2-other-action-','')[:2]
-            button_action_pointer = Button('<<','',(92,13,78),150,220+23*(int(x)/10-1),50,23)
+            button_action_pointer = Button('<<','',(92,13,78),150,220+23*(int(x)/10-1),50,23, alpha = 0)
             button_action_pointer.update()
             button_action_pointer.draw(screen)
         elif len(screen_status.battle_screen_action_indicator.replace('player2-stage-2-other-action-','')) <= 3:
             x = screen_status.battle_screen_action_indicator.replace('player2-stage-2-other-action-','')[:3]
-            button_action_pointer = Button('<<','',(92,13,78),150,220+23*(int(x)/10-1),50,23)
+            button_action_pointer = Button('<<','',(92,13,78),150,220+23*(int(x)/10-1),50,23, alpha = 0)
             button_action_pointer.update()
             button_action_pointer.draw(screen)
         else:
@@ -2159,7 +2270,7 @@ def battle_screen_player2_display(ai_settings, screen, buttons,screen_status, bu
     # Display actions cooldown
     if screen_status.battle_screen_player2_action_display_indicator:
         now = pygame.time.get_ticks()
-        cooldown = 2200
+        cooldown = int(ai_settings.AI_speed_indicator)
         if now - screen_status.time_last >= cooldown:
             screen_status.time_last = now
             battle_screen_player2_action(screen, buttons,screen_status, button_status, card_database_filter, user, player2)
@@ -2220,11 +2331,11 @@ def battle_screen_menu_display(ai_settings, screen, buttons,screen_status, butto
 def battle_screen_win_lost_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ Display win/lost message"""
     if button_status.battle_screen_win_lost_indicator == 'win':
-        button_win_1 = Button('VICTORY!','', (70,170,70), 300,  200, 600, 200, font_size = 70)
+        button_win_1 = Button('VICTORY!','', (70,170,70), 300,  200, 600, 200, font_size = 70, alpha = 150)
         button_win_1.update()
         button_win_1.draw(screen)
 
-        button_win_2 = Button('','', (70,170,70), 300,  400, 600, 200)
+        button_win_2 = Button('','', (70,170,70), 300,  400, 600, 200, alpha = 150)
         button_win_2.update()
         button_win_2.draw(screen)
 
@@ -2236,11 +2347,11 @@ def battle_screen_win_lost_display(ai_settings, screen, buttons,screen_status, b
 
 
     elif button_status.battle_screen_win_lost_indicator == 'lost':
-        button_lost_1 = Button('DEFEAT!','', (170,70,70), 300,  200, 600, 200, font_size = 70)
+        button_lost_1 = Button('DEFEAT!','', (170,70,70), 300,  200, 600, 200, font_size = 70, alpha = 150)
         button_lost_1.update()
         button_lost_1.draw(screen)
 
-        button_lost_2 = Button('','', (170,70,70), 300,  400, 600, 200)
+        button_lost_2 = Button('','', (170,70,70), 300,  400, 600, 200, alpha = 150)
         button_lost_2.update()
         button_lost_2.draw(screen)
 
@@ -3474,9 +3585,6 @@ def battle_screen_instruction_bar_yes_skip_action(yes_skip_indicator, screen,but
 
     # Which stage to go when user at stage-4-wait-for-opponent
 
-
-
-    print(screen_status.battle_screen_action_indicator)
 
 def battle_screen_stage_2_action(position, screen,buttons, screen_status, button_status, card_database_filter, user,action,player2):
     """ Input position of the action, output action according to the type on specific card"""

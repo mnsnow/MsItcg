@@ -9,7 +9,6 @@ class Screen_status():
     def __init__(self):
 
         self.time_last = pygame.time.get_ticks() # For player2(AI) use only
-        self.time_player2_cooldown = 3000
 
         self.welcome_screen_display = True
         self.prepare_screen_display = False
