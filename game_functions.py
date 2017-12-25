@@ -43,9 +43,33 @@ def check_events_welcome_screen(ai_settings, screen, buttons,screen_status, butt
                 sys.exit()
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            if Rect(300, 350, 250, 100).collidepoint(pygame.mouse.get_pos()):
+            if Rect(537, 370, 127, 61).collidepoint(pygame.mouse.get_pos()):
                 screen_status.welcome_screen_display = False
                 screen_status.prepare_screen_display = True
+
+            elif Rect(474, 469, 253, 62).collidepoint(pygame.mouse.get_pos()):
+                button_status.welcome_screen_settings_display = not button_status.welcome_screen_settings_display
+
+            # Turn sound on
+            elif Rect(340, 455, 40, 40).collidepoint(pygame.mouse.get_pos()):
+                if button_status.welcome_screen_settings_display == True:
+                    ai_settings.sound_indicator = True
+            # Turn sound off
+            elif Rect(390, 455, 40, 40).collidepoint(pygame.mouse.get_pos()):
+                if button_status.welcome_screen_settings_display == True:
+                    ai_settings.sound_indicator = False
+            # Turn music on
+            elif Rect(340, 515, 40, 40).collidepoint(pygame.mouse.get_pos()):
+                if button_status.welcome_screen_settings_display == True:
+                    ai_settings.music_indicator = True
+            # Turn music off
+            elif Rect(390, 515, 40, 40).collidepoint(pygame.mouse.get_pos()):
+                if button_status.welcome_screen_settings_display == True:
+                    ai_settings.music_indicator = False
+
+
+        elif Rect(541, 670, 119, 61).collidepoint(pygame.mouse.get_pos()):
+                sys.exit()
 
 def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ Check events in prepare screen"""
@@ -446,7 +470,7 @@ def update_screen(ai_settings,grid, screen, buttons, screen_status, button_statu
     """ Update images on the screen and flip to the new screen"""
 
     if screen_status.welcome_screen_display:
-        welcome_screen_update(ai_settings,screen, buttons, screen_status)
+        welcome_screen_update(ai_settings,screen, buttons, screen_status, button_status)
 
     if screen_status.prepare_screen_display:
         prepare_screen_update(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2)
@@ -462,22 +486,14 @@ def update_screen(ai_settings,grid, screen, buttons, screen_status, button_statu
 
     pygame.display.flip()
 
-
-def welcome_screen_update(ai_settings,screen, buttons, screen_status):
+def welcome_screen_update(ai_settings,screen, buttons, screen_status,button_status):
     """ welcome screen update"""
-    screen.fill(ai_settings.bg_color)
-    button1 = Button('Welcome to Maplestory Itcg - Alpha', 'welcome_screen', (0,0,0),300, 100, 550, 200)
-    button2 = Button('Play','', (0,0,0),300, 350, 250, 100)
-    button3 = Button('Quit','', (0,0,0),600, 350, 250, 100)
-    button1.update()
-    button2.update()
-    button3.update()
-    button1.draw(screen)
-    button2.draw(screen)
-    button3.draw(screen)
-    if screen_status.welcome_screen_backend:
-        buttons.extend((button1, button2, button3))
-        screen_status.welcome_screen_backend = False
+    screen.fill((250,250,250))
+    screen.blit(pygame.image.load('static/bg_images/bg_02.png'), (0,0))
+
+    welcome_screen_stable_button_display(ai_settings,screen, buttons, screen_status, button_status)
+
+    welcome_screen_settings_menu_display(ai_settings,screen, buttons, screen_status, button_status)
 
 def prepare_screen_update(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2):
     """ Update prepare screen"""
@@ -659,14 +675,79 @@ def card_zoom_update(ai_settings, screen, buttons,screen_status, button_status, 
 
 
 
-
-
-
-
-
 #-----------------------------Welcome screen display----------------------------------------------------
+def welcome_screen_stable_button_display(ai_settings,screen, buttons, screen_status, button_status):
+    """ Display stable buttons on welcome screen"""
+    font_1 = pygame.font.Font('freesansbold.ttf', 65)
+    text_image_1 = font_1.render('Welcome to Maplestory ITCG', True, (255,255,255))
+    text_rect_1 = text_image_1.get_rect(center = (600,200))
+    screen.blit(text_image_1, text_rect_1)
 
+    font_2 = pygame.font.Font('freesansbold.ttf', 60)
+    text_image_2 = font_2.render('Play', True, (255,255,255))
+    text_rect_2 = text_image_2.get_rect(center = (600,400))
+    screen.blit(text_image_2, text_rect_2)
 
+    font_3 = pygame.font.Font('freesansbold.ttf', 60)
+    text_image_3 = font_3.render('Settings', True, (255,255,255))
+    text_rect_3 = text_image_3.get_rect(center = (600,500))
+    screen.blit(text_image_3, text_rect_3)
+
+    font_4 = pygame.font.Font('freesansbold.ttf', 60)
+    text_image_4 = font_4.render('Exit', True, (255,255,255))
+    text_rect_4 = text_image_4.get_rect(center = (600,700))
+    screen.blit(text_image_4, text_rect_4)
+
+def welcome_screen_settings_menu_display(ai_settings,screen, buttons, screen_status, button_status):
+    """ Display welcome screen settings menu"""
+    if button_status.welcome_screen_settings_display == True:
+        # Sound settings
+        font_1 = pygame.font.Font('freesansbold.ttf', 50)
+        text_image_1 = font_1.render('Sound: ', True, (255,255,255))
+        text_rect_1 = text_image_1.get_rect(center = (250,470))
+        screen.blit(text_image_1, text_rect_1)
+
+        if ai_settings.sound_indicator == True:
+            button_1 = Button('On','', (50,150,50), 340, 455, 40, 40)
+            button_1.update()
+            button_1.draw(screen)
+
+            button_2 = Button('Off','', (150,150,150), 390, 455, 40, 40)
+            button_2.update()
+            button_2.draw(screen)
+
+        else:
+            button_1 = Button('On','', (150,150,150), 340, 455, 40, 40)
+            button_1.update()
+            button_1.draw(screen)
+
+            button_2 = Button('Off','', (150,50,50), 390, 455, 40, 40)
+            button_2.update()
+            button_2.draw(screen)
+
+        # Music settings
+        font_2 = pygame.font.Font('freesansbold.ttf', 50)
+        text_image_2 = font_2.render('Music: ', True, (255,255,255))
+        text_rect_2 = text_image_2.get_rect(center = (250,530))
+        screen.blit(text_image_2, text_rect_2)
+
+        if ai_settings.music_indicator == True:
+            button_1 = Button('On','', (50,150,50), 340, 515, 40, 40)
+            button_1.update()
+            button_1.draw(screen)
+
+            button_2 = Button('Off','', (150,150,150), 390, 515, 40, 40)
+            button_2.update()
+            button_2.draw(screen)
+
+        else:
+            button_1 = Button('On','', (150,150,150), 340, 515, 40, 40)
+            button_1.update()
+            button_1.draw(screen)
+
+            button_2 = Button('Off','', (150,50,50), 390, 515, 40, 40)
+            button_2.update()
+            button_2.draw(screen)
 
 
 
@@ -2778,7 +2859,7 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
             button_status.battle_screen_instruction_bar_yes_display = True
             button_status.battle_screen_instruction_bar_yes_backend = True
             add_text_to_action_history('You have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to opponent's character, HP: "+str(int(player2.character_card.health)+int(dmg))+' --> '+player2.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-            play_sound_effect('attack_face')
+            play_sound_effect('attack face')
 
         elif "opponent's monster" in button_status.battle_screen_instruction_bar_text:
             x = button_status.battle_screen_instruction_bar_text[-2:-1]
@@ -2789,7 +2870,7 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
             button_status.battle_screen_instruction_bar_yes_display = True
             button_status.battle_screen_instruction_bar_yes_backend = True
             add_text_to_action_history('You have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to opponent's monster: "+player2.monster_in_play_dict[x].name+ ", HP: "+str(int(player2.monster_in_play_dict[x].health) + int(dmg))+' --> '+player2.monster_in_play_dict[x].health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-            play_sound_effect('attack_face')
+            play_sound_effect('attack face')
 
 def battle_screen_battleground_click_action(click_type,screen,buttons, screen_status, button_status, card_database_filter, user,player2, position = ''):
     """ battleground click action """
@@ -2889,7 +2970,7 @@ def battle_screen_battleground_click_action(click_type,screen,buttons, screen_st
         if "opponent's character" in button_status.battle_screen_instruction_bar_text:
             player2.character_card.health = str(int(player2.character_card.health)-10)
             add_text_to_action_history("You have dealt 10 damage to opponent's character, HP: "+str(int(player2.character_card.health)+10)+' --> '+player2.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-            play_sound_effect('attack_face')
+            play_sound_effect('attack face')
 
 
         elif "opponent's monster" in button_status.battle_screen_instruction_bar_text:
@@ -2897,13 +2978,13 @@ def battle_screen_battleground_click_action(click_type,screen,buttons, screen_st
             player2.monster_in_play_dict[x].health = str(int(player2.monster_in_play_dict[x].health) - 10)
             button_status.battle_screen_player2_battleground_indicator_display = False
             add_text_to_action_history("You have dealt 10 damage to opponent's monster: "+player2.monster_in_play_dict[x].name+ ", HP: "+str(int(player2.monster_in_play_dict[x].health) + 10)+' --> '+player2.monster_in_play_dict[x].health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-            play_sound_effect('attack_face')
+            play_sound_effect('attack face')
 
     elif click_type == 'tricky shot':
         if "opponent's character" in button_status.battle_screen_instruction_bar_text:
             player2.character_card.health = str(int(player2.character_card.health)-20)
             add_text_to_action_history("You have dealt 20 damage to opponent's character, HP: "+str(int(player2.character_card.health)+20)+' --> '+player2.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-            play_sound_effect('attack_face')
+            play_sound_effect('attack face')
 
 
         elif "opponent's monster" in button_status.battle_screen_instruction_bar_text:
@@ -2911,14 +2992,14 @@ def battle_screen_battleground_click_action(click_type,screen,buttons, screen_st
             player2.monster_in_play_dict[x].health = str(int(player2.monster_in_play_dict[x].health) - 20)
             button_status.battle_screen_player2_battleground_indicator_display = False
             add_text_to_action_history("You have dealt 20 damage to opponent's monster: "+player2.monster_in_play_dict[x].name+ ", HP: "+str(int(player2.monster_in_play_dict[x].health) + 20)+' --> '+player2.monster_in_play_dict[x].health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-            play_sound_effect('attack_face')
+            play_sound_effect('attack face')
 
     elif click_type == 'monster_attack_character':
         x = screen_status.battle_screen_action_indicator.replace('stage-3-monster-','')[0]
         monster_attacking = user.monster_in_play_dict[x]
         player2.character_card.health = str(int(player2.character_card.health) - int(monster_attacking.attack))
         add_text_to_action_history("You monster: "+monster_attacking.name+" has dealt "+monster_attacking.attack +" damage to opponent's character, HP: "+str(int(player2.character_card.health) + int(monster_attacking.attack))+' --> '+player2.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-        play_sound_effect('attack_face')
+        play_sound_effect('attack face')
 
 
     elif click_type == 'monster_attack_monster':
@@ -2927,7 +3008,7 @@ def battle_screen_battleground_click_action(click_type,screen,buttons, screen_st
         player2.monster_in_play_dict[position].health = str(int(player2.monster_in_play_dict[position].health) - int(monster_attacking.attack))
         button_status.battle_screen_player2_battleground_indicator_display = False
         add_text_to_action_history("You monster: "+monster_attacking.name +" have dealt "+monster_attacking.attack+" damage to opponent's monster: "+player2.monster_in_play_dict[position].name+ ", HP: "+str(int(player2.monster_in_play_dict[position].health) + int(monster_attacking.attack))+' --> '+player2.monster_in_play_dict[position].health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-        play_sound_effect('attack_face')
+        play_sound_effect('attack face')
 
 def battle_screen_instruction_bar_yes_skip_action(yes_skip_indicator, screen,buttons, screen_status, button_status, card_database_filter, user,action,player2):
     """ change to different stages when click on yes on instruction bar"""
@@ -3037,7 +3118,6 @@ def battle_screen_instruction_bar_yes_skip_action(yes_skip_indicator, screen,but
                 and '-detail-tactic-1' in screen_status.battle_screen_action_indicator
                 and button_status.battle_screen_instruction_bar_yes_display == True):
 
-                print('ppppp')
                 battle_screen_hand_click_action('use tactic',screen,buttons, screen_status, button_status, card_database_filter, user, player2)
                 button_status.battle_screen_player1_battleground_indicator_display = False
                 button_status.battle_screen_player2_battleground_indicator_display = False
@@ -3630,7 +3710,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
 
                     player2.hand_list.remove(located_card)
                     add_text_to_action_history('Opponent have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to your character, HP: "+str(int(user.character_card.health)+int(dmg))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-                    play_sound_effect('attack_face')
+                    play_sound_effect('attack face')
 
 
 
@@ -3724,7 +3804,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
 
                         player2.hand_list.remove(located_card)
                         add_text_to_action_history('Opponent have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to your character, HP: "+str(int(user.character_card.health)+int(dmg))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-                        play_sound_effect('attack_face')
+                        play_sound_effect('attack face')
 
 
         if len(player2.stage_2_other_card_usable_list) >= 1:
@@ -3762,7 +3842,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
             ):
             user.character_card.health = str(int(user.character_card.health)-10)
             add_text_to_action_history('Opponent has used the ability: '+character_skill_name+', and dealt 10 damage to you, HP: '+str(int(user.character_card.health)+10)+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-            play_sound_effect('attack_face')
+            play_sound_effect('attack face')
 
         elif ('Tricky Shot' in character_skill_name
             or 'Crush' in character_skill_name
@@ -3770,7 +3850,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
             ):
             user.character_card.health = str(int(user.character_card.health)-20)
             add_text_to_action_history('Opponent has used the ability: '+character_skill_name+', and dealt 20 damage to you, HP: '+str(int(user.character_card.health)+20)+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-            play_sound_effect('attack_face')
+            play_sound_effect('attack face')
 
         elif ('Quest' in character_skill_name
 
@@ -3929,7 +4009,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
 
                         player2.hand_list.remove(located_card)
                         add_text_to_action_history('Opponent have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to your character, HP: "+str(int(user.character_card.health)+int(dmg))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-                        play_sound_effect('attack_face')
+                        play_sound_effect('attack face')
 
 
         elif screen_status.battle_screen_action_indicator == 'player2-stage-2-other-action-detail-spawn-and-equip':
@@ -4022,7 +4102,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
 
                         player2.hand_list.remove(located_card)
                         add_text_to_action_history('Opponent have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to your character, HP: "+str(int(user.character_card.health)+int(dmg))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-                        play_sound_effect('attack_face')
+                        play_sound_effect('attack face')
 
 
         elif screen_status.battle_screen_action_indicator == 'player2-stage-2-other-action-detail-spawn':
@@ -4084,7 +4164,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
 
                     player2.hand_list.remove(located_card)
                     add_text_to_action_history('Opponent have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to your character, HP: "+str(int(user.character_card.health)+int(dmg))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-                    play_sound_effect('attack_face')
+                    play_sound_effect('attack face')
 
 
         elif screen_status.battle_screen_action_indicator == 'player2-stage-2-other-action-detail-equip':
@@ -4175,7 +4255,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
 
                         player2.hand_list.remove(located_card)
                         add_text_to_action_history('Opponent have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to your character, HP: "+str(int(user.character_card.health)+int(dmg))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-                        play_sound_effect('attack_face')
+                        play_sound_effect('attack face')
 
 
 
@@ -4258,7 +4338,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
             ):
             user.character_card.health = str(int(user.character_card.health)-10)
             add_text_to_action_history('Opponent has used the ability: '+player2.character_under_card_by_level[x].lv_type+', and dealt 10 damage to you, HP: '+str(int(user.character_card.health)+10)+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-            play_sound_effect('attack_face')
+            play_sound_effect('attack face')
 
         elif ('Tricky Shot' in player2.character_under_card_by_level[x].lv_type
             or 'Slash' in player2.character_under_card_by_level[x].lv_type
@@ -4266,7 +4346,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
             ):
             user.character_card.health = str(int(user.character_card.health)-20)
             add_text_to_action_history('Opponent has used the ability: '+player2.character_under_card_by_level[x].lv_type+', and dealt 20 damage to you, HP: '+str(int(user.character_card.health)+20)+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-            play_sound_effect('attack_face')
+            play_sound_effect('attack face')
 
 
         elif ('Quest' in player2.character_under_card_by_level[x].lv_type
@@ -4321,7 +4401,8 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
         x = screen_status.battle_screen_action_indicator.replace('player2-stage-3-monster-','')[0]
         user.character_card.health = str(int(user.character_card.health) - int(player2.monster_in_play_dict[x].attack))
         add_text_to_action_history('Opponent has attacked with the monster: '+player2.monster_in_play_dict[x].name+', dealt '+player2.monster_in_play_dict[x].attack+' damage to your character, HP: '+str(int(user.character_card.health) + int(player2.monster_in_play_dict[x].attack))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-        play_sound_effect('attack_face')
+        play_sound_effect('attack face')
+
 
         if player2.monster_in_play_dict[str(int(x)+1)] != '':
             screen_status.battle_screen_action_indicator = 'player2-stage-3-monster-' + str(int(x)+1) + '-action'

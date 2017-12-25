@@ -11,8 +11,8 @@ class Screen_status():
         self.time_last = pygame.time.get_ticks() # For player2(AI) use only
         self.time_player2_cooldown = 3000
 
-        self.welcome_screen_display = False
-        self.prepare_screen_display = True
+        self.welcome_screen_display = True
+        self.prepare_screen_display = False
         self.build_deck_screen_display = False
         self.battle_screen_display = False
 
@@ -33,6 +33,8 @@ class Screen_status():
 class Button_status():
     """ Control active status of all buttons"""
     def __init__(self):
+
+        self.welcome_screen_settings_display = False
 
         self.prepare_screen_end_screen_warning_button_display = ''
 

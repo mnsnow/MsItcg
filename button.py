@@ -41,13 +41,7 @@ class Button():
 
         screen.blit(self.image, self.rect)
 
-    def do_event(self):
-
-        if event.type == pygame.MOUSEMOTION:
-            self.hovered = self.rect.collidepoint(pygame.mouse.get_pos())
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            if self.hovered:
-                print('Clicked:', self.text)
+    
 
 
 
