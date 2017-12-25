@@ -38,18 +38,18 @@ class Action():
         button_status.battle_screen_instruction_bar_yes_backend = False
         button_status.battle_screen_instruction_bar_text = "Pick a target to deal 20 damage"
 
-    def stage_2_quest(self, screen,buttons, screen_status, button_status, card_database_filter, user,player2):
+    def stage_2_quest(self, ai_settings,screen,buttons, screen_status, button_status, card_database_filter, user,player2):
         """ Quest"""
         user.hand_list.append(user.remain_deck_list[0])
         del user.remain_deck_list[0]
         gf.add_text_to_action_history('You have used Quest ability and drawn a card', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-        gf.play_sound_effect('draw heal')
+        gf.play_sound_effect('draw heal',ai_settings)
 
-    def stage_2_refresh(self, screen,buttons, screen_status, button_status, card_database_filter, user,player2):
+    def stage_2_refresh(self, ai_settings,screen,buttons, screen_status, button_status, card_database_filter, user,player2):
         """ refresh"""
         user.character_card.health = str(int(user.character_card.health) + 10)
         gf.add_text_to_action_history('You have used Refresh ability and heal yourself for 10 HP, HP: '+str(int(user.character_card.health)-10)+ ' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-        gf.play_sound_effect('draw heal')
+        gf.play_sound_effect('draw heal', ai_settings,)
 
     def stage_2_sneak(self, caster_type,  action_level, screen, buttons, screen_status, button_status, card_database_filter, user, under_position = '1'):
         """ input spawn number, output spawn action"""
