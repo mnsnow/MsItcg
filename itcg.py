@@ -11,7 +11,6 @@ import card_database_filter as cdf
 from user import User
 from action import Action
 from player2 import Player2
-from sound_and_music import Sound
 
 
 def main():
@@ -31,14 +30,9 @@ def main():
     user = User()
     player2 = Player2()
     action = Action()
-    sound = Sound()
 
     # background music while the game is on
-    pygame.mixer.music.load(sound.MUSIC_LITH_HARBOR)
-    pygame.mixer.Sound(sound.SOUND_PLAY_CARD)
-    pygame.mixer.Sound(sound.SOUND_DRAW_HEAL)
-    pygame.mixer.Sound(sound.SOUND_ATTACK_FACE)
-
+    pygame.mixer.music.load('static/music/Above_The_Tree_Tops.wav')
     pygame.mixer.music.play(-1)
 
 

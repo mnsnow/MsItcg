@@ -12,7 +12,6 @@ import card_database_filter as cdf
 from action import Action
 from builtins import any
 import time
-from sound_and_music import Sound
 
 
 
@@ -2458,7 +2457,7 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
         user.character_card.health = str(int(user.character_card.health) + 20)
         button_status.battle_screen_my_hand_indicator_display = False
         add_text_to_action_history('You have leveled up with: '+located_card.name+', Lv: '+str(int(user.character_card.level)-10)+' --> '+user.character_card.level+', HP: '+str(int(user.character_card.health)-20)+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-
+        play_sound_effect('draw heal')
 
     elif click_type == 'spawn':
         # Make sure if using auto level up by clicking yes, the global position variable is set to one.
@@ -2476,6 +2475,7 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
         button_status.battle_screen_instruction_bar_yes_display = True
         button_status.battle_screen_instruction_bar_yes_backend = True
         add_text_to_action_history('You have spawned the monster: '+ located_card.name + ' onto the battlefield', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+        play_sound_effect('play card')
 
     elif click_type == 'think fast':
         # Make sure if using auto level up by clicking yes, the global position variable is set to one.
@@ -2496,6 +2496,7 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
             button_status.battle_screen_instruction_bar_yes_display = True
             button_status.battle_screen_instruction_bar_yes_backend = True
             add_text_to_action_history('You have played the tactic: '+located_card.name + ', drawn 2 cards', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            play_sound_effect('draw heal')
 
         elif 'Heal 20/Quest' in x:
             user.hand_list.append(user.remain_deck_list[0])
@@ -2508,6 +2509,7 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
             button_status.battle_screen_instruction_bar_yes_display = True
             button_status.battle_screen_instruction_bar_yes_backend = True
             add_text_to_action_history('You have played the tactic: '+located_card.name+ ' ,heal yourself for 20 HP, HP: '+str(int(user.character_card.health)-20)+ ' --> '+user.character_card.health+ ', and drawn a card', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            play_sound_effect('draw heal')
 
         elif 'Dmg' in x:
             if 'other' in screen_status.battle_screen_action_indicator:
@@ -2537,6 +2539,7 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
         button_status.battle_screen_instruction_bar_yes_display = True
         button_status.battle_screen_instruction_bar_yes_backend = True
         add_text_to_action_history('You have equiped the item: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+        play_sound_effect('play card')
 
     elif click_type == 'spawn/think fast':
         # Make sure if using auto level up by clicking yes, the global position variable is set to one.
@@ -2555,6 +2558,8 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
             button_status.battle_screen_instruction_bar_yes_display = True
             button_status.battle_screen_instruction_bar_yes_backend = True
             add_text_to_action_history('You have spawned the monster: '+ located_card.name + ' onto the battlefield', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            play_sound_effect('play card')
+
         else:
 
             x = located_card.special_effect
@@ -2574,6 +2579,8 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
                     button_status.battle_screen_instruction_bar_yes_display = True
                     button_status.battle_screen_instruction_bar_yes_backend = True
                     add_text_to_action_history('You have played the tactic: '+located_card.name + ', drawn 2 cards', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                    play_sound_effect('draw heal')
+
 
                 elif 'Heal 20/Quest' in x:
                     user.hand_list.append(user.remain_deck_list[0])
@@ -2586,6 +2593,8 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
                     button_status.battle_screen_instruction_bar_yes_display = True
                     button_status.battle_screen_instruction_bar_yes_backend = True
                     add_text_to_action_history('You have played the tactic: '+located_card.name+ ' ,heal yourself for 20 HP, HP: '+str(int(user.character_card.health)-20)+ ' --> '+user.character_card.health+ ', and drawn a card', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                    play_sound_effect('draw heal')
+
 
                 elif 'Dmg' in x:
                     screen_status.battle_screen_action_indicator = 'stage-2-other-action-detail-tactic-1'
@@ -2607,12 +2616,16 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
                     user.monster_in_play_dict[str(i)] = located_card
                     break
             add_text_to_action_history('You have spawned the monster: '+ located_card.name + ' onto the battlefield', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            play_sound_effect('play card')
+
         else:
             for i in range(1,7):
                 if user.item_in_play_dict[str(i)] == '':
                     user.item_in_play_dict[str(i)] = located_card
                     break
             add_text_to_action_history('You have equiped the item: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            play_sound_effect('play card')
+
         user.hand_list.remove(located_card)
         button_status.battle_screen_my_hand_indicator_display = False # hand buttons on card eg:****
         button_status.battle_screen_instruction_bar_yes_display = True
@@ -2640,6 +2653,8 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
                 button_status.battle_screen_instruction_bar_yes_display = True
                 button_status.battle_screen_instruction_bar_yes_backend = True
                 add_text_to_action_history('You have played the tactic: '+located_card.name + ', drawn 2 cards', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                play_sound_effect('draw heal')
+
 
             elif 'Heal 20/Quest' in x:
                 user.hand_list.append(user.remain_deck_list[0])
@@ -2652,6 +2667,8 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
                 button_status.battle_screen_instruction_bar_yes_display = True
                 button_status.battle_screen_instruction_bar_yes_backend = True
                 add_text_to_action_history('You have played the tactic: '+located_card.name+ ' ,heal yourself for 20 HP, HP: '+str(int(user.character_card.health)-20)+ ' --> '+user.character_card.health+ ', and drawn a card', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                play_sound_effect('draw heal')
+
 
             elif 'Dmg' in x:
                 screen_status.battle_screen_action_indicator = 'stage-2-other-action-detail-tactic-1'
@@ -2669,6 +2686,7 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
             button_status.battle_screen_instruction_bar_yes_display = True
             button_status.battle_screen_instruction_bar_yes_backend = True
             add_text_to_action_history('You have equiped the item: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            play_sound_effect('play card')
 
 
     elif click_type == 'sneak':
@@ -2693,6 +2711,8 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
                 button_status.battle_screen_instruction_bar_yes_display = True
                 button_status.battle_screen_instruction_bar_yes_backend = True
                 add_text_to_action_history('You have played the tactic: '+located_card.name + ', drawn 2 cards', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                play_sound_effect('draw heal')
+
 
             elif 'Heal 20/Quest' in x:
                 user.hand_list.append(user.remain_deck_list[0])
@@ -2705,6 +2725,8 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
                 button_status.battle_screen_instruction_bar_yes_display = True
                 button_status.battle_screen_instruction_bar_yes_backend = True
                 add_text_to_action_history('You have played the tactic: '+located_card.name+ ' ,heal yourself for 20 HP, HP: '+str(int(user.character_card.health)-20)+ ' --> '+user.character_card.health+ ', and drawn a card', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                play_sound_effect('draw heal')
+
 
             elif 'Dmg' in x:
                 if 'other' in screen_status.battle_screen_action_indicator:
@@ -2726,6 +2748,7 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
             button_status.battle_screen_instruction_bar_yes_display = True
             button_status.battle_screen_instruction_bar_yes_backend = True
             add_text_to_action_history('You have equiped the item: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            play_sound_effect('play card')
 
         elif located_card.card_type == 'monster':
             for i in range(1,7):
@@ -2737,6 +2760,7 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
             button_status.battle_screen_instruction_bar_yes_display = True
             button_status.battle_screen_instruction_bar_yes_backend = True
             add_text_to_action_history('You have spawned the monster: '+ located_card.name + ' onto the battlefield', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            play_sound_effect('play card')
 
 
     elif click_type == 'use tactic':
@@ -2754,6 +2778,7 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
             button_status.battle_screen_instruction_bar_yes_display = True
             button_status.battle_screen_instruction_bar_yes_backend = True
             add_text_to_action_history('You have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to opponent's character, HP: "+str(int(player2.character_card.health)+int(dmg))+' --> '+player2.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            play_sound_effect('attack_face')
 
         elif "opponent's monster" in button_status.battle_screen_instruction_bar_text:
             x = button_status.battle_screen_instruction_bar_text[-2:-1]
@@ -2764,6 +2789,7 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
             button_status.battle_screen_instruction_bar_yes_display = True
             button_status.battle_screen_instruction_bar_yes_backend = True
             add_text_to_action_history('You have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to opponent's monster: "+player2.monster_in_play_dict[x].name+ ", HP: "+str(int(player2.monster_in_play_dict[x].health) + int(dmg))+' --> '+player2.monster_in_play_dict[x].health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            play_sound_effect('attack_face')
 
 def battle_screen_battleground_click_action(click_type,screen,buttons, screen_status, button_status, card_database_filter, user,player2, position = ''):
     """ battleground click action """
@@ -2863,29 +2889,37 @@ def battle_screen_battleground_click_action(click_type,screen,buttons, screen_st
         if "opponent's character" in button_status.battle_screen_instruction_bar_text:
             player2.character_card.health = str(int(player2.character_card.health)-10)
             add_text_to_action_history("You have dealt 10 damage to opponent's character, HP: "+str(int(player2.character_card.health)+10)+' --> '+player2.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            play_sound_effect('attack_face')
+
 
         elif "opponent's monster" in button_status.battle_screen_instruction_bar_text:
             x = button_status.battle_screen_instruction_bar_text.replace("Do you want to deal 10 damage to opponent's monster: ",'')[0]
             player2.monster_in_play_dict[x].health = str(int(player2.monster_in_play_dict[x].health) - 10)
             button_status.battle_screen_player2_battleground_indicator_display = False
             add_text_to_action_history("You have dealt 10 damage to opponent's monster: "+player2.monster_in_play_dict[x].name+ ", HP: "+str(int(player2.monster_in_play_dict[x].health) + 10)+' --> '+player2.monster_in_play_dict[x].health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            play_sound_effect('attack_face')
 
     elif click_type == 'tricky shot':
         if "opponent's character" in button_status.battle_screen_instruction_bar_text:
             player2.character_card.health = str(int(player2.character_card.health)-20)
             add_text_to_action_history("You have dealt 20 damage to opponent's character, HP: "+str(int(player2.character_card.health)+20)+' --> '+player2.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            play_sound_effect('attack_face')
+
 
         elif "opponent's monster" in button_status.battle_screen_instruction_bar_text:
             x = button_status.battle_screen_instruction_bar_text.replace("Do you want to deal 20 damage to opponent's monster: ",'')[0]
             player2.monster_in_play_dict[x].health = str(int(player2.monster_in_play_dict[x].health) - 20)
             button_status.battle_screen_player2_battleground_indicator_display = False
             add_text_to_action_history("You have dealt 20 damage to opponent's monster: "+player2.monster_in_play_dict[x].name+ ", HP: "+str(int(player2.monster_in_play_dict[x].health) + 20)+' --> '+player2.monster_in_play_dict[x].health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            play_sound_effect('attack_face')
 
     elif click_type == 'monster_attack_character':
         x = screen_status.battle_screen_action_indicator.replace('stage-3-monster-','')[0]
         monster_attacking = user.monster_in_play_dict[x]
         player2.character_card.health = str(int(player2.character_card.health) - int(monster_attacking.attack))
         add_text_to_action_history("You monster: "+monster_attacking.name+" has dealt "+monster_attacking.attack +" damage to opponent's character, HP: "+str(int(player2.character_card.health) + int(monster_attacking.attack))+' --> '+player2.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+        play_sound_effect('attack_face')
+
 
     elif click_type == 'monster_attack_monster':
         x = screen_status.battle_screen_action_indicator.replace('stage-3-monster-','')[0]
@@ -2893,6 +2927,7 @@ def battle_screen_battleground_click_action(click_type,screen,buttons, screen_st
         player2.monster_in_play_dict[position].health = str(int(player2.monster_in_play_dict[position].health) - int(monster_attacking.attack))
         button_status.battle_screen_player2_battleground_indicator_display = False
         add_text_to_action_history("You monster: "+monster_attacking.name +" have dealt "+monster_attacking.attack+" damage to opponent's monster: "+player2.monster_in_play_dict[position].name+ ", HP: "+str(int(player2.monster_in_play_dict[position].health) + int(monster_attacking.attack))+' --> '+player2.monster_in_play_dict[position].health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+        play_sound_effect('attack_face')
 
 def battle_screen_instruction_bar_yes_skip_action(yes_skip_indicator, screen,buttons, screen_status, button_status, card_database_filter, user,action,player2):
     """ change to different stages when click on yes on instruction bar"""
@@ -3339,6 +3374,7 @@ def battle_screen_instruction_bar_yes_skip_action(yes_skip_indicator, screen,but
         player2.character_card.health = str(int(player2.character_card.health) - 10*int(user.item_in_play_length))
         user.character_card.health = str(int(user.character_card.health) + 10*int(user.item_in_play_length))
         add_text_to_action_history('You have '+user.item_in_play_length+' items, your HP: '+str(int(user.character_card.health) - 10*int(user.item_in_play_length))+' --> '+user.character_card.health+ ", opponent's HP: "+str(int(player2.character_card.health) + 10*int(user.item_in_play_length))+' --> '+player2.character_card.health+' . Your turn has end', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+        play_sound_effect('draw heal')
 
         button_status.battle_screen_instruction_bar_yes_display = False
         button_status.battle_screen_instruction_bar_yes_backend = False
@@ -3499,6 +3535,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
             player2.character_card.level = str(int(player2.character_card.level) + 10)
             player2.character_card.health = str(int(player2.character_card.health) + 20)
             add_text_to_action_history('Opponent has leveled up, Lv: '+str(int(player2.character_card.level) - 10)+' --> '+player2.character_card.level+', HP: '+str(int(player2.character_card.health) - 20)+' --> '+player2.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            play_sound_effect('draw heal')
 
             button_status.battle_screen_instruction_bar_text = 'Opponent has leveled up to lv ' + player2.character_card.level
             player2.stage_2_other_card_usable_list = player2.get_stage_2_other_card_usable_list()
@@ -3550,6 +3587,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                         break
                 player2.hand_list.remove(located_card)
                 add_text_to_action_history('Opponent has spawned the monster: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                play_sound_effect('play card')
 
         elif screen_status.battle_screen_action_indicator == 'player2-stage-2-character-action-detail-think-fast':
             located_card = []
@@ -3572,6 +3610,8 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
 
                     player2.hand_list.remove(located_card)
                     add_text_to_action_history('Opponent have played the tactic: '+located_card.name + ', drawn 2 cards', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                    play_sound_effect('draw heal')
+
 
                 elif 'Heal 20/Quest' in x:
                     player2.hand_list.append(player2.remain_deck_list[0])
@@ -3581,6 +3621,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                     player2.hand_list.remove(located_card)
 
                     add_text_to_action_history('Opponent have played the tactic: '+located_card.name+ ' ,heal for 20 HP, HP: '+str(int(player2.character_card.health)-20)+ ' --> '+player2.character_card.health+ ', and drawn a card', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                    play_sound_effect('draw heal')
 
                 elif 'Dmg' in x:
 
@@ -3589,6 +3630,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
 
                     player2.hand_list.remove(located_card)
                     add_text_to_action_history('Opponent have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to your character, HP: "+str(int(user.character_card.health)+int(dmg))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                    play_sound_effect('attack_face')
 
 
 
@@ -3609,6 +3651,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                         break
                 player2.hand_list.remove(located_card)
                 add_text_to_action_history('Opponent has equiped the item: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                play_sound_effect('play card')
 
         elif screen_status.battle_screen_action_indicator == 'player2-stage-2-character-action-detail-sneak':
             located_card = []
@@ -3638,6 +3681,8 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                             break
                     player2.hand_list.remove(located_card)
                     add_text_to_action_history('Opponent has spawned the monster: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                    play_sound_effect('play card')
+
                 elif located_card.card_type == 'item':
                     for i in range(1,7):
                         if player2.item_in_play_dict[str(i)] == '':
@@ -3645,6 +3690,8 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                             break
                     player2.hand_list.remove(located_card)
                     add_text_to_action_history('Opponent has equiped the item: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                    play_sound_effect('play card')
+
                 elif located_card.card_type == 'tactic':
                     x = located_card.special_effect
                     if 'Quest/Quest' in x:
@@ -3656,6 +3703,8 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
 
                         player2.hand_list.remove(located_card)
                         add_text_to_action_history('Opponent have played the tactic: '+located_card.name + ', drawn 2 cards', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                        play_sound_effect('draw heal')
+
 
                     elif 'Heal 20/Quest' in x:
                         player2.hand_list.append(player2.remain_deck_list[0])
@@ -3665,6 +3714,8 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                         player2.hand_list.remove(located_card)
 
                         add_text_to_action_history('Opponent have played the tactic: '+located_card.name+ ' ,heal for 20 HP, HP: '+str(int(player2.character_card.health)-20)+ ' --> '+player2.character_card.health+ ', and drawn a card', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                        play_sound_effect('draw heal')
+
 
                     elif 'Dmg' in x:
 
@@ -3673,6 +3724,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
 
                         player2.hand_list.remove(located_card)
                         add_text_to_action_history('Opponent have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to your character, HP: "+str(int(user.character_card.health)+int(dmg))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                        play_sound_effect('attack_face')
 
 
         if len(player2.stage_2_other_card_usable_list) >= 1:
@@ -3710,6 +3762,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
             ):
             user.character_card.health = str(int(user.character_card.health)-10)
             add_text_to_action_history('Opponent has used the ability: '+character_skill_name+', and dealt 10 damage to you, HP: '+str(int(user.character_card.health)+10)+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            play_sound_effect('attack_face')
 
         elif ('Tricky Shot' in character_skill_name
             or 'Crush' in character_skill_name
@@ -3717,6 +3770,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
             ):
             user.character_card.health = str(int(user.character_card.health)-20)
             add_text_to_action_history('Opponent has used the ability: '+character_skill_name+', and dealt 20 damage to you, HP: '+str(int(user.character_card.health)+20)+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            play_sound_effect('attack_face')
 
         elif ('Quest' in character_skill_name
 
@@ -3724,6 +3778,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
             player2.hand_list.append(player2.remain_deck_list[0])
             del player2.remain_deck_list[0]
             add_text_to_action_history('Opponent has used the ability: Quest and drawn a card', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            play_sound_effect('draw heal')
 
 
         elif 'Spawn' in character_skill_name:
@@ -3842,6 +3897,8 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                             break
                     player2.hand_list.remove(located_card)
                     add_text_to_action_history('Opponent has spawned the monster: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                    play_sound_effect('play card')
+
                 else:
                     x = located_card.special_effect
                     if 'Quest/Quest' in x:
@@ -3853,6 +3910,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
 
                         player2.hand_list.remove(located_card)
                         add_text_to_action_history('Opponent have played the tactic: '+located_card.name + ', drawn 2 cards', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                        play_sound_effect('draw heal')
 
                     elif 'Heal 20/Quest' in x:
                         player2.hand_list.append(player2.remain_deck_list[0])
@@ -3862,6 +3920,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                         player2.hand_list.remove(located_card)
 
                         add_text_to_action_history('Opponent have played the tactic: '+located_card.name+ ' ,heal for 20 HP, HP: '+str(int(player2.character_card.health)-20)+ ' --> '+player2.character_card.health+ ', and drawn a card', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                        play_sound_effect('draw heal')
 
                     elif 'Dmg' in x:
 
@@ -3870,6 +3929,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
 
                         player2.hand_list.remove(located_card)
                         add_text_to_action_history('Opponent have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to your character, HP: "+str(int(user.character_card.health)+int(dmg))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                        play_sound_effect('attack_face')
 
 
         elif screen_status.battle_screen_action_indicator == 'player2-stage-2-other-action-detail-spawn-and-equip':
@@ -3896,6 +3956,8 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                             break
                     player2.hand_list.remove(located_card)
                     add_text_to_action_history('Opponent has spawned the monster: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                    play_sound_effect('play card')
+
                 else:
                     for i in range(1,7):
                         if player2.item_in_play_dict[str(i)] == '':
@@ -3903,6 +3965,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                             break
                     player2.hand_list.remove(located_card)
                     add_text_to_action_history('Opponent has equiped the item: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                    play_sound_effect('play card')
 
         elif screen_status.battle_screen_action_indicator == 'player2-stage-2-other-action-detail-think-fast-and-equip':
             located_card = []
@@ -3927,6 +3990,8 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                             break
                     player2.hand_list.remove(located_card)
                     add_text_to_action_history('Opponent has equiped the item: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                    play_sound_effect('play card')
+
                 else:
                     x = located_card.special_effect
                     if 'Quest/Quest' in x:
@@ -3938,6 +4003,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
 
                         player2.hand_list.remove(located_card)
                         add_text_to_action_history('Opponent have played the tactic: '+located_card.name + ', drawn 2 cards', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                        play_sound_effect('draw heal')
 
                     elif 'Heal 20/Quest' in x:
                         player2.hand_list.append(player2.remain_deck_list[0])
@@ -3947,6 +4013,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                         player2.hand_list.remove(located_card)
 
                         add_text_to_action_history('Opponent have played the tactic: '+located_card.name+ ' ,heal for 20 HP, HP: '+str(int(player2.character_card.health)-20)+ ' --> '+player2.character_card.health+ ', and drawn a card', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                        play_sound_effect('draw heal')
 
                     elif 'Dmg' in x:
 
@@ -3955,6 +4022,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
 
                         player2.hand_list.remove(located_card)
                         add_text_to_action_history('Opponent have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to your character, HP: "+str(int(user.character_card.health)+int(dmg))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                        play_sound_effect('attack_face')
 
 
         elif screen_status.battle_screen_action_indicator == 'player2-stage-2-other-action-detail-spawn':
@@ -3974,6 +4042,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                         break
                 player2.hand_list.remove(located_card)
                 add_text_to_action_history('Opponent has spawned the monster: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                play_sound_effect('play card')
 
 
         elif screen_status.battle_screen_action_indicator == 'player2-stage-2-other-action-detail-think-fast':
@@ -3996,6 +4065,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
 
                     player2.hand_list.remove(located_card)
                     add_text_to_action_history('Opponent have played the tactic: '+located_card.name + ', drawn 2 cards', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                    play_sound_effect('draw heal')
 
                 elif 'Heal 20/Quest' in x:
                     player2.hand_list.append(player2.remain_deck_list[0])
@@ -4005,6 +4075,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                     player2.hand_list.remove(located_card)
 
                     add_text_to_action_history('Opponent have played the tactic: '+located_card.name+ ' ,heal for 20 HP, HP: '+str(int(player2.character_card.health)-20)+ ' --> '+player2.character_card.health+ ', and drawn a card', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                    play_sound_effect('draw heal')
 
                 elif 'Dmg' in x:
 
@@ -4013,6 +4084,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
 
                     player2.hand_list.remove(located_card)
                     add_text_to_action_history('Opponent have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to your character, HP: "+str(int(user.character_card.health)+int(dmg))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                    play_sound_effect('attack_face')
 
 
         elif screen_status.battle_screen_action_indicator == 'player2-stage-2-other-action-detail-equip':
@@ -4032,6 +4104,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                         break
                 player2.hand_list.remove(located_card)
                 add_text_to_action_history('Opponent has equiped the item: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                play_sound_effect('play card')
 
         elif screen_status.battle_screen_action_indicator == 'player2-stage-2-other-action-detail-sneak':
             located_card = []
@@ -4061,6 +4134,8 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                             break
                     player2.hand_list.remove(located_card)
                     add_text_to_action_history('Opponent has spawned the monster: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                    play_sound_effect('play card')
+
                 elif located_card.card_type == 'item':
                     for i in range(1,7):
                         if player2.item_in_play_dict[str(i)] == '':
@@ -4068,6 +4143,8 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                             break
                     player2.hand_list.remove(located_card)
                     add_text_to_action_history('Opponent has equiped the item: '+located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                    play_sound_effect('play card')
+
                 elif located_card.card_type == 'tactic':
                     x = located_card.special_effect
                     if 'Quest/Quest' in x:
@@ -4079,6 +4156,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
 
                         player2.hand_list.remove(located_card)
                         add_text_to_action_history('Opponent have played the tactic: '+located_card.name + ', drawn 2 cards', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                        play_sound_effect('draw heal')
 
                     elif 'Heal 20/Quest' in x:
                         player2.hand_list.append(player2.remain_deck_list[0])
@@ -4088,6 +4166,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
                         player2.hand_list.remove(located_card)
 
                         add_text_to_action_history('Opponent have played the tactic: '+located_card.name+ ' ,heal for 20 HP, HP: '+str(int(player2.character_card.health)-20)+ ' --> '+player2.character_card.health+ ', and drawn a card', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                        play_sound_effect('draw heal')
 
                     elif 'Dmg' in x:
 
@@ -4096,6 +4175,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
 
                         player2.hand_list.remove(located_card)
                         add_text_to_action_history('Opponent have played the tactic: '+located_card.name+', dealt '+str(int(dmg))+ " damage to your character, HP: "+str(int(user.character_card.health)+int(dmg))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                        play_sound_effect('attack_face')
 
 
 
@@ -4178,6 +4258,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
             ):
             user.character_card.health = str(int(user.character_card.health)-10)
             add_text_to_action_history('Opponent has used the ability: '+player2.character_under_card_by_level[x].lv_type+', and dealt 10 damage to you, HP: '+str(int(user.character_card.health)+10)+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            play_sound_effect('attack_face')
 
         elif ('Tricky Shot' in player2.character_under_card_by_level[x].lv_type
             or 'Slash' in player2.character_under_card_by_level[x].lv_type
@@ -4185,6 +4266,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
             ):
             user.character_card.health = str(int(user.character_card.health)-20)
             add_text_to_action_history('Opponent has used the ability: '+player2.character_under_card_by_level[x].lv_type+', and dealt 20 damage to you, HP: '+str(int(user.character_card.health)+20)+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            play_sound_effect('attack_face')
 
 
         elif ('Quest' in player2.character_under_card_by_level[x].lv_type
@@ -4193,6 +4275,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
             player2.hand_list.append(player2.remain_deck_list[0])
             del player2.remain_deck_list[0]
             add_text_to_action_history('Opponent has used the ability: Quest and drawn a card', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            play_sound_effect('draw heal')
 
 
         elif ('Refresh' in player2.character_under_card_by_level[x].lv_type
@@ -4200,6 +4283,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
             ):
             player2.character_card.health = str(int(player2.character_card.health)+10)
             add_text_to_action_history('Opponent has used the ability: Refresh and heal for 10 hp, HP: '+str(int(player2.character_card.health)-10)+' --> '+player2.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            play_sound_effect('draw heal')
 
 
         if screen_status.battle_screen_action_indicator == 'player2-stage-2-other-action-' + x:
@@ -4237,6 +4321,7 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
         x = screen_status.battle_screen_action_indicator.replace('player2-stage-3-monster-','')[0]
         user.character_card.health = str(int(user.character_card.health) - int(player2.monster_in_play_dict[x].attack))
         add_text_to_action_history('Opponent has attacked with the monster: '+player2.monster_in_play_dict[x].name+', dealt '+player2.monster_in_play_dict[x].attack+' damage to your character, HP: '+str(int(user.character_card.health) + int(player2.monster_in_play_dict[x].attack))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+        play_sound_effect('attack_face')
 
         if player2.monster_in_play_dict[str(int(x)+1)] != '':
             screen_status.battle_screen_action_indicator = 'player2-stage-3-monster-' + str(int(x)+1) + '-action'
@@ -4253,6 +4338,8 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
         player2.character_card.health = str(int(player2.character_card.health) + 10*int(player2.item_in_play_length))
         user.character_card.health = str(int(user.character_card.health) - 10*int(player2.item_in_play_length))
         add_text_to_action_history('Opponent have '+player2.item_in_play_length+' items, your HP: '+str(int(user.character_card.health) + 10*int(player2.item_in_play_length))+' --> '+user.character_card.health+ ", opponent's HP: "+str(int(player2.character_card.health) - 10*int(player2.item_in_play_length))+' --> '+player2.character_card.health+" . Opponent's turn has end", screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+        play_sound_effect('draw heal')
+
         #pygame.time.delay(3000)
         screen_status.battle_screen_action_indicator = 'player2-stage-4-end-turn-transfer'
 
@@ -4261,6 +4348,8 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
 
 
         add_text_to_action_history("Your turn has started", screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
+
         screen_status.battle_screen_action_indicator = 'stage-1'
         screen_status.battle_screen_player2_action_display_indicator = False # No longer doing player2 loops
         button_status.battle_screen_instruction_bar_yes_display = True
@@ -4343,6 +4432,18 @@ def add_text_to_action_history(string, screen, buttons,screen_status, button_sta
     new_text_dict['1'] = string
     button_status.battle_screen_history_bar_text_dict = new_text_dict
 
+
+def play_sound_effect(string):
+    """ play sound effects"""
+    SOUND_ATTACK_FACE = pygame.mixer.Sound('static/sound/attack_face.wav')
+    SOUND_DRAW_HEAL = pygame.mixer.Sound('static/sound/draw_heal.wav')
+    SOUND_PLAY_CARD = pygame.mixer.Sound('static/sound/play_card.wav')
+    if string == 'play card':
+        pygame.mixer.Sound.play(SOUND_PLAY_CARD)
+    elif string == 'draw heal':
+        pygame.mixer.Sound.play(SOUND_DRAW_HEAL)
+    elif string == 'attack face':
+        pygame.mixer.Sound.play(SOUND_ATTACK_FACE)
 
 
 
