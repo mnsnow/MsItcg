@@ -325,14 +325,29 @@ def check_events_battle_screen(ai_settings, screen, buttons,screen_status, butto
             if Rect(20,40,130,180).collidepoint(pygame.mouse.get_pos()):
                 battle_screen_battleground_click_action('player2-character',screen,buttons, screen_status, button_status, card_database_filter, user, player2)
 
+            # win/lost back to main menu button
+            if Rect(500, 500, 200, 40).collidepoint(pygame.mouse.get_pos()):
+                if screen_status.battle_screen_action_indicator == 'game-end':
+                    screen_status.battle_screen_display = False
+                    screen_status.welcome_screen_display = True
+
+            # Quit and Concede
+            if Rect(850, 30, 150, 40).collidepoint(pygame.mouse.get_pos()):
+                if button_status.battle_screen_menu_display == True:
+                    button_status.battle_screen_win_lost_indicator = 'lost'
+
+            # back to game
+            if Rect(850, 70, 150, 40).collidepoint(pygame.mouse.get_pos()):
+                if button_status.battle_screen_menu_display == True:
+                    button_status.battle_screen_menu_display = False
 
 
             elif rect_union(buttons).collidepoint(pygame.mouse.get_pos()):
                 for button in buttons:
                     if button.rect.collidepoint(pygame.mouse.get_pos()):
                         if button.text == 'Menu':
-                            screen_status.prepare_screen_display = True
-                            screen_status.battle_screen_display = False
+                            button_status.battle_screen_menu_display = True
+
                         elif button.text == '>':
                             screen_status.battle_screen_my_hand_page_id += 1
                             button_status.battle_screen_my_hand_indicator_display = False # Turn off display of buttons when change page
@@ -514,6 +529,9 @@ def battle_screen_update(ai_settings,grid, screen, buttons, screen_status, butto
     battle_screen_player2_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
     battle_screen_battleground_button_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
+    battle_screen_menu_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
     # Update result in each cycle
     battle_screen_result_update(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
@@ -963,6 +981,7 @@ def prepare_screen_to_battle_screen_action(ai_settings, screen,buttons, screen_s
 
     if save_pass:
 
+        # render AI character deck
         if player2.character_ai_index == '1':
             player2.character_card = make_deck_from_string(str(['CARD_01_16']), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
             player2.deck_list = make_deck_from_string(player2.NIXIE_DECK, ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
@@ -995,7 +1014,7 @@ def prepare_screen_to_battle_screen_action(ai_settings, screen,buttons, screen_s
             player2.character_card = make_deck_from_string(str(['CARD_05_61']), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
             player2.deck_list = make_deck_from_string(player2.FANGBLADE_DECK, ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
-
+        # Set up AI difficulty
         if player2.ai_difficulty_index == '1':
             player2.random_deck_list = random.sample(player2.deck_list, len(player2.deck_list))
             player2.remain_deck_list = player2.random_deck_list[3:]
@@ -1021,7 +1040,7 @@ def prepare_screen_to_battle_screen_action(ai_settings, screen,buttons, screen_s
             player2.character_card.health = str(int(player2.character_card.health)*4)
 
 
-
+        # Render user's deck
         with open('user_deck_list_string.txt','r') as f:
             f.seek(0)
             for line in f:
@@ -1034,6 +1053,130 @@ def prepare_screen_to_battle_screen_action(ai_settings, screen,buttons, screen_s
         user.random_deck_list = random.sample(user.deck_list, len(user.deck_list))
         user.remain_deck_list = user.random_deck_list[6:]
         user.hand_list = user.random_deck_list[0:6]
+
+
+        # Clear up and initiate all display/progress indicator on battle screen
+        # screen_status
+        screen_status.battle_screen_my_hand_page_id = 1
+        screen_status.battle_screen_action_indicator = 'stage-0'
+        screen_status.battle_screen_player2_action_display_indicator = False
+        # button_status
+        button_status.battle_screen_win_lost_display = False
+        button_status.battle_screen_win_lost_indicator = ''
+        button_status.battle_screen_instruction_bar_yes_display = True
+        button_status.battle_screen_instruction_bar_yes_backend = True
+        button_status.battle_screen_instruction_bar_skip_display = False
+        button_status.battle_screen_instruction_bar_skip_backend = False
+        button_status.battle_screen_stable_button_backend = True
+        button_status.battle_screen_my_hand_page_change_button_backend = True
+        button_status.battle_screen_menu_display = False
+        button_status.battle_screen_history_bar_detail_display = False
+        button_status.battle_screen_history_bar_text_dict = {
+            '1' : '',
+            '2' : '',
+            '3' : '',
+            '4' : '',
+            '5' : '',
+            '6' : '',
+            '7' : '',
+            '8' : '',
+            '9' : '',
+            '10' : '',
+            '11' : '',
+            '12' : '',
+            '13' : '',
+            '14' : '',
+            '15' : '',
+        }
+        button_status.battle_screen_my_hand_indicator_display = False
+        button_status.battle_screen_my_hand_indicator_position = '1'
+        button_status.battle_screen_player1_battleground_indicator_display = False
+        button_status.battle_screen_player1_battleground_indicator_position = '1'
+        button_status.battle_screen_player2_battleground_indicator_display = False
+        button_status.battle_screen_player2_battleground_indicator_position = '1'
+        button_status.card_zoom_active = False
+        button_status.card_zoom_screen_indicator = 'build_deck_screen'
+        button_status.card_zoom_part_indicator = ''
+        button_status.card_zoom_position_indicator = '1'
+        button_status.battle_screen_win_lost_indicator = ''
+
+        #user
+        user.monster_in_play_dict = {
+            '1' : '',
+            '2' : '',
+            '3' : '',
+            '4' : '',
+            '5' : '',
+            '6' : '',
+        }
+        user.monster_in_play_length = '0'
+        user.item_in_play_dict = {
+            '1' : '',
+            '2' : '',
+            '3' : '',
+            '4' : '',
+            '5' : '',
+            '6' : '',
+        }
+        user.item_in_play_length = '0'
+        user.character_under_card_by_level = {
+            '10' : '',
+            '20' : '',
+            '30' : '',
+            '40' : '',
+            '50' : '',
+            '60' : '',
+            '70' : '',
+            '80' : '',
+            '90' : '',
+            '100' : '',
+            '110' : '',
+            '120' : '',
+            '130' : '',
+            '140' : '',
+            '150' : '',
+        }
+        user.stage_2_other_card_usable_list = []
+
+        #player2
+        player2.character_under_card_by_level = {
+            '10' : '',
+            '20' : '',
+            '30' : '',
+            '40' : '',
+            '50' : '',
+            '60' : '',
+            '70' : '',
+            '80' : '',
+            '90' : '',
+            '100' : '',
+            '110' : '',
+            '120' : '',
+            '130' : '',
+            '140' : '',
+            '150' : '',
+        }
+        player2.monster_in_play_dict = {
+            '1' : '',
+            '2' : '',
+            '3' : '',
+            '4' : '',
+            '5' : '',
+            '6' : '',
+        }
+        player2.monster_in_play_length = '0'
+        player2.item_in_play_dict = {
+            '1' : '',
+            '2' : '',
+            '3' : '',
+            '4' : '',
+            '5' : '',
+            '6' : '',
+        }
+        player2.item_in_play_length = '0'
+        player2.stage_2_other_card_usable_list = []
+
+
 
 
 #-----------------------------Build deck screen actions----------------------------------------------------
@@ -1671,7 +1814,6 @@ def battle_screen_history_bar_display(ai_settings, screen, buttons,screen_status
                     button_even.draw(screen)
                     i += 1
 
-
 def battle_screen_my_hand_card_display(screen,buttons, screen_status, button_status, card_database_filter, user):
     """ Display my deck on battle screen"""
     rect_position_x = 100
@@ -1977,18 +2119,51 @@ def battle_screen_battleground_button_display(ai_settings, screen, buttons,scree
                 button.update()
                 button.draw(screen)
 
+def battle_screen_menu_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
+    """ Display menu on battle screen"""
+    if button_status.battle_screen_menu_display == True:
+        button_1 = Button('Concede and Quit','', (170,70,70), 850, 30, 150, 40)
+        button_1.update()
+        button_1.draw(screen)
+
+        button_2 = Button('Back to Game','', (70,70,170), 850, 70, 150, 40)
+        button_2.update()
+        button_2.draw(screen)
+
+
+
 def battle_screen_win_lost_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ Display win/lost message"""
     if button_status.battle_screen_win_lost_indicator == 'win':
-        button_win = Button('VICTORY!','', (70,170,70), 300,  200, 600, 400)
-        button_win.update()
-        button_win.draw(screen)
+        button_win_1 = Button('VICTORY!','', (70,170,70), 300,  200, 600, 200, font_size = 70)
+        button_win_1.update()
+        button_win_1.draw(screen)
+
+        button_win_2 = Button('','', (70,170,70), 300,  400, 600, 200)
+        button_win_2.update()
+        button_win_2.draw(screen)
+
+        button_win_3 = Button('Back To Main Menu','', (70,70,170), 500,  500, 200, 40)
+        button_win_3.update()
+        button_win_3.draw(screen)
+
+        screen_status.battle_screen_action_indicator = 'game-end'
+
+
     elif button_status.battle_screen_win_lost_indicator == 'lost':
-        button_win = Button('DEFEAT!','', (170,70,70), 300,  200, 600, 400)
-        button_win.update()
-        button_win.draw(screen)
+        button_lost_1 = Button('DEFEAT!','', (170,70,70), 300,  200, 600, 200, font_size = 70)
+        button_lost_1.update()
+        button_lost_1.draw(screen)
 
+        button_lost_2 = Button('','', (170,70,70), 300,  400, 600, 200)
+        button_lost_2.update()
+        button_lost_2.draw(screen)
 
+        button_lost_2 = Button('Back To Main Menu','', (70,70,170), 500,  500, 200, 40)
+        button_lost_2.update()
+        button_lost_2.draw(screen)
+
+        screen_status.battle_screen_action_indicator = 'game-end'
 
 def battle_screen_result_update(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ update result in each cycle"""

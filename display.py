@@ -46,9 +46,10 @@ class Button_status():
         self.battle_screen_instruction_bar_yes_backend = True
         self.battle_screen_instruction_bar_skip_display = False
         self.battle_screen_instruction_bar_skip_backend = False
-        self.battle_screen_instruction_bar_button_backend = True
         self.battle_screen_stable_button_backend = True
         self.battle_screen_my_hand_page_change_button_backend = True
+
+        self.battle_screen_menu_display = False
 
         self.battle_screen_history_bar_detail_display = False
         self.battle_screen_history_bar_text_dict = {
