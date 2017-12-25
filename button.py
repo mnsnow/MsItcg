@@ -3,7 +3,7 @@ import pygame
 
 class Button():
 
-    def __init__(self, text, group, color, x, y, width, height, font_color = (255,255,255), font_size = 16):
+    def __init__(self, text, group, color, x, y, width, height, font_color = (255,255,255), font_size = 16, alpha = 250):
 
 
 
@@ -11,8 +11,11 @@ class Button():
         self.color = color
         self.group = group
 
-        self.image_normal = pygame.Surface((width, height))
-        self.image_normal.fill(color)
+        self.image_normal = pygame.Surface((width, height),pygame.SRCALPHA)
+        #self.image_normal.set_alpha(alpha)
+        ls = []
+        ls.append(alpha)
+        self.image_normal.fill(color+tuple(ls))
 
         self.image_hovered = pygame.Surface((width, height))
         self.image_hovered.fill((0,255,0)) #green
@@ -25,7 +28,6 @@ class Button():
         text_rect = text_image.get_rect(center = self.rect.center)
 
         self.image_normal.blit(text_image, text_rect)
-        self.image_hovered.blit(text_image, text_rect)
 
         self.rect.topleft = (x, y)
         self.hovered = False
@@ -41,7 +43,7 @@ class Button():
 
         screen.blit(self.image, self.rect)
 
-    
+
 
 
 

@@ -497,9 +497,11 @@ def welcome_screen_update(ai_settings,screen, buttons, screen_status,button_stat
 
 def prepare_screen_update(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2):
     """ Update prepare screen"""
-    screen.fill(ai_settings.bg_color)
+    screen.fill((250,250,250))
 
-    prepare_screen_grid_display(grid, screen)
+    screen.blit(pygame.image.load('static/bg_images/bg_02.png'), (0,0))
+
+    #prepare_screen_grid_display(grid, screen)
 
     prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
@@ -511,7 +513,9 @@ def build_deck_screen_update(ai_settings, grid, screen, buttons, screen_status, 
     """ Build deck screen update"""
     screen.fill(ai_settings.bg_color)
 
-    build_deck_screen_grid_display(grid, screen)
+    screen.blit(pygame.image.load('static/bg_images/bg_02.png'), (0,0))
+
+    #build_deck_screen_grid_display(grid, screen)
 
     build_deck_screen_stable_button_display(screen, buttons,screen_status, button_status)
 
@@ -525,7 +529,9 @@ def battle_screen_update(ai_settings,grid, screen, buttons, screen_status, butto
     """ Battle screen update"""
     screen.fill(ai_settings.bg_color)
 
-    battle_screen_grid_display(grid, screen)
+    screen.blit(pygame.image.load('static/bg_images/bg_02.png'), (0,0))
+
+    #battle_screen_grid_display(grid, screen)
 
     battle_screen_instruction_bar_display(screen,buttons, screen_status, button_status, card_database_filter, user)
 
@@ -678,7 +684,7 @@ def card_zoom_update(ai_settings, screen, buttons,screen_status, button_status, 
 #-----------------------------Welcome screen display----------------------------------------------------
 def welcome_screen_stable_button_display(ai_settings,screen, buttons, screen_status, button_status):
     """ Display stable buttons on welcome screen"""
-    font_1 = pygame.font.Font('freesansbold.ttf', 65)
+    font_1 = pygame.font.Font('freesansbold.ttf', 70)
     text_image_1 = font_1.render('Welcome to Maplestory ITCG', True, (255,255,255))
     text_rect_1 = text_image_1.get_rect(center = (600,200))
     screen.blit(text_image_1, text_rect_1)
@@ -761,15 +767,15 @@ def prepare_screen_grid_display(grid, screen):
 def prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ Display stable buttons"""
     # Back
-    button_back = Button('Back','', (0,0,0),0, 0, 50, 50)
+    button_back = Button('Back','', (0,0,0),0, 0, 50, 50, font_size = 18)
     button_back.update()
     button_back.draw(screen)
     # Play
-    button_play = Button('Play!','', (0,0,0),1150, 0, 50, 50)
+    button_play = Button('Play!','', (0,0,0),1150, 0, 50, 50, font_size = 18)
     button_play.update()
     button_play.draw(screen)
     # Pick deck text
-    button_text_1 = Button('Pick an exist deck or create a new one: ','', (200,100,170),400, 100, 400, 35)
+    button_text_1 = Button('Pick an exist deck or create a new one: ','', (0,0,0),400, 100, 400, 35)
     button_text_1.update()
     button_text_1.draw(screen)
 
@@ -821,16 +827,16 @@ def prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_sta
 
                 else:
 
-                    button_top = Button(character_card.name + ': ','', (160,160,160),85 + 180* (i-1), 165, 130, 60)
+                    button_top = Button(character_card.name + ': ','', (160,160,160),85 + 180* (i-1), 165, 130, 60, alpha = 240)
                     button_top.update()
                     button_top.draw(screen)
 
                     if deck_length < 40:
-                        button_bottom = Button(str(character_length) + '/1  |  ' + str(deck_length) +'/40','', (160,160,160),85 + 180* (i-1), 225, 130, 50, font_color = (200,0,0))
+                        button_bottom = Button(str(character_length) + '/1  |  ' + str(deck_length) +'/40','', (160,160,160),85 + 180* (i-1), 225, 130, 50, font_color = (200,0,0), alpha = 240)
                         button_bottom.update()
                         button_bottom.draw(screen)
                     else:
-                        button_bottom = Button(str(character_length) + '/1  |  ' + str(deck_length) +'/40','', (160,160,160),85 + 180* (i-1), 225, 130, 50)
+                        button_bottom = Button(str(character_length) + '/1  |  ' + str(deck_length) +'/40','', (160,160,160),85 + 180* (i-1), 225, 130, 50, alpha = 240)
                         button_bottom.update()
                         button_bottom.draw(screen)
 
@@ -838,7 +844,7 @@ def prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_sta
 
             else: # DECK_LIST_i not exist
 
-                button = Button('Empty','', (200,200,200),85 + 180* (i-1), 165, 130, 110)
+                button = Button('Empty','', (200,200,200),85 + 180* (i-1), 165, 130, 110, alpha = 80)
                 button.update()
                 button.draw(screen)
 
@@ -846,7 +852,7 @@ def prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_sta
 
     # Pick opponents buttons
     # Pick opponents text
-    button_text_2 = Button('Pick an opponent to play against: ','', (200,100,170),400, 350, 400, 35)
+    button_text_2 = Button('Pick an opponent to play against: ','', (0,0,0),400, 350, 400, 35) # (200,100,170)
     button_text_2.update()
     button_text_2.draw(screen)
 
@@ -874,7 +880,7 @@ def prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_sta
 
 
     # Pick a difficulty
-    button_text_3 = Button('Pick a difficulty: ','', (100,100,170),810, 400, 200, 35)
+    button_text_3 = Button('Pick a difficulty: ','', (0,0,0),810, 400, 200, 35)
     button_text_3.update()
     button_text_3.draw(screen)
 
@@ -883,7 +889,7 @@ def prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_sta
         button_difficulty_1.update()
         button_difficulty_1.draw(screen)
     else:
-        button_difficulty_1 = Button('Beginner  (Opponent start with 3 cards, 50% Hp)','', (160,160,160),710, 445, 410, 70)
+        button_difficulty_1 = Button('Beginner  (Opponent start with 3 cards, 50% Hp)','', (160,160,160),710, 445, 410, 70, alpha = 240)
         button_difficulty_1.update()
         button_difficulty_1.draw(screen)
 
@@ -892,7 +898,7 @@ def prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_sta
         button_difficulty_2.update()
         button_difficulty_2.draw(screen)
     else:
-        button_difficulty_2 = Button('Normal  (Opponent start with 6 cards, 100% Hp)','', (160,160,160),710, 525, 410, 70)
+        button_difficulty_2 = Button('Normal  (Opponent start with 6 cards, 100% Hp)','', (160,160,160),710, 525, 410, 70, alpha = 240)
         button_difficulty_2.update()
         button_difficulty_2.draw(screen)
 
@@ -901,7 +907,7 @@ def prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_sta
         button_difficulty_3.update()
         button_difficulty_3.draw(screen)
     else:
-        button_difficulty_3 = Button('Hard  (Opponent start with 10 cards, 200% Hp)','', (160,160,160),710, 605, 410, 70)
+        button_difficulty_3 = Button('Hard  (Opponent start with 10 cards, 200% Hp)','', (160,160,160),710, 605, 410, 70, alpha = 240)
         button_difficulty_3.update()
         button_difficulty_3.draw(screen)
 
@@ -910,7 +916,7 @@ def prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_sta
         button_difficulty_4.update()
         button_difficulty_4.draw(screen)
     else:
-        button_difficulty_4 = Button('Impossible  (Opponent start with 30 cards, 400% Hp)','', (160,160,160),710, 685, 410, 70)
+        button_difficulty_4 = Button('Impossible  (Opponent start with 30 cards, 400% Hp)','', (160,160,160),710, 685, 410, 70, alpha = 240)
         button_difficulty_4.update()
         button_difficulty_4.draw(screen)
 
@@ -1309,7 +1315,7 @@ def build_deck_screen_card_gallery_button_display(screen, buttons, screen_status
         button2.update()
         button2.draw(screen)
     # button3: page button to display the current page number for card gallery
-    button3 = Button('page: ' + str(screen_status.build_deck_screen_card_gallery_page_id), 'build_deck_screen_card_gallery_stable' ,(123,163,48),560, 510, 80, 40)
+    button3 = Button('page: ' + str(screen_status.build_deck_screen_card_gallery_page_id), 'build_deck_screen_card_gallery_stable' ,(0,0,0),560, 510, 80, 40)
     button3.update()
     button3.draw(screen)
     # Class filter:
@@ -1410,16 +1416,16 @@ def build_deck_screen_my_deck_button_display(screen,buttons, screen_status, butt
     local_store_list = build_deck_screen_my_deck_card_list_refine(user)
     #character number display
     if user.character_card == '':
-        button1 = Button('Character: 0/1','' ,(122,113,178),50, 560, 150, 30, font_color = (255,60,60))
+        button1 = Button('Character: 0/1','' ,(0,0,0),50, 560, 150, 30, font_color = (255,60,60))
     else:
-        button1 = Button('Character: 1/1','' ,(122,113,178),50, 560, 150, 30)
+        button1 = Button('Character: 1/1','' ,(0,0,0),50, 560, 150, 30)
     button1.update()
     button1.draw(screen)
     #card number display
     if len(user.deck_list) >= 40:
-        button2 = Button('Total: ' + str(len(user.deck_list)) + '/40','' ,(122,113,178),595, 560, 150, 30)
+        button2 = Button('Total: ' + str(len(user.deck_list)) + '/40','' ,(0,0,0),620, 560, 100, 30)
     else:
-        button2 = Button('Total: ' + str(len(user.deck_list)) + '/40','' ,(122,113,178),595, 560, 150, 30, font_color = (255,60,60))
+        button2 = Button('Total: ' + str(len(user.deck_list)) + '/40','' ,(0,0,0),620, 560, 100, 30, font_color = (255,60,60))
     button2.update()
     button2.draw(screen)
 
@@ -1489,9 +1495,9 @@ def build_deck_screen_my_deck_card_display(screen,buttons, screen_status, button
 def build_deck_screen_my_deck_duplicate_number_display(card, screen):
     """Input Card instance, output how many copies of that card as a button above that card"""
     if card.duplicate <= 4:
-        button_dup = Button(str(card.duplicate) + 'x','', (122,113,178),(card.rect.x + 50),(card.rect.y - 30) , 30, 30)
+        button_dup = Button(str(card.duplicate) + 'x','', (0,0,0),(card.rect.x + 50),(card.rect.y - 30) , 30, 30)
     else:
-        button_dup = Button(str(card.duplicate) + 'x','', (122,113,178),(card.rect.x + 50),(card.rect.y - 30) , 30, 30, font_color = (255,60,60))
+        button_dup = Button(str(card.duplicate) + 'x','', (0,0,0),(card.rect.x + 50),(card.rect.y - 30) , 30, 30, font_color = (255,60,60))
     button_dup.update()
     button_dup.draw(screen)
 
@@ -1743,7 +1749,7 @@ def battle_screen_instruction_bar_display(screen,buttons, screen_status, button_
 
 
     # instruction bar draw
-    button_instruction_bar = Button(button_status.battle_screen_instruction_bar_text,'battle_screen_instruction_bar_text', (0,0,0),200, 550, 640, 30)
+    button_instruction_bar = Button(button_status.battle_screen_instruction_bar_text,'battle_screen_instruction_bar_text', (0,0,0),100, 570, 1000, 30,alpha = 100)
 
     if 1: # Display
         button_instruction_bar.update()
@@ -1762,7 +1768,7 @@ def battle_screen_instruction_bar_display(screen,buttons, screen_status, button_
             pass
 
     # yes button
-    button_yes = Button('Yes','battle_screen_instruction_bar_yes', (43,93,67),920, 554, 60, 22)
+    button_yes = Button('Yes','battle_screen_instruction_bar_yes', (43,93,67),605, 540, 60, 22) #(880, 544, 60, 22)
 
 
     if button_status.battle_screen_instruction_bar_yes_display == True: # Display
@@ -1791,7 +1797,7 @@ def battle_screen_instruction_bar_display(screen,buttons, screen_status, button_
             buttons.remove(bt)
 
     # Skip button
-    button_skip = Button('Skip','battle_screen_instruction_bar_skip', (200,70,70),840, 554, 60, 22)
+    button_skip = Button('Skip','battle_screen_instruction_bar_skip', (200,70,70),535, 540, 60, 22)
 
     if button_status.battle_screen_instruction_bar_skip_display == True: # Display
         button_skip.update()
@@ -1820,31 +1826,31 @@ def battle_screen_instruction_bar_display(screen,buttons, screen_status, button_
 
 def battle_screen_stable_button_display(screen, buttons,screen_status, button_status):
     """ Display all stable button on battle screen"""
-
+    button_1 = Button('Rules','', (250,250,250),200, 0, 50, 30, font_color = (0,0,0), alpha = 150)
+    button_1.update()
+    button_1.draw(screen)
     #
-    button1 = Button('Menu','', (0,0,0),950, 0, 50, 30)
-    button1.update()
-    button1.draw(screen)
+    button2 = Button('Menu','', (250,250,250),950, 0, 50, 30, font_color = (0,0,0), alpha = 150)
+    button2.update()
+    button2.draw(screen)
 
     if button_status.battle_screen_stable_button_backend:
-        buttons.append(button1)
+        buttons.append(button2)
         button_status.battle_screen_stable_button_backend = False
 
 def battle_screen_history_bar_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ Display action history for both players"""
-    button_1 = Button('Rules','', (0,0,0),200, 0, 50, 30)
-    button_1.update()
-    button_1.draw(screen)
+
 
     for number,text in button_status.battle_screen_history_bar_text_dict.items():
         if int(number) == 1:
-            button_text = Button(text,'', (90,140,230),250, 0, 650, 30, font_size = 13)
+            button_text = Button(text,'', (0,0,0),250, 0, 600, 30, font_size = 13, alpha = 100)
             button_text.update()
             button_text.draw(screen)
         else:
             pass
 
-    button_details = Button('History','', (43,93,67),900, 3, 46, 24,font_size = 13)
+    button_details = Button('+','', (0,0,0),850, 0, 100, 30,font_size = 25, alpha = 100)
     button_details.update()
     button_details.draw(screen)
 
@@ -1995,7 +2001,7 @@ def battle_screen_character_1_card_display(screen,buttons, screen_status, button
 
 def battle_screen_character_1_button_display(screen,buttons, screen_status, button_status, card_database_filter, user):
     """ Display character 1 buttons"""
-    button_basic_info = Button('Lv: ' + user.character_card.level + '  HP: ' + user.character_card.health + '  Card #: ' + str(len(user.hand_list)),'', (0,0,0),1000, 5, 200, 30)
+    button_basic_info = Button('Lv: ' + user.character_card.level + '  HP: ' + user.character_card.health + '  Card #: ' + str(len(user.hand_list)),'', (0,0,0),1000, 0, 200, 30, alpha = 100)
     button_basic_info.update()
     button_basic_info.draw(screen)
 
@@ -2069,7 +2075,7 @@ def battle_screen_player2_display(ai_settings, screen, buttons,screen_status, bu
     screen.blit(player2.character_card.image, player2.character_card.rect)
 
     # Info bar above character_card
-    button_basic_info = Button('Lv: ' + player2.character_card.level + '  HP: ' + player2.character_card.health + '  Card #: ' + str(len(player2.hand_list)),'', (0,0,0),0, 5, 200, 30)
+    button_basic_info = Button('Lv: ' + player2.character_card.level + '  HP: ' + player2.character_card.health + '  Card #: ' + str(len(player2.hand_list)),'', (0,0,0),0, 0, 200, 30, alpha = 100)
     button_basic_info.update()
     button_basic_info.draw(screen)
 
@@ -2555,7 +2561,7 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
         button_status.battle_screen_my_hand_indicator_display = False # hand buttons on card eg:****
         button_status.battle_screen_instruction_bar_yes_display = True
         button_status.battle_screen_instruction_bar_yes_backend = True
-        add_text_to_action_history('You have spawned the monster: '+ located_card.name + ' onto the battlefield', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+        add_text_to_action_history('You have spawned the monster: '+ located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
         play_sound_effect('play card')
 
     elif click_type == 'think fast':
@@ -2638,7 +2644,7 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
             button_status.battle_screen_my_hand_indicator_display = False # hand buttons on card eg:****
             button_status.battle_screen_instruction_bar_yes_display = True
             button_status.battle_screen_instruction_bar_yes_backend = True
-            add_text_to_action_history('You have spawned the monster: '+ located_card.name + ' onto the battlefield', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            add_text_to_action_history('You have spawned the monster: '+ located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
             play_sound_effect('play card')
 
         else:
@@ -2696,7 +2702,7 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
                 if user.monster_in_play_dict[str(i)] == '':
                     user.monster_in_play_dict[str(i)] = located_card
                     break
-            add_text_to_action_history('You have spawned the monster: '+ located_card.name + ' onto the battlefield', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            add_text_to_action_history('You have spawned the monster: '+ located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
             play_sound_effect('play card')
 
         else:
@@ -2840,7 +2846,7 @@ def battle_screen_hand_click_action(click_type,screen,buttons, screen_status, bu
             button_status.battle_screen_my_hand_indicator_display = False # hand buttons on card eg:****
             button_status.battle_screen_instruction_bar_yes_display = True
             button_status.battle_screen_instruction_bar_yes_backend = True
-            add_text_to_action_history('You have spawned the monster: '+ located_card.name + ' onto the battlefield', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            add_text_to_action_history('You have spawned the monster: '+ located_card.name, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
             play_sound_effect('play card')
 
 
