@@ -519,6 +519,8 @@ def battle_screen_update(ai_settings,grid, screen, buttons, screen_status, butto
 
     battle_screen_history_bar_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
+    battle_screen_win_lost_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
 def card_zoom_update(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ display card details (zoom in) any card"""
     # Prepare screen
@@ -1625,16 +1627,49 @@ def battle_screen_history_bar_display(ai_settings, screen, buttons,screen_status
     if button_status.battle_screen_history_bar_detail_display == True:
         i = 0
         for number,text in button_status.battle_screen_history_bar_text_dict.items():
+
             if int(number) % 2 == 1 and text != '':
-                button_odd = Button(text,'', (227,133,0),200, 30 + 30*(i), 800, 30, font_size = 13)
-                button_odd.update()
-                button_odd.draw(screen)
-                i += 1
+                if text == "Game Started!":
+                    button_odd = Button(text,'', (0,160,0),200, 30 + 30*(i), 800, 30, font_size = 13)
+                    button_odd.update()
+                    button_odd.draw(screen)
+                    i += 1
+                elif text == "Your turn has started":
+                    button_odd = Button(text,'', (0,160,0),200, 30 + 30*(i), 800, 30, font_size = 13)
+                    button_odd.update()
+                    button_odd.draw(screen)
+                    i += 1
+                elif text == "Opponent's turn has started":
+                    button_odd = Button(text,'', (160,0,0),200, 30 + 30*(i), 800, 30, font_size = 13)
+                    button_odd.update()
+                    button_odd.draw(screen)
+                    i += 1
+                else:
+                    button_odd = Button(text,'', (160,160,160),200, 30 + 30*(i), 800, 30, font_size = 13)
+                    button_odd.update()
+                    button_odd.draw(screen)
+                    i += 1
             elif int(number) % 2 == 0 and text != '':
-                button_even = Button(text,'', (162,90,144),200, 60 + 30 * (i-1), 800, 30, font_size = 13)
-                button_even.update()
-                button_even.draw(screen)
-                i += 1
+                if text == "Game Started!":
+                    button_even = Button(text,'', (0,160,0),200, 60 + 30 * (i-1), 800, 30, font_size = 13)
+                    button_even.update()
+                    button_even.draw(screen)
+                    i += 1
+                elif text == "Your turn has started":
+                    button_even = Button(text,'', (0,160,0),200, 60 + 30 * (i-1), 800, 30, font_size = 13)
+                    button_even.update()
+                    button_even.draw(screen)
+                    i += 1
+                elif text == "Opponent's turn has started":
+                    button_even = Button(text,'', (160,0,0),200, 60 + 30 * (i-1), 800, 30, font_size = 13)
+                    button_even.update()
+                    button_even.draw(screen)
+                    i += 1
+                else:
+                    button_even = Button(text,'', (130,130,130),200, 60 + 30 * (i-1), 800, 30, font_size = 13)
+                    button_even.update()
+                    button_even.draw(screen)
+                    i += 1
 
 
 def battle_screen_my_hand_card_display(screen,buttons, screen_status, button_status, card_database_filter, user):
@@ -1942,6 +1977,19 @@ def battle_screen_battleground_button_display(ai_settings, screen, buttons,scree
                 button.update()
                 button.draw(screen)
 
+def battle_screen_win_lost_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
+    """ Display win/lost message"""
+    if button_status.battle_screen_win_lost_indicator == 'win':
+        button_win = Button('VICTORY!','', (70,170,70), 300,  200, 600, 400)
+        button_win.update()
+        button_win.draw(screen)
+    elif button_status.battle_screen_win_lost_indicator == 'lost':
+        button_win = Button('DEFEAT!','', (170,70,70), 300,  200, 600, 400)
+        button_win.update()
+        button_win.draw(screen)
+
+
+
 def battle_screen_result_update(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ update result in each cycle"""
     # items list length update
@@ -1976,9 +2024,9 @@ def battle_screen_result_update(ai_settings, screen, buttons,screen_status, butt
 
     # Win/Lost situations
     if int(user.character_card.health) <= 0:
-        print('You Lost!')
+        button_status.battle_screen_win_lost_indicator = 'lost'
     if int(player2.character_card.health) <= 0:
-        print('You Win!')
+        button_status.battle_screen_win_lost_indicator = 'win'
 
 
 
@@ -2680,7 +2728,7 @@ def battle_screen_instruction_bar_yes_skip_action(yes_skip_indicator, screen,but
         screen_status.battle_screen_action_indicator = 'stage-1'
         button_status.battle_screen_instruction_bar_skip_display = True
         button_status.battle_screen_instruction_bar_skip_backend = True
-        add_text_to_action_history('Game Start!', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+        add_text_to_action_history('Game Started!', screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
 
     # Which stage to go when user at stage-1
@@ -4028,17 +4076,17 @@ def battle_screen_player2_action(screen, buttons,screen_status, button_status, c
     # Which stage to go when user at stage-4-end-turn
     elif screen_status.battle_screen_action_indicator == 'player2-stage-4-end-turn':
         button_status.battle_screen_instruction_bar_text = "Opponent's turn has end with " + player2.item_in_play_length + " item. Deal " + str(int(player2.item_in_play_length)*10) + ' damage. Gain ' + str(int(player2.item_in_play_length)*10) + ' hp.'
-
+        player2.character_card.health = str(int(player2.character_card.health) + 10*int(player2.item_in_play_length))
+        user.character_card.health = str(int(user.character_card.health) - 10*int(player2.item_in_play_length))
+        add_text_to_action_history('Opponent have '+player2.item_in_play_length+' items, your HP: '+str(int(user.character_card.health) + 10*int(player2.item_in_play_length))+' --> '+user.character_card.health+ ", opponent's HP: "+str(int(player2.character_card.health) - 10*int(player2.item_in_play_length))+' --> '+player2.character_card.health+" . Opponent's turn has end", screen, buttons,screen_status, button_status, card_database_filter, user, player2)
         #pygame.time.delay(3000)
         screen_status.battle_screen_action_indicator = 'player2-stage-4-end-turn-transfer'
 
 
     elif screen_status.battle_screen_action_indicator == 'player2-stage-4-end-turn-transfer':
 
-        player2.character_card.health = str(int(player2.character_card.health) + 10*int(player2.item_in_play_length))
-        user.character_card.health = str(int(user.character_card.health) - 10*int(player2.item_in_play_length))
-        add_text_to_action_history('Opponent have '+player2.item_in_play_length+' items, your HP: '+str(int(user.character_card.health) + 10*int(player2.item_in_play_length))+' --> '+user.character_card.health+ ", opponent's HP: "+str(int(player2.character_card.health) - 10*int(player2.item_in_play_length))+' --> '+player2.character_card.health+" . Opponent's turn has end", screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
+        add_text_to_action_history("Your turn has started", screen, buttons,screen_status, button_status, card_database_filter, user, player2)
         screen_status.battle_screen_action_indicator = 'stage-1'
         screen_status.battle_screen_player2_action_display_indicator = False # No longer doing player2 loops
         button_status.battle_screen_instruction_bar_yes_display = True

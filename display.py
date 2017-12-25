@@ -84,7 +84,7 @@ class Button_status():
         self.card_zoom_part_indicator = ''
         self.card_zoom_position_indicator = '1'
 
-
+        self.battle_screen_win_lost_indicator = ''
 
 
 
