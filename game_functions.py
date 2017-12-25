@@ -102,7 +102,6 @@ def check_events_welcome_screen(ai_settings, screen, buttons,screen_status, butt
                     button_status.welcome_screen_settings_display = False
 
 
-
 def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ Check events in prepare screen"""
 
@@ -387,15 +386,58 @@ def check_events_battle_screen(ai_settings, screen, buttons,screen_status, butto
                     screen_status.battle_screen_display = False
                     screen_status.welcome_screen_display = True
 
-            # Quit and Concede
-            if Rect(850, 30, 150, 40).collidepoint(pygame.mouse.get_pos()):
-                if button_status.battle_screen_menu_display == True:
+            # When menu window is on
+            if button_status.battle_screen_menu_display == True:
+
+                # Turn sound on
+                if Rect(447+280, 323-270, 28, 28).collidepoint(pygame.mouse.get_pos()):
+                    ai_settings.sound_indicator = True
+                # Turn sound off
+                elif Rect(482+280, 323-270, 28, 28).collidepoint(pygame.mouse.get_pos()):
+                    ai_settings.sound_indicator = False
+                # Turn music on
+                elif Rect(447+280, 372-270, 28, 28).collidepoint(pygame.mouse.get_pos()):
+                    ai_settings.music_indicator = True
+                # Turn music off
+                elif Rect(482+280, 372-270, 28, 28).collidepoint(pygame.mouse.get_pos()):
+                    ai_settings.music_indicator = False
+
+                # Change Theme
+                elif Rect(447+280, 419-270, 98, 35).collidepoint(pygame.mouse.get_pos()):
+                    ai_settings.theme_indicator = 'Lith Harbor'
+                    change_bg_music('Lith Harbor')
+
+                elif Rect(559+280, 419-270, 98, 35).collidepoint(pygame.mouse.get_pos()):
+                    ai_settings.theme_indicator = 'Leafre'
+                    change_bg_music('Leafre')
+
+                elif Rect(447+280, 468-270, 98, 35).collidepoint(pygame.mouse.get_pos()):
+                    ai_settings.theme_indicator = 'Pantheon'
+                    change_bg_music('Pantheon')
+
+                elif Rect(559+280, 468-270, 98, 35).collidepoint(pygame.mouse.get_pos()):
+                    ai_settings.theme_indicator = 'Ellinia'
+                    change_bg_music('Ellinia')
+
+                # change AI speeding
+                elif Rect(475+280, 524-270, 56, 35).collidepoint(pygame.mouse.get_pos()):
+                    ai_settings.AI_speed_indicator = '1000'
+
+                elif Rect(545+280, 524-270, 56, 35).collidepoint(pygame.mouse.get_pos()):
+                    ai_settings.AI_speed_indicator = '2000'
+
+                elif Rect(615+280, 524-270, 56, 35).collidepoint(pygame.mouse.get_pos()):
+                    ai_settings.AI_speed_indicator = '3000'
+
+                # Quit settings window
+                elif Rect(699+280, 300-270, 21, 21).collidepoint(pygame.mouse.get_pos()):
+                    button_status.battle_screen_menu_display = False
+
+                # Concede and back to main menu
+                elif Rect(700, 310, 180, 40).collidepoint(pygame.mouse.get_pos()):
+                    screen_status.battle_screen_action_indicator = 'game-end'
                     button_status.battle_screen_win_lost_indicator = 'lost'
 
-            # back to game
-            if Rect(850, 70, 150, 40).collidepoint(pygame.mouse.get_pos()):
-                if button_status.battle_screen_menu_display == True:
-                    button_status.battle_screen_menu_display = False
 
 
             elif rect_union(buttons).collidepoint(pygame.mouse.get_pos()):
@@ -2329,13 +2371,141 @@ def battle_screen_battleground_button_display(ai_settings, screen, buttons,scree
 def battle_screen_menu_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ Display menu on battle screen"""
     if button_status.battle_screen_menu_display == True:
-        button_1 = Button('Concede and Quit','', (170,70,70), 850, 30, 150, 40)
+
+        button = Button('','', (0,0,0), 580, 30, 420, 340, alpha = 200)
+        button.update()
+        button.draw(screen)
+        # Sound settings
+        button_sound = Button('Sound: ','', (0,0,0), 601, 51, 105, 35, font_size = 28, alpha = 0)
+        button_sound.update()
+        button_sound.draw(screen)
+
+        if ai_settings.sound_indicator == True:
+            button_1 = Button('On','', (50,150,50), 447+280, 323-270, 28, 28)
+            button_1.update()
+            button_1.draw(screen)
+
+            button_2 = Button('Off','', (150,150,150), 482+280, 323-270, 28, 28)
+            button_2.update()
+            button_2.draw(screen)
+
+        else:
+            button_1 = Button('On','', (150,150,150), 447+280, 323-270, 28, 28)
+            button_1.update()
+            button_1.draw(screen)
+
+            button_2 = Button('Off','', (150,50,50), 482+280, 323-270, 28, 28)
+            button_2.update()
+            button_2.draw(screen)
+
+
+        # Music settings
+        button_music = Button('Music: ','', (0,0,0), 321+280, 370-270, 105, 35, font_size = 28, alpha = 0)
+        button_music.update()
+        button_music.draw(screen)
+
+        if ai_settings.music_indicator == True:
+            button_1 = Button('On','', (50,150,50), 447+280, 372-270, 28, 28)
+            button_1.update()
+            button_1.draw(screen)
+
+            button_2 = Button('Off','', (150,150,150), 482+280, 372-270, 28, 28)
+            button_2.update()
+            button_2.draw(screen)
+
+        else:
+            button_1 = Button('On','', (150,150,150), 447+280, 372-270, 28, 28)
+            button_1.update()
+            button_1.draw(screen)
+
+            button_2 = Button('Off','', (150,50,50), 482+280, 372-270, 28, 28)
+            button_2.update()
+            button_2.draw(screen)
+
+        # Theme settings
+        button_theme = Button('Theme: ','', (0,0,0), 321+280, 419-270, 112, 35, font_size = 28, alpha = 0)
+        button_theme.update()
+        button_theme.draw(screen)
+
+        if ai_settings.theme_indicator == 'Lith Harbor':
+            button_1 = Button('Lith Harbor','', (50,150,50), 447+280, 419-270, 98, 35, font_size = 16)
+            button_1.update()
+            button_1.draw(screen)
+        else:
+            button_1 = Button('Lith Harbor','', (150,150,150), 447+280, 419-270, 98, 35, font_size = 16)
+            button_1.update()
+            button_1.draw(screen)
+
+        if ai_settings.theme_indicator == 'Leafre':
+            button_1 = Button('Leafre','', (50,150,50), 559+280, 419-270, 98, 35, font_size = 16)
+            button_1.update()
+            button_1.draw(screen)
+        else:
+            button_1 = Button('Leafre','', (150,150,150), 559+280, 419-270, 98, 35, font_size = 16)
+            button_1.update()
+            button_1.draw(screen)
+
+        if ai_settings.theme_indicator == 'Pantheon':
+            button_1 = Button('Pantheon','', (50,150,50), 447+280, 468-270, 98, 35, font_size = 16)
+            button_1.update()
+            button_1.draw(screen)
+        else:
+            button_1 = Button('Pantheon','', (150,150,150), 447+280, 468-270, 98, 35, font_size = 16)
+            button_1.update()
+            button_1.draw(screen)
+
+        if ai_settings.theme_indicator == 'Ellinia':
+            button_1 = Button('Ellinia','', (50,150,50), 559+280, 468-270, 98, 35, font_size = 16)
+            button_1.update()
+            button_1.draw(screen)
+        else:
+            button_1 = Button('Ellinia','', (150,150,150), 559+280, 468-270, 98, 35, font_size = 16)
+            button_1.update()
+            button_1.draw(screen)
+
+        # AI speeding settings
+        button_ai_speed = Button('AI Speed: ','', (0,0,0), 321+280, 524-270, 140, 35, font_size = 28, alpha = 0)
+        button_ai_speed.update()
+        button_ai_speed.draw(screen)
+
+        if ai_settings.AI_speed_indicator == '1000':
+            button_1 = Button('Fast','', (50,150,50), 475+280, 524-270, 56, 35, font_size = 15)
+            button_1.update()
+            button_1.draw(screen)
+        else:
+            button_1 = Button('Fast','', (150,150,150), 475+280, 524-270, 56, 35, font_size = 15)
+            button_1.update()
+            button_1.draw(screen)
+
+        if ai_settings.AI_speed_indicator == '2000':
+            button_1 = Button('Normal','', (50,150,50), 545+280, 524-270, 56, 35, font_size = 15)
+            button_1.update()
+            button_1.draw(screen)
+        else:
+            button_1 = Button('Normal','', (150,150,150), 545+280, 524-270, 56, 35, font_size = 15)
+            button_1.update()
+            button_1.draw(screen)
+
+        if ai_settings.AI_speed_indicator == '3000':
+            button_1 = Button('Slow','', (50,150,50), 615+280, 524-270, 56, 35, font_size = 15)
+            button_1.update()
+            button_1.draw(screen)
+        else:
+            button_1 = Button('Slow','', (150,150,150), 615+280, 524-270, 56, 35, font_size = 15)
+            button_1.update()
+            button_1.draw(screen)
+
+        # Closed settings window button
+        button_1 = Button('X','', (250,100,100), 699+280, 300-270, 21, 21, font_size = 16)
         button_1.update()
         button_1.draw(screen)
 
-        button_2 = Button('Back to Game','', (70,70,170), 850, 70, 150, 40)
-        button_2.update()
-        button_2.draw(screen)
+
+        button_1 = Button('Concede and Quit!','', (170,70,70), 700, 310, 180, 40)
+        button_1.update()
+        button_1.draw(screen)
+
+
 
 def battle_screen_win_lost_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ Display win/lost message"""
