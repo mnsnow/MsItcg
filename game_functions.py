@@ -12,6 +12,7 @@ import card_database_filter as cdf
 from action import Action
 from builtins import any
 import time
+from sound_and_music import Sound
 
 
 
@@ -2129,8 +2130,6 @@ def battle_screen_menu_display(ai_settings, screen, buttons,screen_status, butto
         button_2 = Button('Back to Game','', (70,70,170), 850, 70, 150, 40)
         button_2.update()
         button_2.draw(screen)
-
-
 
 def battle_screen_win_lost_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ Display win/lost message"""

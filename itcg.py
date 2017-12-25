@@ -11,6 +11,7 @@ import card_database_filter as cdf
 from user import User
 from action import Action
 from player2 import Player2
+from sound_and_music import Sound
 
 
 def main():
@@ -19,11 +20,10 @@ def main():
     clock = pygame.time.Clock()
     pygame.display.set_caption('Maplestory ITCG')
 
+    # Global class instance controling all golbal variables
     ai_settings = Settings()
     grid = Grid()
     screen = pygame.display.set_mode((ai_settings.screen_width, ai_settings.screen_height))
-
-
     screen_status = Screen_status()
     button_status = Button_status()
     buttons = []
@@ -31,8 +31,15 @@ def main():
     user = User()
     player2 = Player2()
     action = Action()
+    sound = Sound()
 
+    # background music while the game is on
+    pygame.mixer.music.load(sound.MUSIC_LITH_HARBOR)
+    pygame.mixer.Sound(sound.SOUND_PLAY_CARD)
+    pygame.mixer.Sound(sound.SOUND_DRAW_HEAL)
+    pygame.mixer.Sound(sound.SOUND_ATTACK_FACE)
 
+    pygame.mixer.music.play(-1)
 
 
 
