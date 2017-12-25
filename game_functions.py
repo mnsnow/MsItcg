@@ -72,16 +72,20 @@ def check_events_welcome_screen(ai_settings, screen, buttons,screen_status, butt
 
                 # Change Theme
                 elif Rect(510, 470, 140, 50).collidepoint(pygame.mouse.get_pos()):
-                    ai_settings.theme_indicator = 'LITH HARBOR'
+                    ai_settings.theme_indicator = 'Lith Harbor'
+                    change_bg_music('Lith Harbor')
 
                 elif Rect(670, 470, 140, 50).collidepoint(pygame.mouse.get_pos()):
-                    ai_settings.theme_indicator = '1'
+                    ai_settings.theme_indicator = 'Leafre'
+                    change_bg_music('Leafre')
 
                 elif Rect(510, 540, 140, 50).collidepoint(pygame.mouse.get_pos()):
-                    ai_settings.theme_indicator = '2'
+                    ai_settings.theme_indicator = 'Pantheon'
+                    change_bg_music('Pantheon')
 
                 elif Rect(670, 540, 140, 50).collidepoint(pygame.mouse.get_pos()):
-                    ai_settings.theme_indicator = '3'
+                    ai_settings.theme_indicator = 'Ellinia'
+                    change_bg_music('Ellinia')
 
                 # change AI speeding
                 elif Rect(550, 620, 80, 50).collidepoint(pygame.mouse.get_pos()):
@@ -496,6 +500,15 @@ def check_events_battle_screen(ai_settings, screen, buttons,screen_status, butto
 #-----------------------------Update screens----------------------------------------------------
 def update_screen(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2):
     """ Update images on the screen and flip to the new screen"""
+    screen.fill((250,250,250))
+    if ai_settings.theme_indicator == 'Lith Harbor':
+        screen.blit(pygame.image.load('static/bg_images/bg_02.png'), (0,0))
+    elif ai_settings.theme_indicator == 'Leafre':
+        screen.blit(pygame.image.load('static/bg_images/bg_05.jpg'), (0,0))
+    elif ai_settings.theme_indicator == 'Pantheon':
+        screen.blit(pygame.image.load('static/bg_images/bg_06.jpg'), (0,0))
+    elif ai_settings.theme_indicator == 'Ellinia':
+        screen.blit(pygame.image.load('static/bg_images/bg_04.jpg'), (0,0))
 
     if screen_status.welcome_screen_display:
         welcome_screen_update(ai_settings,screen, buttons, screen_status, button_status)
@@ -516,8 +529,6 @@ def update_screen(ai_settings,grid, screen, buttons, screen_status, button_statu
 
 def welcome_screen_update(ai_settings,screen, buttons, screen_status,button_status):
     """ welcome screen update"""
-    screen.fill((250,250,250))
-    screen.blit(pygame.image.load('static/bg_images/bg_02.png'), (0,0))
 
     welcome_screen_stable_button_display(ai_settings,screen, buttons, screen_status, button_status)
 
@@ -525,9 +536,6 @@ def welcome_screen_update(ai_settings,screen, buttons, screen_status,button_stat
 
 def prepare_screen_update(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2):
     """ Update prepare screen"""
-    screen.fill((250,250,250))
-
-    screen.blit(pygame.image.load('static/bg_images/bg_02.png'), (0,0))
 
     #prepare_screen_grid_display(grid, screen)
 
@@ -539,9 +547,6 @@ def prepare_screen_update(ai_settings,grid, screen, buttons, screen_status, butt
 
 def build_deck_screen_update(ai_settings, grid, screen, buttons, screen_status, button_status, card_database_filter, user):
     """ Build deck screen update"""
-    screen.fill(ai_settings.bg_color)
-
-    screen.blit(pygame.image.load('static/bg_images/bg_02.png'), (0,0))
 
     #build_deck_screen_grid_display(grid, screen)
 
@@ -555,9 +560,6 @@ def build_deck_screen_update(ai_settings, grid, screen, buttons, screen_status, 
 
 def battle_screen_update(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2):
     """ Battle screen update"""
-    screen.fill(ai_settings.bg_color)
-
-    screen.blit(pygame.image.load('static/bg_images/bg_02.png'), (0,0))
 
     #battle_screen_grid_display(grid, screen)
 
@@ -790,7 +792,7 @@ def welcome_screen_settings_menu_display(ai_settings,screen, buttons, screen_sta
         button_theme.update()
         button_theme.draw(screen)
 
-        if ai_settings.theme_indicator == 'LITH HARBOR':
+        if ai_settings.theme_indicator == 'Lith Harbor':
             button_1 = Button('Lith Harbor','', (50,150,50), 510, 470, 140, 50, font_size = 18)
             button_1.update()
             button_1.draw(screen)
@@ -799,30 +801,30 @@ def welcome_screen_settings_menu_display(ai_settings,screen, buttons, screen_sta
             button_1.update()
             button_1.draw(screen)
 
-        if ai_settings.theme_indicator == '1':
-            button_1 = Button('1','', (50,150,50), 670, 470, 140, 50, font_size = 18)
+        if ai_settings.theme_indicator == 'Leafre':
+            button_1 = Button('Leafre','', (50,150,50), 670, 470, 140, 50, font_size = 18)
             button_1.update()
             button_1.draw(screen)
         else:
-            button_1 = Button('1','', (150,150,150), 670, 470, 140, 50, font_size = 18)
+            button_1 = Button('Leafre','', (150,150,150), 670, 470, 140, 50, font_size = 18)
             button_1.update()
             button_1.draw(screen)
 
-        if ai_settings.theme_indicator == '2':
-            button_1 = Button('2','', (50,150,50), 510, 540, 140, 50, font_size = 18)
+        if ai_settings.theme_indicator == 'Pantheon':
+            button_1 = Button('Pantheon','', (50,150,50), 510, 540, 140, 50, font_size = 18)
             button_1.update()
             button_1.draw(screen)
         else:
-            button_1 = Button('2','', (150,150,150), 510, 540, 140, 50, font_size = 18)
+            button_1 = Button('Pantheon','', (150,150,150), 510, 540, 140, 50, font_size = 18)
             button_1.update()
             button_1.draw(screen)
 
-        if ai_settings.theme_indicator == '3':
-            button_1 = Button('3','', (50,150,50), 670, 540, 140, 50, font_size = 18)
+        if ai_settings.theme_indicator == 'Ellinia':
+            button_1 = Button('Ellinia','', (50,150,50), 670, 540, 140, 50, font_size = 18)
             button_1.update()
             button_1.draw(screen)
         else:
-            button_1 = Button('3','', (150,150,150), 670, 540, 140, 50, font_size = 18)
+            button_1 = Button('Ellinia','', (150,150,150), 670, 540, 140, 50, font_size = 18)
             button_1.update()
             button_1.draw(screen)
 
@@ -4640,7 +4642,24 @@ def play_sound_effect(string):
     elif string == 'attack face':
         pygame.mixer.Sound.play(SOUND_ATTACK_FACE)
 
-
+def change_bg_music(string):
+    """ CHange bg music"""
+    if string == 'Lith Harbor':
+        pygame.mixer.music.stop()
+        pygame.mixer.music.load('static/music/Above_The_Tree_Tops.wav')
+        pygame.mixer.music.play(-1)
+    elif string == 'Leafre':
+        pygame.mixer.music.stop()
+        pygame.mixer.music.load('static/music/Leafre.wav')
+        pygame.mixer.music.play(-1)
+    elif string == 'Pantheon':
+        pygame.mixer.music.stop()
+        pygame.mixer.music.load('static/music/Pantheon.wav')
+        pygame.mixer.music.play(-1)
+    elif string == 'Ellinia':
+        pygame.mixer.music.stop()
+        pygame.mixer.music.load('static/music/When_The_Morning_Comes.wav')
+        pygame.mixer.music.play(-1)
 
 
 

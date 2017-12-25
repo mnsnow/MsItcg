@@ -13,7 +13,7 @@ class Settings():
         self.sound_indicator = True
         self.music_indicator = True
 
-        self.theme_indicator = 'LITH HARBOR'
+        self.theme_indicator = 'Lith Harbor'
 
         self.AI_speed_indicator = '2000'# fast = 1000, normal = 2000, slow = 3000
 
