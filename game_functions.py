@@ -549,9 +549,9 @@ def update_screen(ai_settings,grid, screen, buttons, screen_status, button_statu
     elif ai_settings.theme_indicator == 'Leafre':
         screen.blit(pygame.image.load('static/bg_images/bg_05.jpg'), (0,0))
     elif ai_settings.theme_indicator == 'Pantheon':
-        screen.blit(pygame.image.load('static/bg_images/bg_06.jpg'), (0,0))
+        screen.blit(pygame.image.load('static/bg_images/bg_06.png'), (0,0))
     elif ai_settings.theme_indicator == 'Ellinia':
-        screen.blit(pygame.image.load('static/bg_images/bg_04.jpg'), (0,0))
+        screen.blit(pygame.image.load('static/bg_images/bg_04.jpeg'), (0,0))
 
     if screen_status.welcome_screen_display:
         welcome_screen_update(ai_settings,screen, buttons, screen_status, button_status)
