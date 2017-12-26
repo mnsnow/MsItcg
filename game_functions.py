@@ -2646,6 +2646,54 @@ def battle_screen_win_lost_display(ai_settings, screen, buttons,screen_status, b
 
 def battle_screen_result_update(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ update result in each cycle"""
+    # Monster list update
+    # Remove monsters with < 0 HP and rebuild monster dict
+    dict1 = {
+        '1' : '',
+        '2' : '',
+        '3' : '',
+        '4' : '',
+        '5' : '',
+        '6' : '',
+    }
+    list1 = []
+    for position, card in user.monster_in_play_dict.items():
+        if card != '' and int(card.health) > 0:
+            list1.append(card)
+
+    x1 = len(list1)
+    while x1 > 0:
+        dict1[str(x1)] = list1[x1-1]
+        x1 -= 1
+
+    user.monster_in_play_dict = dict1
+
+    #player2
+    dict2 = {
+        '1' : '',
+        '2' : '',
+        '3' : '',
+        '4' : '',
+        '5' : '',
+        '6' : '',
+    }
+    list2 = []
+    for position, card in player2.monster_in_play_dict.items():
+        if card != '' and int(card.health) > 0:
+            list2.append(card)
+
+    x2 = len(list2)
+    while x2 > 0:
+        dict2[str(x2)] = list2[x2-1]
+        x2 -= 1
+
+    player2.monster_in_play_dict = dict2
+
+
+
+
+
+
     # items list length update
 
     for position,card in user.item_in_play_dict.items():
@@ -2665,15 +2713,6 @@ def battle_screen_result_update(ai_settings, screen, buttons,screen_status, butt
     for position,card in player2.monster_in_play_dict.items():
         if card != '':
             player2.monster_in_play_length = position
-
-    # Monster list update
-    for position, card in user.monster_in_play_dict.items():
-        if card != '' and int(card.health) <= 0:
-            user.monster_in_play_dict[position] = ''
-
-    for position, card in player2.monster_in_play_dict.items():
-        if card != '' and int(card.health) <= 0:
-            player2.monster_in_play_dict[position] = ''
 
 
     # Win/Lost situations
@@ -3834,14 +3873,20 @@ def battle_screen_instruction_bar_yes_skip_action(yes_skip_indicator, ai_setting
 
             pass
 
+        if int(x) < 6:
 
-        if user.monster_in_play_dict[str(int(x)+1)] != '':
-            screen_status.battle_screen_action_indicator = 'stage-3-monster-' + str(int(x)+1) + '-action'
-            battle_screen_stage_3_action(str(int(x)+1), screen,buttons, screen_status, button_status, card_database_filter, user)
-            button_status.battle_screen_player1_battleground_indicator_display = False
-            button_status.battle_screen_player2_battleground_indicator_display = False
+            if user.monster_in_play_dict[str(int(x)+1)] != '':
+                screen_status.battle_screen_action_indicator = 'stage-3-monster-' + str(int(x)+1) + '-action'
+                battle_screen_stage_3_action(str(int(x)+1), screen,buttons, screen_status, button_status, card_database_filter, user)
+                button_status.battle_screen_player1_battleground_indicator_display = False
+                button_status.battle_screen_player2_battleground_indicator_display = False
+            else:
+
+                screen_status.battle_screen_action_indicator = 'stage-4-end-turn'
+                button_status.battle_screen_player1_battleground_indicator_display = False
+                button_status.battle_screen_player2_battleground_indicator_display = False
+
         else:
-
             screen_status.battle_screen_action_indicator = 'stage-4-end-turn'
             button_status.battle_screen_player1_battleground_indicator_display = False
             button_status.battle_screen_player2_battleground_indicator_display = False
@@ -3867,7 +3912,6 @@ def battle_screen_instruction_bar_yes_skip_action(yes_skip_indicator, ai_setting
 
 
     # Which stage to go when user at stage-4-wait-for-opponent
-
 
 def battle_screen_stage_2_action(position, ai_settings,screen,buttons, screen_status, button_status, card_database_filter, user,action,player2):
     """ Input position of the action, output action according to the type on specific card"""
@@ -4800,13 +4844,16 @@ def battle_screen_player2_action(ai_settings,screen, buttons,screen_status, butt
         add_text_to_action_history('Opponent has attacked with the monster: '+player2.monster_in_play_dict[x].name+', dealt '+player2.monster_in_play_dict[x].attack+' damage to your character, HP: '+str(int(user.character_card.health) + int(player2.monster_in_play_dict[x].attack))+' --> '+user.character_card.health, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
         play_sound_effect('draw heal',ai_settings)
 
+        if int(x) < 6:
+            if player2.monster_in_play_dict[str(int(x)+1)] != '':
+                screen_status.battle_screen_action_indicator = 'player2-stage-3-monster-' + str(int(x)+1) + '-action'
+                button_status.battle_screen_instruction_bar_text = "Opponent deciding action for monster " + str(int(x)+1)
 
-        if player2.monster_in_play_dict[str(int(x)+1)] != '':
-            screen_status.battle_screen_action_indicator = 'player2-stage-3-monster-' + str(int(x)+1) + '-action'
-            button_status.battle_screen_instruction_bar_text = "Opponent deciding action for monster " + str(int(x)+1)
+            else:
+
+                screen_status.battle_screen_action_indicator = 'player2-stage-4-end-turn'
 
         else:
-
             screen_status.battle_screen_action_indicator = 'player2-stage-4-end-turn'
 
 

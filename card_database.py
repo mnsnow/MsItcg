@@ -204,7 +204,7 @@ card_02_19 = Item(name = 'BLACK MAGIC SHOES',set_number='02',card_number='19',ca
 lv_type='Spawn/Equip 70',lv_active_level='60',special_effect='')
 
 card_02_20 = Monster(name = 'BLUE DRAGON TURTLE',set_number='02',card_number='20',card_type='monster',job='magician',level='90',
-attack='80',health='100',lv_type='lalalala',lv_active_level='70',special_effect='')
+attack='80',health='100',lv_type='Spawn 90',lv_active_level='70',special_effect='')
 
 card_02_23 = Character(name = 'FELIX',set_number='02',card_number='23',card_type='character',job='magician',level='0',
 health='170',skill_1_lv = '10', skill_1_type = '',skill_2_lv = '20', skill_2_type = '',skill_3_lv = '40', skill_3_type = '')
