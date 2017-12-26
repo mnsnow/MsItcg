@@ -1,14 +1,21 @@
-Welcome to Maplestory Itcg Alpha!
-
-Game rules:
-
-1. Basic
-  (1).There are 4 types : Character/Monster/Tactic/Item, and 5 classes :Bowman/Magician/Thief/Warrior/Jobless in this game. Each
-      card has exactly one type and belongs to exactly one class. For Example: RIBBON PIG is a Warrior Monster. SIDE QUEST is a
-      Magician Tactic.
-  (2).Each player 
+Welcome to Maplestory Itcg Alpha -- 1.0!
 
 
+Patch Note:
+
+Version 1.0
+
+This is a very early version of the game. Here are things that you need to know before playing this version of the game.
+
+Items:
+
+1. All Item cards currently in the game have an aura effect (Deal 10 damage to opponent's character and heal 10 HP for your character at the end of each turn). For example, if you have 3 items equipped at the end of the turn, you will heal yourself for 30 HP and deal 30 damage to opponent's character. This is a very good source of healing.
+
+2. Besides the aura effects on Item cards, Item cards has no other functionality. Namely, effects that printed on the Item cards are ignored and will not work as stated on the card.
+
+Abilities:
+
+1. The "Crush" ability (Do 20 damage to a monster) can also deal damage to a character. This in particular boost the power of the character FANGBLADE quite a lot.
 
 
 
@@ -16,6 +23,19 @@ Game rules:
 
 
 
+
+
+
+
+
+
+Others:
+
+1. There is no blocking effects in this version of the game. For example, if you use EASY SHOT (Do 10 damage to a character or monster) targeting opponent's character, no matter how many monsters your opponent have, your opponent's character will lose 10 HP.
+
+2. Monsters' HP will not recover/reset at the end of each turn. So if you dealt 10 damage to one of your opponent's monster, even if the monster is still alive at the end of the turn, it will remain damaged at the start of your next turn.
+
+3. AI will always attack your character, if you some AIs are too hard to beat, try to unleash a horde of monsters and overwhelm your opponent!
 
 
 

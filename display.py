@@ -32,6 +32,8 @@ class Screen_status():
 class Button_status():
     """ Control active status of all buttons"""
     def __init__(self):
+        self.rules_display = False
+        self.rules_page_id = '1'
 
         self.welcome_screen_settings_display = False
 
@@ -51,8 +53,7 @@ class Button_status():
         self.battle_screen_my_hand_page_change_button_backend = True
 
         self.battle_screen_menu_display = False
-        self.battle_screen_rules_display = False
-        self.battle_screen_rules_page_id = '1'
+
 
         self.battle_screen_history_bar_detail_display = False
         self.battle_screen_history_bar_text_dict = {

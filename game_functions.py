@@ -101,7 +101,6 @@ def check_events_welcome_screen(ai_settings, screen, buttons,screen_status, butt
                 elif Rect(870, 300, 30, 30).collidepoint(pygame.mouse.get_pos()):
                     button_status.welcome_screen_settings_display = False
 
-
 def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ Check events in prepare screen"""
 
@@ -387,7 +386,7 @@ def check_events_battle_screen(ai_settings, screen, buttons,screen_status, butto
                     screen_status.welcome_screen_display = True
 
             if Rect(200, 0, 50, 30).collidepoint(pygame.mouse.get_pos()):
-                button_status.battle_screen_rules_display = True
+                button_status.rules_display = True
 
 
             # When menu window is on
@@ -442,22 +441,22 @@ def check_events_battle_screen(ai_settings, screen, buttons,screen_status, butto
                     screen_status.battle_screen_action_indicator = 'game-end'
                     button_status.battle_screen_win_lost_indicator = 'lost'
 
-            if button_status.battle_screen_rules_display == True:
+            if button_status.rules_display == True:
                 # When we click on '>'
                 if Rect(640, 37, 20, 20).collidepoint(pygame.mouse.get_pos()):
-                    if int(button_status.battle_screen_rules_page_id) < 3:
-                        button_status.battle_screen_rules_page_id = str(int(button_status.battle_screen_rules_page_id)+1)
+                    if int(button_status.rules_page_id) < 4:
+                        button_status.rules_page_id = str(int(button_status.rules_page_id)+1)
                     else:
                         pass
                 # When we click on '<'
                 elif Rect(540, 37, 20, 20).collidepoint(pygame.mouse.get_pos()):
-                    if int(button_status.battle_screen_rules_page_id) > 1:
-                        button_status.battle_screen_rules_page_id = str(int(button_status.battle_screen_rules_page_id)-1)
+                    if int(button_status.rules_page_id) > 1:
+                        button_status.rules_page_id = str(int(button_status.rules_page_id)-1)
                     else:
                         pass
 
                 elif Rect(975, 35, 25, 25).collidepoint(pygame.mouse.get_pos()):
-                    button_status.battle_screen_rules_display = False
+                    button_status.rules_display = False
 
 
 
@@ -590,6 +589,8 @@ def update_screen(ai_settings,grid, screen, buttons, screen_status, button_statu
     # Display zoom in affect at the end to cover previous draw when zoom in
     card_zoom_update(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
+    #Rules display
+    rules_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
     # music volume
     if ai_settings.music_indicator == True:
         pygame.mixer.music.set_volume(1.0)
@@ -655,7 +656,6 @@ def battle_screen_update(ai_settings,grid, screen, buttons, screen_status, butto
 
     battle_screen_menu_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
-    battle_screen_rules_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
     # Update result in each cycle
     battle_screen_result_update(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
@@ -780,6 +780,57 @@ def card_zoom_update(ai_settings, screen, buttons,screen_status, button_status, 
                     else:
                         pass
 
+def rules_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
+    """ Display rules for the game"""
+    if button_status.rules_display == True:
+
+        button = Button('','', (255,255,255), 200, 35, 800, 730)
+        button.update()
+        button.draw(screen)
+
+        if button_status.rules_page_id == '1':
+            screen.blit(pygame.image.load('static/rules_images/001.png'), (200,65))
+
+            button = Button('>','', (255,255,255), 640, 37, 20, 20, font_color = (0,0,0))
+            button.update()
+            button.draw(screen)
+
+        elif button_status.rules_page_id == '2':
+            screen.blit(pygame.image.load('static/rules_images/002.png'), (200,65))
+
+            button = Button('<','', (255,255,255), 540, 37, 20, 20, font_color = (0,0,0))
+            button.update()
+            button.draw(screen)
+
+            button = Button('>','', (255,255,255), 640, 37, 20, 20, font_color = (0,0,0))
+            button.update()
+            button.draw(screen)
+
+        elif button_status.rules_page_id == '3':
+            screen.blit(pygame.image.load('static/rules_images/003.png'), (200,65))
+
+            button = Button('<','', (255,255,255), 540, 37, 20, 20, font_color = (0,0,0))
+            button.update()
+            button.draw(screen)
+
+            button = Button('>','', (255,255,255), 640, 37, 20, 20, font_color = (0,0,0))
+            button.update()
+            button.draw(screen)
+
+        elif button_status.rules_page_id == '4':
+            screen.blit(pygame.image.load('static/rules_images/004.png'), (200,65))
+
+            button = Button('<','', (255,255,255), 540, 37, 20, 20, font_color = (0,0,0))
+            button.update()
+            button.draw(screen)
+
+        button = Button('Page: '+button_status.rules_page_id,'', (255,255,255), 570, 35, 60, 30, font_color = (0,0,0))
+        button.update()
+        button.draw(screen)
+
+        button = Button('X','', (250,100,100), 975, 35, 25, 25, font_size = 16)
+        button.update()
+        button.draw(screen)
 
 
 
@@ -2527,47 +2578,6 @@ def battle_screen_menu_display(ai_settings, screen, buttons,screen_status, butto
         button_1 = Button('Concede and Quit!','', (170,70,70), 700, 310, 180, 40)
         button_1.update()
         button_1.draw(screen)
-
-def battle_screen_rules_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
-    """ Display rules for the game"""
-    if button_status.battle_screen_rules_display == True:
-
-        button = Button('','', (255,255,255), 200, 35, 800, 730)
-        button.update()
-        button.draw(screen)
-
-        if button_status.battle_screen_rules_page_id == '1':
-            screen.blit(pygame.image.load('static/rules_images/001.png'), (200,65))
-
-            button = Button('>','', (255,255,255), 640, 37, 20, 20, font_color = (0,0,0))
-            button.update()
-            button.draw(screen)
-
-        elif button_status.battle_screen_rules_page_id == '2':
-            screen.blit(pygame.image.load('static/rules_images/002.png'), (200,65))
-
-            button = Button('<','', (255,255,255), 540, 37, 20, 20, font_color = (0,0,0))
-            button.update()
-            button.draw(screen)
-
-            button = Button('>','', (255,255,255), 640, 37, 20, 20, font_color = (0,0,0))
-            button.update()
-            button.draw(screen)
-
-        elif button_status.battle_screen_rules_page_id == '3':
-            screen.blit(pygame.image.load('static/rules_images/003.png'), (200,65))
-
-            button = Button('<','', (255,255,255), 540, 37, 20, 20, font_color = (0,0,0))
-            button.update()
-            button.draw(screen)
-
-        button = Button('Page: '+button_status.battle_screen_rules_page_id,'', (255,255,255), 570, 35, 60, 30, font_color = (0,0,0))
-        button.update()
-        button.draw(screen)
-
-        button = Button('X','', (250,100,100), 975, 35, 25, 25, font_size = 16)
-        button.update()
-        button.draw(screen)
 
 
 
