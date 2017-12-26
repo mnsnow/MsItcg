@@ -43,20 +43,9 @@ def check_events_welcome_screen(ai_settings, screen, buttons,screen_status, butt
                 sys.exit()
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            if button_status.welcome_screen_settings_display == False:
-                # Click on play
-                if Rect(537, 370, 127, 61).collidepoint(pygame.mouse.get_pos()):
-                    screen_status.welcome_screen_display = False
-                    screen_status.prepare_screen_display = True
-                # Click on settings
-                elif Rect(474, 469, 253, 62).collidepoint(pygame.mouse.get_pos()):
-                    button_status.welcome_screen_settings_display = True
 
-                # click on exit
-                elif Rect(541, 670, 119, 61).collidepoint(pygame.mouse.get_pos()):
-                    sys.exit()
             # If settings window is on
-            else:
+            if button_status.welcome_screen_settings_display == True:
                 # Turn sound on
                 if Rect(510, 333, 40, 40).collidepoint(pygame.mouse.get_pos()):
                     ai_settings.sound_indicator = True
@@ -100,6 +89,40 @@ def check_events_welcome_screen(ai_settings, screen, buttons,screen_status, butt
                 # Quit settings window
                 elif Rect(870, 300, 30, 30).collidepoint(pygame.mouse.get_pos()):
                     button_status.welcome_screen_settings_display = False
+
+            elif button_status.rules_display == True:
+                # When we click on '>'
+                if Rect(640, 37, 20, 20).collidepoint(pygame.mouse.get_pos()):
+                    if int(button_status.rules_page_id) < 4:
+                        button_status.rules_page_id = str(int(button_status.rules_page_id)+1)
+                    else:
+                        pass
+                # When we click on '<'
+                elif Rect(540, 37, 20, 20).collidepoint(pygame.mouse.get_pos()):
+                    if int(button_status.rules_page_id) > 1:
+                        button_status.rules_page_id = str(int(button_status.rules_page_id)-1)
+                    else:
+                        pass
+
+                elif Rect(975, 35, 25, 25).collidepoint(pygame.mouse.get_pos()):
+                    button_status.rules_display = False
+
+            else:
+                # Click on play
+                if Rect(537, 370, 127, 61).collidepoint(pygame.mouse.get_pos()):
+                    screen_status.welcome_screen_display = False
+                    screen_status.prepare_screen_display = True
+                # Click on settings
+                elif Rect(474, 469, 253, 62).collidepoint(pygame.mouse.get_pos()):
+                    button_status.welcome_screen_settings_display = True
+
+                # Click on rules
+                elif Rect(517, 570, 167, 61).collidepoint(pygame.mouse.get_pos()):
+                    button_status.rules_display = True
+
+                # click on exit
+                elif Rect(541, 670, 119, 61).collidepoint(pygame.mouse.get_pos()):
+                    sys.exit()
 
 def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ Check events in prepare screen"""
@@ -852,10 +875,16 @@ def welcome_screen_stable_button_display(ai_settings,screen, buttons, screen_sta
     text_rect_3 = text_image_3.get_rect(center = (600,500))
     screen.blit(text_image_3, text_rect_3)
 
+    font_5 = pygame.font.Font('freesansbold.ttf', 60)
+    text_image_5 = font_5.render('Rules', True, (255,255,255))
+    text_rect_5 = text_image_5.get_rect(center = (600,600))
+    screen.blit(text_image_5, text_rect_5)
+
     font_4 = pygame.font.Font('freesansbold.ttf', 60)
     text_image_4 = font_4.render('Exit', True, (255,255,255))
     text_rect_4 = text_image_4.get_rect(center = (600,700))
     screen.blit(text_image_4, text_rect_4)
+
 
 def welcome_screen_settings_menu_display(ai_settings,screen, buttons, screen_status, button_status):
     """ Display welcome screen settings menu"""
