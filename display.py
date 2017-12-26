@@ -10,10 +10,10 @@ class Screen_status():
 
         self.time_last = pygame.time.get_ticks() # For player2(AI) use only
 
-        self.welcome_screen_display = True
+        self.welcome_screen_display = False
         self.prepare_screen_display = False
         self.build_deck_screen_display = False
-        self.battle_screen_display = False
+        self.battle_screen_display = True
 
         self.welcome_screen_backend = True
         self.build_deck_screen_card_gallery_page_id = 1
@@ -51,6 +51,8 @@ class Button_status():
         self.battle_screen_my_hand_page_change_button_backend = True
 
         self.battle_screen_menu_display = False
+        self.battle_screen_rules_display = False
+        self.battle_screen_rules_page_id = '1'
 
         self.battle_screen_history_bar_detail_display = False
         self.battle_screen_history_bar_text_dict = {

@@ -1,0 +1,32 @@
+Welcome to Maplestory Itcg Alpha!
+
+Game rules:
+
+1. Basic
+  (1).There are 4 types : Character/Monster/Tactic/Item, and 5 classes :Bowman/Magician/Thief/Warrior/Jobless in this game. Each
+      card has exactly one type and belongs to exactly one class. For Example: RIBBON PIG is a Warrior Monster. SIDE QUEST is a
+      Magician Tactic.
+  (2).Each player 
+
+
+
+
+
+
+
+
+
+
+
+
+Disclaimer:
+
+This game is not sponsored or endorsed by Wizards of the Coast or NEXON Corporation.
+
+MapleStory, MapleStory iTrading Card Game, its associated logos, all character,
+item, and monster names and their respective likenesses are registered trademarks
+of Wizards of the Coast and NEXON Corporation. All other MapleStory material are
+the copyright of the copyright holders.
+
+
+A game by Wenchang Li

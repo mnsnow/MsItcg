@@ -386,6 +386,10 @@ def check_events_battle_screen(ai_settings, screen, buttons,screen_status, butto
                     screen_status.battle_screen_display = False
                     screen_status.welcome_screen_display = True
 
+            if Rect(200, 0, 50, 30).collidepoint(pygame.mouse.get_pos()):
+                button_status.battle_screen_rules_display = True
+
+
             # When menu window is on
             if button_status.battle_screen_menu_display == True:
 
@@ -438,9 +442,27 @@ def check_events_battle_screen(ai_settings, screen, buttons,screen_status, butto
                     screen_status.battle_screen_action_indicator = 'game-end'
                     button_status.battle_screen_win_lost_indicator = 'lost'
 
+            if button_status.battle_screen_rules_display == True:
+                # When we click on '>'
+                if Rect(640, 37, 20, 20).collidepoint(pygame.mouse.get_pos()):
+                    if int(button_status.battle_screen_rules_page_id) < 3:
+                        button_status.battle_screen_rules_page_id = str(int(button_status.battle_screen_rules_page_id)+1)
+                    else:
+                        pass
+                # When we click on '<'
+                elif Rect(540, 37, 20, 20).collidepoint(pygame.mouse.get_pos()):
+                    if int(button_status.battle_screen_rules_page_id) > 1:
+                        button_status.battle_screen_rules_page_id = str(int(button_status.battle_screen_rules_page_id)-1)
+                    else:
+                        pass
+
+                elif Rect(975, 35, 25, 25).collidepoint(pygame.mouse.get_pos()):
+                    button_status.battle_screen_rules_display = False
 
 
-            elif rect_union(buttons).collidepoint(pygame.mouse.get_pos()):
+
+
+            if rect_union(buttons).collidepoint(pygame.mouse.get_pos()):
                 for button in buttons:
                     if button.rect.collidepoint(pygame.mouse.get_pos()):
                         if button.text == 'Menu':
@@ -633,6 +655,7 @@ def battle_screen_update(ai_settings,grid, screen, buttons, screen_status, butto
 
     battle_screen_menu_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
+    battle_screen_rules_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
     # Update result in each cycle
     battle_screen_result_update(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
 
@@ -2505,16 +2528,58 @@ def battle_screen_menu_display(ai_settings, screen, buttons,screen_status, butto
         button_1.update()
         button_1.draw(screen)
 
+def battle_screen_rules_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
+    """ Display rules for the game"""
+    if button_status.battle_screen_rules_display == True:
+
+        button = Button('','', (255,255,255), 200, 35, 800, 730)
+        button.update()
+        button.draw(screen)
+
+        if button_status.battle_screen_rules_page_id == '1':
+            screen.blit(pygame.image.load('static/rules_images/001.png'), (200,65))
+
+            button = Button('>','', (255,255,255), 640, 37, 20, 20, font_color = (0,0,0))
+            button.update()
+            button.draw(screen)
+
+        elif button_status.battle_screen_rules_page_id == '2':
+            screen.blit(pygame.image.load('static/rules_images/002.png'), (200,65))
+
+            button = Button('<','', (255,255,255), 540, 37, 20, 20, font_color = (0,0,0))
+            button.update()
+            button.draw(screen)
+
+            button = Button('>','', (255,255,255), 640, 37, 20, 20, font_color = (0,0,0))
+            button.update()
+            button.draw(screen)
+
+        elif button_status.battle_screen_rules_page_id == '3':
+            screen.blit(pygame.image.load('static/rules_images/003.png'), (200,65))
+
+            button = Button('<','', (255,255,255), 540, 37, 20, 20, font_color = (0,0,0))
+            button.update()
+            button.draw(screen)
+
+        button = Button('Page: '+button_status.battle_screen_rules_page_id,'', (255,255,255), 570, 35, 60, 30, font_color = (0,0,0))
+        button.update()
+        button.draw(screen)
+
+        button = Button('X','', (250,100,100), 975, 35, 25, 25, font_size = 16)
+        button.update()
+        button.draw(screen)
+
+
 
 
 def battle_screen_win_lost_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ Display win/lost message"""
     if button_status.battle_screen_win_lost_indicator == 'win':
-        button_win_1 = Button('VICTORY!','', (70,170,70), 300,  200, 600, 200, font_size = 70, alpha = 150)
+        button_win_1 = Button('VICTORY!','', (70,170,70), 300,  200, 600, 200, font_size = 70, alpha = 180)
         button_win_1.update()
         button_win_1.draw(screen)
 
-        button_win_2 = Button('','', (70,170,70), 300,  400, 600, 200, alpha = 150)
+        button_win_2 = Button('','', (70,170,70), 300,  400, 600, 200, alpha = 180)
         button_win_2.update()
         button_win_2.draw(screen)
 
@@ -2526,11 +2591,11 @@ def battle_screen_win_lost_display(ai_settings, screen, buttons,screen_status, b
 
 
     elif button_status.battle_screen_win_lost_indicator == 'lost':
-        button_lost_1 = Button('DEFEAT!','', (170,70,70), 300,  200, 600, 200, font_size = 70, alpha = 150)
+        button_lost_1 = Button('DEFEAT!','', (170,70,70), 300,  200, 600, 200, font_size = 70, alpha = 180)
         button_lost_1.update()
         button_lost_1.draw(screen)
 
-        button_lost_2 = Button('','', (170,70,70), 300,  400, 600, 200, alpha = 150)
+        button_lost_2 = Button('','', (170,70,70), 300,  400, 600, 200, alpha = 180)
         button_lost_2.update()
         button_lost_2.draw(screen)
 
