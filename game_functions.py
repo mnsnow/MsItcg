@@ -23,6 +23,9 @@ def check_events(ai_settings,grid, screen, buttons,screen_status, button_status,
     if screen_status.welcome_screen_display:
         check_events_welcome_screen(ai_settings, screen, buttons,screen_status, button_status)
 
+    if screen_status.lobby_screen_display:
+        check_events_lobby_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
+
     if screen_status.prepare_screen_display:
         check_events_prepare_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
 
@@ -108,10 +111,14 @@ def check_events_welcome_screen(ai_settings, screen, buttons,screen_status, butt
                     button_status.rules_display = False
 
             else:
-                # Click on play
-                if Rect(537, 370, 127, 61).collidepoint(pygame.mouse.get_pos()):
+                # Click on single player
+                if Rect(402, 269, 396, 62).collidepoint(pygame.mouse.get_pos()):
                     screen_status.welcome_screen_display = False
                     screen_status.prepare_screen_display = True
+                # Click on multiplayer
+                elif Rect(434, 370, 333, 61).collidepoint(pygame.mouse.get_pos()):
+                    screen_status.welcome_screen_display = False
+                    screen_status.lobby_screen_display = True
                 # Click on settings
                 elif Rect(474, 469, 253, 62).collidepoint(pygame.mouse.get_pos()):
                     button_status.welcome_screen_settings_display = True
@@ -123,6 +130,23 @@ def check_events_welcome_screen(ai_settings, screen, buttons,screen_status, butt
                 # click on exit
                 elif Rect(541, 670, 119, 61).collidepoint(pygame.mouse.get_pos()):
                     sys.exit()
+
+def check_events_lobby_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
+    """ Check input events on lobby screen"""
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            sys.exit()
+
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                sys.exit()
+
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if Rect(0, 0, 50, 50).collidepoint(pygame.mouse.get_pos()):
+                screen_status.lobby_screen_display = False
+                screen_status.welcome_screen_display = True
+
+
 
 def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ Check events in prepare screen"""
@@ -600,6 +624,9 @@ def update_screen(ai_settings,grid, screen, buttons, screen_status, button_statu
     if screen_status.welcome_screen_display:
         welcome_screen_update(ai_settings,screen, buttons, screen_status, button_status)
 
+    if screen_status.lobby_screen_display:
+        lobby_screen_update(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2)
+
     if screen_status.prepare_screen_display:
         prepare_screen_update(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2)
 
@@ -628,6 +655,12 @@ def welcome_screen_update(ai_settings,screen, buttons, screen_status,button_stat
     welcome_screen_stable_button_display(ai_settings,screen, buttons, screen_status, button_status)
 
     welcome_screen_settings_menu_display(ai_settings,screen, buttons, screen_status, button_status)
+
+def lobby_screen_update(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2):
+    """ Update display for lobby screen"""
+
+    lobby_screen_stable_button_display(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2)
+
 
 def prepare_screen_update(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2):
     """ Update prepare screen"""
@@ -860,13 +893,19 @@ def rules_display(ai_settings, screen, buttons,screen_status, button_status, car
 #-----------------------------Welcome screen display----------------------------------------------------
 def welcome_screen_stable_button_display(ai_settings,screen, buttons, screen_status, button_status):
     """ Display stable buttons on welcome screen"""
+
     font_1 = pygame.font.Font('freesansbold.ttf', 70)
-    text_image_1 = font_1.render('Welcome to Maplestory ITCG', True, (255,255,255))
-    text_rect_1 = text_image_1.get_rect(center = (600,200))
+    text_image_1 = font_1.render('Welcome to Maplestory ITCG', True, (250,250,250))
+    text_rect_1 = text_image_1.get_rect(center = (600,150))
     screen.blit(text_image_1, text_rect_1)
 
+    font_6 = pygame.font.Font('freesansbold.ttf', 60)
+    text_image_6 = font_6.render('Single Player', True, (255,255,255))
+    text_rect_6 = text_image_6.get_rect(center = (600,300))
+    screen.blit(text_image_6, text_rect_6)
+
     font_2 = pygame.font.Font('freesansbold.ttf', 60)
-    text_image_2 = font_2.render('Play', True, (255,255,255))
+    text_image_2 = font_2.render('Multiplayer', True, (255,255,255))
     text_rect_2 = text_image_2.get_rect(center = (600,400))
     screen.blit(text_image_2, text_rect_2)
 
@@ -1017,6 +1056,38 @@ def welcome_screen_settings_menu_display(ai_settings,screen, buttons, screen_sta
         button_1.update()
         button_1.draw(screen)
 
+
+#-----------------------------Lobby screen display----------------------------------------------------
+
+def lobby_screen_stable_button_display(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2):
+    """ Display stable button on lobby screen"""
+    button_back = Button('Back','', (250,250,250),0, 0, 50, 50, font_size = 18, font_color = (0,0,0),alpha = 200)
+    button_back.update()
+    button_back.draw(screen)
+
+    button1 = Button('Hello Mnsnow! Join a game or create one yourself: ','', (250,250,250),300, 0, 600, 50, font_size = 20, font_color = (0,0,0),alpha = 200)
+    button1.update()
+    button1.draw(screen)
+
+    button2 = Button('','', (0,0,0),150, 80, 900, 320,alpha = 200)
+    button2.update()
+    button2.draw(screen)
+
+    button5 = Button('Join an existing game:','', (0,0,0),400, 80, 400, 50, font_size = 30, alpha = 0)
+    button5.update()
+    button5.draw(screen)
+
+    button3 = Button('','', (0,0,0),150, 410, 900, 330,alpha = 200)
+    button3.update()
+    button3.draw(screen)
+
+    button4 = Button('Create a game:','', (0,0,0),400, 410, 400, 50, font_size = 30, alpha = 0)
+    button4.update()
+    button4.draw(screen)
+
+    button3 = Button('Create','', (40,120,40),920, 430, 100, 50,alpha = 240)
+    button3.update()
+    button3.draw(screen)
 
 
 #-----------------------------Prepare screen display----------------------------------------------------
