@@ -1065,29 +1065,30 @@ def lobby_screen_stable_button_display(ai_settings,grid, screen, buttons, screen
     button_back.update()
     button_back.draw(screen)
 
-    button1 = Button('Hello Mnsnow! Join a game or create one yourself: ','', (250,250,250),300, 0, 600, 50, font_size = 20, font_color = (0,0,0),alpha = 200)
+    button1 = Button('Hello! Join a game or create one yourself: ','', (250,250,250),300, 0, 600, 50, font_size = 20, font_color = (0,0,0),alpha = 200)
     button1.update()
     button1.draw(screen)
 
-    button2 = Button('','', (0,0,0),150, 80, 900, 320,alpha = 200)
+    button2 = Button('','', (0,0,0),150, 80, 900, 130,alpha = 200)
     button2.update()
     button2.draw(screen)
 
-    button5 = Button('Join an existing game:','', (0,0,0),400, 80, 400, 50, font_size = 30, alpha = 0)
+    button5 = Button('Create a game:','', (0,0,0),400, 80, 400, 50, font_size = 20, alpha = 0)
     button5.update()
     button5.draw(screen)
 
-    button3 = Button('','', (0,0,0),150, 410, 900, 330,alpha = 200)
+    button3 = Button('','', (0,0,0),150, 220, 900, 520,alpha = 200)
     button3.update()
     button3.draw(screen)
 
-    button4 = Button('Create a game:','', (0,0,0),400, 410, 400, 50, font_size = 30, alpha = 0)
+    button4 = Button('Join an existing game:','', (0,0,0),400, 220, 400, 50, font_size = 20, alpha = 0)
     button4.update()
     button4.draw(screen)
 
-    button3 = Button('Create','', (40,120,40),920, 430, 100, 50,alpha = 240)
+    button3 = Button('Create','', (40,120,40),920, 110, 100, 50,alpha = 240)
     button3.update()
     button3.draw(screen)
+
 
 
 #-----------------------------Prepare screen display----------------------------------------------------
