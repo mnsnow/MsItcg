@@ -118,6 +118,10 @@ def check_events_welcome_screen(ai_settings,grid, screen, buttons,screen_status,
                 if Rect(402, 269, 396, 62).collidepoint(pygame.mouse.get_pos()):
                     screen_status.welcome_screen_display = False
                     screen_status.prepare_screen_display = True
+                    if user.name == '':
+                        button_status.text_input_box_display = True
+                    else:
+                        pass
                 # Click on multiplayer
                 elif Rect(434, 370, 333, 61).collidepoint(pygame.mouse.get_pos()):
                     screen_status.welcome_screen_display = False
@@ -259,7 +263,9 @@ def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, butt
             elif Rect(1100, 62, 40, 30).collidepoint(pygame.mouse.get_pos()):
                 button_status.prepare_screen_end_screen_warning_button_display = ''
 
-
+            # Change name
+            elif Rect(780, 10, 110, 30).collidepoint(pygame.mouse.get_pos()):
+                button_status.text_input_box_display = True
 
             # create new deck
             elif Rect(1020, 110, 120, 35).collidepoint(pygame.mouse.get_pos()):
@@ -733,7 +739,7 @@ def battle_screen_update(ai_settings,grid, screen, buttons, screen_status, butto
 
     battle_screen_instruction_bar_display(screen,buttons, screen_status, button_status, card_database_filter, user)
 
-    battle_screen_stable_button_display(screen, buttons,screen_status, button_status)
+    battle_screen_stable_button_display(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2)
 
     battle_screen_my_hand_card_display(screen,buttons, screen_status, button_status, card_database_filter, user)
 
@@ -931,7 +937,11 @@ def rules_display(ai_settings, screen, buttons,screen_status, button_status, car
 def text_input_box_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ Display text input box"""
     if button_status.text_input_box_display == True:
-        button = Button('','', (255,255,255), 400, 275, 400, 180, alpha = 200)
+        button = Button('','', (0,0,0), 0, 0, 1200, 800, alpha = 100)
+        button.update()
+        button.draw(screen)
+
+        button = Button('','', (255,255,255), 400, 275, 400, 180, alpha = 250)
         button.update()
         button.draw(screen)
 
@@ -1172,6 +1182,14 @@ def prepare_screen_stable_button_display(ai_settings, screen, buttons,screen_sta
     button_play = Button('Play!','', (250,250,250),1150, 0, 50, 50, font_size = 18, font_color = (0,0,0), alpha = 150)
     button_play.update()
     button_play.draw(screen)
+    # Hello
+    button1 = Button('Hello '+ user.name +'!','', (250,250,250),300, 0, 600, 50, font_size = 20, font_color = (0,0,0),alpha = 200)
+    button1.update()
+    button1.draw(screen)
+    # change name
+    button_back = Button('Change Name','', (150,40,40),780, 10, 110, 30, font_size = 14,alpha = 200)
+    button_back.update()
+    button_back.draw(screen)
     # Pick deck text
     button_text_1 = Button('Pick an exist deck or create a new one: ','', (250,250,250),400, 100, 400, 35, font_color = (0,0,0), alpha = 150)
     button_text_1.update()
@@ -2222,18 +2240,42 @@ def battle_screen_instruction_bar_display(screen,buttons, screen_status, button_
         else:
             buttons.remove(bt)
 
-def battle_screen_stable_button_display(screen, buttons,screen_status, button_status):
+def battle_screen_stable_button_display(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2):
     """ Display all stable button on battle screen"""
     button_1 = Button('Rules','', (250,250,250),200, 0, 50, 30, font_color = (0,0,0), alpha = 150)
     button_1.update()
     button_1.draw(screen)
-    #
-    button2 = Button('Menu','', (250,250,250),950, 0, 50, 30, font_color = (0,0,0), alpha = 150)
+    # menu
+    button_menu = Button('Menu','', (250,250,250),950, 0, 50, 30, font_color = (0,0,0), alpha = 150)
+    button_menu.update()
+    button_menu.draw(screen)
+    # Display user name
+    button2 = Button(user.name,'', (250,250,250),1110, 570, 90, 30, font_color = (0,0,0), alpha = 150)
     button2.update()
     button2.draw(screen)
-
+    # Display opponent's name
+    if player2.character_ai_index == '1':
+        player2_AI = 'NIXIE'
+    elif player2.character_ai_index == '2':
+        player2_AI = 'MAYA'
+    elif player2.character_ai_index == '3':
+        player2_AI = 'IVAN'
+    elif player2.character_ai_index == '4':
+        player2_AI = 'SHERMAN'
+    elif player2.character_ai_index == '5':
+        player2_AI = 'MOBY'
+    elif player2.character_ai_index == '6':
+        player2_AI = 'MAHIBANG'
+    elif player2.character_ai_index == '7':
+        player2_AI = 'MISTMOON'
+    elif player2.character_ai_index == '8':
+        player2_AI = 'FANGBLADE'
+    button2 = Button(player2_AI,'', (250,250,250),0, 570, 90, 30, font_color = (0,0,0), alpha = 150)
+    button2.update()
+    button2.draw(screen)
+    # add menu button to buttons group
     if button_status.battle_screen_stable_button_backend:
-        buttons.append(button2)
+        buttons.append(button_menu)
         button_status.battle_screen_stable_button_backend = False
 
 def battle_screen_history_bar_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
