@@ -7,7 +7,13 @@ from card import Monster, Character
 class User():
     """Contains informations of user's customatic informations"""
     def __init__(self):
-        self.typing_variable = 'aaaa'
+        with open('user_info.txt','r') as f:
+            f.seek(0)
+            for line in f:
+                if 'NAME' in line:
+                    x = line.replace('NAME = ','')
+
+        self.typing_variable = str(x)[:-1]
 
         self.deck_list = [
             # # Set 1

@@ -617,21 +617,25 @@ def check_events_text_input_box(ai_settings, screen, buttons,screen_status, butt
         if event.type == pygame.QUIT:
             sys.exit()
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                sys.exit()
-            elif event.key == pygame.K_DELETE:
+            if event.key == pygame.K_DELETE:
                 if user.typing_variable != '':
                     user.typing_variable = user.typing_variable[:-1]
                 else:
                     pass
-            elif event.key == pygame.K_a:
-                user.typing_variable += 'a'
-            elif event.key == pygame.K_b:
-                user.typing_variable += 'b'
-            elif event.key == pygame.K_c:
-                user.typing_variable += 'c'
-            elif event.key == pygame.K_C:
-                user.typing_variable += 'C'
+            elif event.key <= 127:
+                if pygame.key.get_mods() & KMOD_SHIFT or pygame.key.get_mods() & KMOD_CAPS:
+                    user.typing_variable += chr(event.key).upper()
+                else:
+                    user.typing_variable += chr(event.key)
+
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            #click on ok
+            if Rect(575, 410, 50, 30).collidepoint(pygame.mouse.get_pos()):
+                user_input_text_save('user name',ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
+                button_status.text_input_box_display = False
+
+
+
 
 
 #-----------------------------Update screens----------------------------------------------------
@@ -926,10 +930,6 @@ def text_input_box_display(ai_settings, screen, buttons,screen_status, button_st
         button.draw(screen)
 
         button = Button('PLEASE ENTER YOUR NAME','', (255,255,255), 400, 275, 400, 50, font_color = (0,0,0), font_size = 22, alpha = 0)
-        button.update()
-        button.draw(screen)
-
-        button = Button('X','', (250,100,100), 775, 275, 25, 25, font_size = 16)
         button.update()
         button.draw(screen)
 
@@ -5114,7 +5114,7 @@ def change_bg_music(string):
         pygame.mixer.music.load('static/music/When_The_Morning_Comes.wav')
         pygame.mixer.music.play(-1)
 
-def user_input_text_save(string):
+def user_input_text_save(string_type, ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ save the informations user has typed in"""
     if string_type == 'user name':
         with open('user_info.txt','a+') as f:
@@ -5129,7 +5129,7 @@ def user_input_text_save(string):
                     break
             x[y-1] = 'NAME = ' + user.typing_variable + '\n'
 
-        with open('user_deck_list_string.txt','w') as f:
+        with open('user_info.txt','w') as f:
             f.writelines(x)
 
 
