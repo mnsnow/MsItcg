@@ -7,7 +7,7 @@ from card import Monster, Character
 class User():
     """Contains informations of user's customatic informations"""
     def __init__(self):
-        self.typing_variable = ''
+        self.typing_variable = 'aaaa'
 
         self.deck_list = [
             # # Set 1

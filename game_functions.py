@@ -19,28 +19,25 @@ import time
 #-----------------------------Check events----------------------------------------------------
 def check_events(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user,action, player2):
     """Check mouse and keyboard events"""
-
-    if screen_status.welcome_screen_display:
-        check_events_welcome_screen(ai_settings, screen, buttons,screen_status, button_status)
-
-    if screen_status.lobby_screen_display:
-        check_events_lobby_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
-
-    if screen_status.prepare_screen_display:
-        check_events_prepare_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
-
-    if screen_status.build_deck_screen_display:
-        check_events_build_deck_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user)
-
-    if screen_status.battle_screen_display:
-        check_events_battle_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
-
     # text input box
     if button_status.text_input_box_display == True:
-        for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_A:
-                    print('aaaaa')
+        check_events_text_input_box(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
+
+    elif screen_status.welcome_screen_display:
+        check_events_welcome_screen(ai_settings, screen, buttons,screen_status, button_status)
+
+    elif screen_status.lobby_screen_display:
+        check_events_lobby_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
+
+    elif screen_status.prepare_screen_display:
+        check_events_prepare_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
+
+    elif screen_status.build_deck_screen_display:
+        check_events_build_deck_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user)
+
+    elif screen_status.battle_screen_display:
+        check_events_battle_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
+
 
 def check_events_welcome_screen(ai_settings, screen, buttons,screen_status, button_status):
     """ Check all events on the welcome screen"""
@@ -154,10 +151,9 @@ def check_events_lobby_screen(ai_settings, screen, buttons,screen_status, button
             if Rect(0, 0, 50, 50).collidepoint(pygame.mouse.get_pos()):
                 screen_status.lobby_screen_display = False
                 screen_status.welcome_screen_display = True
+            # Create button
             elif Rect(920, 600, 100, 50).collidepoint(pygame.mouse.get_pos()):
                 pass
-
-
 
 def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ Check events in prepare screen"""
@@ -615,7 +611,27 @@ def check_events_battle_screen(ai_settings, screen, buttons,screen_status, butto
         elif event.type == pygame.MOUSEBUTTONUP:
             pass
 
+def check_events_text_input_box(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
+    for event in pygame.event.get():
 
+        if event.type == pygame.QUIT:
+            sys.exit()
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                sys.exit()
+            elif event.key == pygame.K_DELETE:
+                if user.typing_variable != '':
+                    user.typing_variable = user.typing_variable[:-1]
+                else:
+                    pass
+            elif event.key == pygame.K_a:
+                user.typing_variable += 'a'
+            elif event.key == pygame.K_b:
+                user.typing_variable += 'b'
+            elif event.key == pygame.K_c:
+                user.typing_variable += 'c'
+            elif event.key == pygame.K_C:
+                user.typing_variable += 'C'
 
 
 #-----------------------------Update screens----------------------------------------------------
@@ -922,9 +938,11 @@ def text_input_box_display(ai_settings, screen, buttons,screen_status, button_st
         button.draw(screen)
 
         # Text box
-        button = Button('','', (100,100,100), 450, 340, 300, 50, alpha = 250)
+        button = Button(user.typing_variable + '|','', (100,100,100), 450, 340, 300, 50, alpha = 250)
         button.update()
         button.draw(screen)
+
+
 
 
 
