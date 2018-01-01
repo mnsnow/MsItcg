@@ -1,6 +1,7 @@
 import sys
 import random
 import pygame
+import socket
 from pygame.locals import *
 from card_database import *
 from card import Character, Monster, Tactic, Item
@@ -130,6 +131,7 @@ def check_events_welcome_screen(ai_settings,grid, screen, buttons,screen_status,
                         button_status.text_input_box_display = True
                     else:
                         pass
+                    #enter_as_network_client(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user,action, player2)
                 # Click on settings
                 elif Rect(474, 469, 253, 62).collidepoint(pygame.mouse.get_pos()):
                     button_status.welcome_screen_settings_display = True
@@ -162,8 +164,15 @@ def check_events_lobby_screen(ai_settings, screen, buttons,screen_status, button
                 button_status.text_input_box_display = True
 
             # Create button
-            elif Rect(920, 600, 100, 50).collidepoint(pygame.mouse.get_pos()):
+            elif Rect(920, 607, 100, 50).collidepoint(pygame.mouse.get_pos()):
+                #create_network_server(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
                 pass
+
+
+
+
+
+
 
 def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ Check events in prepare screen"""
@@ -1152,14 +1161,19 @@ def lobby_screen_stable_button_display(ai_settings,grid, screen, buttons, screen
     button4.update()
     button4.draw(screen)
     # background for create game
-    button2 = Button('','', (0,0,0),150, 580, 900, 180,alpha = 200)
+    button2 = Button('','', (0,0,0),150, 580, 900, 181,alpha = 200)
     button2.update()
     button2.draw(screen)
 
     button5 = Button('Create a game:','', (0,0,0),400, 580, 400, 50, font_size = 20, alpha = 0)
     button5.update()
     button5.draw(screen)
-    button3 = Button('CREATE','', (40,120,40),920, 600, 100, 50,alpha = 240)
+
+    button3 = Button('CREATE','', (40,40,120),920, 607, 100, 50,alpha = 240)
+    button3.update()
+    button3.draw(screen)
+
+    button3 = Button('Ready','', (40,120,40),920, 684, 100, 50,alpha = 240)
     button3.update()
     button3.draw(screen)
 
@@ -5184,7 +5198,37 @@ def user_input_text_save(string_type, ai_settings, screen, buttons,screen_status
         with open('user_info.txt','w') as f:
             f.writelines(x)
 
+def create_network_server(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
+    """ Create network server"""
+    print(user.ip_address)
 
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    host = ''
+    port = 5555
+
+    s.bind((host, port))
+    s.listen(5)
+    c, addr = s.accept()
+    print('socket created: '+'IP: '+ host + 'PORT: ' + str(port))
+    while 1:
+        pass
+
+    c.close()
+
+
+def enter_as_network_client(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user,action, player2):
+    """ establish connection when entering multiplayer screen"""
+    host = user.ip_address
+    port = 5555
+
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    s.connect((host,port))
+    while 1:
+        pass
+
+    s.close()
 
 
 #--

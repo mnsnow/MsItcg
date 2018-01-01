@@ -1,19 +1,27 @@
 import sys
 import pygame
 import random
+import socket
 from card_database import *
 from card import Monster, Character
+
 
 class User():
     """Contains informations of user's customatic informations"""
     def __init__(self):
+        # render user name
         with open('user_info.txt','r') as f:
             f.seek(0)
             for line in f:
                 if 'NAME' in line:
                     x1 = line.replace('NAME = ','')
-
         self.name = str(x1)[:-1]
+        # find ip address for the local network
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        x2 = s.getsockname()[0]
+        s.close()
+        self.ip_address = x2
 
         self.deck_list = [
             # # Set 1

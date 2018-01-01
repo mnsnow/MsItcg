@@ -7,14 +7,15 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 s.connect((host,port))
 
-message = input(' --> ')
+#message = input(' --> ')
 
-while message != 'q':
-    s.send(message.encode())
-    data1 = s.recv(2048)
-    data = data1.decode()
-    print('Received from server: ' + str(data))
-    message = input(' --> ')
+while 1:#message != 'q':
+    pass
+    # s.send(message.encode())
+    # data1 = s.recv(2048)
+    # data = data1.decode()
+    # print('Received from server: ' + str(data))
+    # message = input(' --> ')
 
 s.close()
 
