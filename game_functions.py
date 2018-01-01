@@ -35,6 +35,13 @@ def check_events(ai_settings,grid, screen, buttons,screen_status, button_status,
     if screen_status.battle_screen_display:
         check_events_battle_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
 
+    # text input box
+    if button_status.text_input_box_display == True:
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_A:
+                    print('aaaaa')
+
 def check_events_welcome_screen(ai_settings, screen, buttons,screen_status, button_status):
     """ Check all events on the welcome screen"""
     for event in pygame.event.get():
@@ -119,6 +126,7 @@ def check_events_welcome_screen(ai_settings, screen, buttons,screen_status, butt
                 elif Rect(434, 370, 333, 61).collidepoint(pygame.mouse.get_pos()):
                     screen_status.welcome_screen_display = False
                     screen_status.lobby_screen_display = True
+                    button_status.text_input_box_display = True
                 # Click on settings
                 elif Rect(474, 469, 253, 62).collidepoint(pygame.mouse.get_pos()):
                     button_status.welcome_screen_settings_display = True
@@ -142,9 +150,12 @@ def check_events_lobby_screen(ai_settings, screen, buttons,screen_status, button
                 sys.exit()
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
+            # Back button
             if Rect(0, 0, 50, 50).collidepoint(pygame.mouse.get_pos()):
                 screen_status.lobby_screen_display = False
                 screen_status.welcome_screen_display = True
+            elif Rect(920, 600, 100, 50).collidepoint(pygame.mouse.get_pos()):
+                pass
 
 
 
@@ -641,6 +652,10 @@ def update_screen(ai_settings,grid, screen, buttons, screen_status, button_statu
 
     #Rules display
     rules_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
+    #Text input box display
+    text_input_box_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
     # music volume
     if ai_settings.music_indicator == True:
         pygame.mixer.music.set_volume(1.0)
@@ -660,7 +675,6 @@ def lobby_screen_update(ai_settings,grid, screen, buttons, screen_status, button
     """ Update display for lobby screen"""
 
     lobby_screen_stable_button_display(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2)
-
 
 def prepare_screen_update(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2):
     """ Update prepare screen"""
@@ -888,6 +902,30 @@ def rules_display(ai_settings, screen, buttons,screen_status, button_status, car
         button.update()
         button.draw(screen)
 
+def text_input_box_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
+    """ Display text input box"""
+    if button_status.text_input_box_display == True:
+        button = Button('','', (255,255,255), 400, 275, 400, 180, alpha = 200)
+        button.update()
+        button.draw(screen)
+
+        button = Button('PLEASE ENTER YOUR NAME','', (255,255,255), 400, 275, 400, 50, font_color = (0,0,0), font_size = 22, alpha = 0)
+        button.update()
+        button.draw(screen)
+
+        button = Button('X','', (250,100,100), 775, 275, 25, 25, font_size = 16)
+        button.update()
+        button.draw(screen)
+
+        button = Button('OK','', (40,120,40), 575, 410, 50, 30, font_size = 20)
+        button.update()
+        button.draw(screen)
+
+        # Text box
+        button = Button('','', (100,100,100), 450, 340, 300, 50, alpha = 250)
+        button.update()
+        button.draw(screen)
+
 
 
 #-----------------------------Welcome screen display----------------------------------------------------
@@ -923,7 +961,6 @@ def welcome_screen_stable_button_display(ai_settings,screen, buttons, screen_sta
     text_image_4 = font_4.render('Exit', True, (255,255,255))
     text_rect_4 = text_image_4.get_rect(center = (600,700))
     screen.blit(text_image_4, text_rect_4)
-
 
 def welcome_screen_settings_menu_display(ai_settings,screen, buttons, screen_status, button_status):
     """ Display welcome screen settings menu"""
@@ -1065,27 +1102,26 @@ def lobby_screen_stable_button_display(ai_settings,grid, screen, buttons, screen
     button_back.update()
     button_back.draw(screen)
 
-    button1 = Button('Hello! Join a game or create one yourself: ','', (250,250,250),300, 0, 600, 50, font_size = 20, font_color = (0,0,0),alpha = 200)
+    button1 = Button('Hello Mnsnow! Join a game or create one yourself: ','', (250,250,250),300, 0, 600, 50, font_size = 20, font_color = (0,0,0),alpha = 200)
     button1.update()
     button1.draw(screen)
-
-    button2 = Button('','', (0,0,0),150, 80, 900, 130,alpha = 200)
-    button2.update()
-    button2.draw(screen)
-
-    button5 = Button('Create a game:','', (0,0,0),400, 80, 400, 50, font_size = 20, alpha = 0)
-    button5.update()
-    button5.draw(screen)
-
-    button3 = Button('','', (0,0,0),150, 220, 900, 520,alpha = 200)
+    # Background for join existing game
+    button3 = Button('','', (0,0,0),150, 70, 900, 500,alpha = 200)
     button3.update()
     button3.draw(screen)
 
-    button4 = Button('Join an existing game:','', (0,0,0),400, 220, 400, 50, font_size = 20, alpha = 0)
+    button4 = Button('Join an existing game:','', (0,0,0),400, 70, 400, 50, font_size = 20, alpha = 0)
     button4.update()
     button4.draw(screen)
+    # background for create game
+    button2 = Button('','', (0,0,0),150, 580, 900, 180,alpha = 200)
+    button2.update()
+    button2.draw(screen)
 
-    button3 = Button('Create','', (40,120,40),920, 110, 100, 50,alpha = 240)
+    button5 = Button('Create a game:','', (0,0,0),400, 580, 400, 50, font_size = 20, alpha = 0)
+    button5.update()
+    button5.draw(screen)
+    button3 = Button('CREATE','', (40,120,40),920, 600, 100, 50,alpha = 240)
     button3.update()
     button3.draw(screen)
 
@@ -1955,9 +1991,9 @@ def build_deck_screen_save_deck_to_file(screen,buttons, screen_status, button_st
                     for line in f:
                         if 'DECK_LIST_' + str(i) not in line:
                             y += 1
-                    if y < x:
+                    if y < x: # This means the index i has already exist, so we go for the next available i
                         y = 0
-                    else:
+                    else: # y = x means index i is free to use
                         deck_list_index = i
                         break
 
@@ -5024,7 +5060,6 @@ def add_text_to_action_history(string, screen, buttons,screen_status, button_sta
     new_text_dict['1'] = string
     button_status.battle_screen_history_bar_text_dict = new_text_dict
 
-
 def play_sound_effect(string, ai_settings):
     """ play sound effects"""
     if ai_settings.sound_indicator == True:
@@ -5060,6 +5095,25 @@ def change_bg_music(string):
         pygame.mixer.music.stop()
         pygame.mixer.music.load('static/music/When_The_Morning_Comes.wav')
         pygame.mixer.music.play(-1)
+
+def user_input_text_save(string):
+    """ save the informations user has typed in"""
+    if string_type == 'user name':
+        with open('user_info.txt','a+') as f:
+            f.seek(0)
+            x = f.readlines()
+            y = 1
+            f.seek(0)
+            for line in f:
+                if 'NAME' not in line:
+                    y += 1
+                else:
+                    break
+            x[y-1] = 'NAME = ' + user.typing_variable + '\n'
+
+        with open('user_deck_list_string.txt','w') as f:
+            f.writelines(x)
+
 
 
 

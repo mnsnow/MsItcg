@@ -7,6 +7,8 @@ from card import Monster, Character
 class Player2():
     def __init__(self):
 
+        self.identity = 'AI' #identify player2 is AI or a real person
+
         self.deck_list = [
             # # Set 1
             # card_01_01, card_01_03, card_01_04, card_01_06,

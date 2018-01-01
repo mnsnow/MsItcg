@@ -7,7 +7,7 @@ port = 5555
 
 s.bind((host, port))
 
-s.listen(1)
+s.listen(5)
 
 c, addr = s.accept()
 print('Connection from: '+ str(addr))

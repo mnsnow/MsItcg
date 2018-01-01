@@ -10,8 +10,8 @@ class Screen_status():
 
         self.time_last = pygame.time.get_ticks() # For player2(AI) use only
 
-        self.welcome_screen_display = True
-        self.lobby_screen_display = False
+        self.welcome_screen_display = False
+        self.lobby_screen_display = True
         self.prepare_screen_display = False
         self.build_deck_screen_display = False
         self.battle_screen_display = False
@@ -35,6 +35,7 @@ class Button_status():
     def __init__(self):
         self.rules_display = False
         self.rules_page_id = '1'
+        self.text_input_box_display = False
 
         self.welcome_screen_settings_display = False
 
