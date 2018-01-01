@@ -24,7 +24,7 @@ def check_events(ai_settings,grid, screen, buttons,screen_status, button_status,
         check_events_text_input_box(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
 
     elif screen_status.welcome_screen_display:
-        check_events_welcome_screen(ai_settings, screen, buttons,screen_status, button_status)
+        check_events_welcome_screen(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user,action, player2)
 
     elif screen_status.lobby_screen_display:
         check_events_lobby_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
@@ -38,8 +38,7 @@ def check_events(ai_settings,grid, screen, buttons,screen_status, button_status,
     elif screen_status.battle_screen_display:
         check_events_battle_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
 
-
-def check_events_welcome_screen(ai_settings, screen, buttons,screen_status, button_status):
+def check_events_welcome_screen(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user,action, player2):
     """ Check all events on the welcome screen"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -123,7 +122,10 @@ def check_events_welcome_screen(ai_settings, screen, buttons,screen_status, butt
                 elif Rect(434, 370, 333, 61).collidepoint(pygame.mouse.get_pos()):
                     screen_status.welcome_screen_display = False
                     screen_status.lobby_screen_display = True
-                    button_status.text_input_box_display = True
+                    if user.name == '':
+                        button_status.text_input_box_display = True
+                    else:
+                        pass
                 # Click on settings
                 elif Rect(474, 469, 253, 62).collidepoint(pygame.mouse.get_pos()):
                     button_status.welcome_screen_settings_display = True
@@ -151,6 +153,10 @@ def check_events_lobby_screen(ai_settings, screen, buttons,screen_status, button
             if Rect(0, 0, 50, 50).collidepoint(pygame.mouse.get_pos()):
                 screen_status.lobby_screen_display = False
                 screen_status.welcome_screen_display = True
+            # Change name button
+            elif Rect(780, 10, 110, 30).collidepoint(pygame.mouse.get_pos()):
+                button_status.text_input_box_display = True
+
             # Create button
             elif Rect(920, 600, 100, 50).collidepoint(pygame.mouse.get_pos()):
                 pass
@@ -617,20 +623,20 @@ def check_events_text_input_box(ai_settings, screen, buttons,screen_status, butt
         if event.type == pygame.QUIT:
             sys.exit()
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_DELETE:
-                if user.typing_variable != '':
-                    user.typing_variable = user.typing_variable[:-1]
+            if event.key == pygame.K_BACKSPACE:
+                if user.name != '':
+                    user.name = user.name[:-1]
                 else:
                     pass
             elif event.key <= 127:
                 if pygame.key.get_mods() & KMOD_SHIFT or pygame.key.get_mods() & KMOD_CAPS:
-                    user.typing_variable += chr(event.key).upper()
+                    user.name += chr(event.key).upper()
                 else:
-                    user.typing_variable += chr(event.key)
+                    user.name += chr(event.key)
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             #click on ok
-            if Rect(575, 410, 50, 30).collidepoint(pygame.mouse.get_pos()):
+            if Rect(567, 410, 66, 30).collidepoint(pygame.mouse.get_pos()):
                 user_input_text_save('user name',ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
                 button_status.text_input_box_display = False
 
@@ -933,12 +939,12 @@ def text_input_box_display(ai_settings, screen, buttons,screen_status, button_st
         button.update()
         button.draw(screen)
 
-        button = Button('OK','', (40,120,40), 575, 410, 50, 30, font_size = 20)
+        button = Button('SAVE','', (40,120,40), 567, 410, 66, 30, font_size = 18)
         button.update()
         button.draw(screen)
 
         # Text box
-        button = Button(user.typing_variable + '|','', (100,100,100), 450, 340, 300, 50, alpha = 250)
+        button = Button(user.name + '|','', (100,100,100), 450, 340, 300, 50, alpha = 250)
         button.update()
         button.draw(screen)
 
@@ -1120,9 +1126,13 @@ def lobby_screen_stable_button_display(ai_settings,grid, screen, buttons, screen
     button_back.update()
     button_back.draw(screen)
 
-    button1 = Button('Hello Mnsnow! Join a game or create one yourself: ','', (250,250,250),300, 0, 600, 50, font_size = 20, font_color = (0,0,0),alpha = 200)
+    button1 = Button('Hello '+ user.name +'!','', (250,250,250),300, 0, 600, 50, font_size = 20, font_color = (0,0,0),alpha = 200)
     button1.update()
     button1.draw(screen)
+
+    button_back = Button('Change Name','', (150,40,40),780, 10, 110, 30, font_size = 14,alpha = 200)
+    button_back.update()
+    button_back.draw(screen)
     # Background for join existing game
     button3 = Button('','', (0,0,0),150, 70, 900, 500,alpha = 200)
     button3.update()
@@ -5127,7 +5137,7 @@ def user_input_text_save(string_type, ai_settings, screen, buttons,screen_status
                     y += 1
                 else:
                     break
-            x[y-1] = 'NAME = ' + user.typing_variable + '\n'
+            x[y-1] = 'NAME = ' + user.name + '\n'
 
         with open('user_info.txt','w') as f:
             f.writelines(x)

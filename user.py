@@ -11,9 +11,9 @@ class User():
             f.seek(0)
             for line in f:
                 if 'NAME' in line:
-                    x = line.replace('NAME = ','')
+                    x1 = line.replace('NAME = ','')
 
-        self.typing_variable = str(x)[:-1]
+        self.name = str(x1)[:-1]
 
         self.deck_list = [
             # # Set 1
