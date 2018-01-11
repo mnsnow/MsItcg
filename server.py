@@ -60,7 +60,7 @@ while 1:
         aaa = data[data.find('USER_NAME'):]
         bbb = aaa[:aaa.find('||')]
         player_name = str(bbb.replace('USER_NAME = ', ''))
-        print('USER_NAME---------: ' + user_name + '.')
+        print('PLAYER_NAME---------: ' + player_name + '.')
 
     if 'USER_CHARACTER_HP' in data:
         aaa = data[data.find('USER_CHARACTER_HP'):]
@@ -72,7 +72,7 @@ while 1:
         aaa = data[data.find('PLAYER_NAME'):]
         bbb = aaa[:aaa.find('||')]
         user_name = str(bbb.replace('PLAYER_NAME = ', ''))
-        print('PLAYER_NAME---------: ' + player_name + '.')
+        print('USER_NAME---------: ' + user_name + '.')
 
     # Writing into the file
     with open('connection.txt','a+') as f:
