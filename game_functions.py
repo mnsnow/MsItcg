@@ -23,6 +23,10 @@ def read_network_variables(ai_settings,grid, screen, buttons,screen_status, butt
         for line in f:
             if 'PLAYER_NAME' in line:
                 player2.name = str(line.replace('PLAYER_NAME = ', ''))[:-1]
+            if 'USER_NAME' in line:
+                user.name = str(line.replace('USER_NAME = ', ''))[:-1]
+            if 'USER_CHARACTER_HP' in line:
+                user.character_card.health = str(line.replace('USER_CHARACTER_HP = ', ''))[:-1]
 
 def write_network_variables(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ Write variables for multiplyaer from text file"""
@@ -39,6 +43,16 @@ def write_network_variables(ai_settings,grid, screen, buttons,screen_status, but
             else:
                 break
         x[y-1] = 'USER_NAME = ' + user.name + '\n'
+
+        #write player_name
+        y = 1
+        f.seek(0)
+        for line in f:
+            if 'PLAYER_NAME' not in line:
+                y += 1
+            else:
+                break
+        x[y-1] = 'PLAYER_NAME = ' + player2.name + '\n'
 
         #write user.character_card.health
         y = 1
@@ -1207,6 +1221,10 @@ def lobby_screen_stable_button_display(ai_settings,grid, screen, buttons, screen
     button4.draw(screen)
     # background for create game
     button2 = Button('','', (0,0,0),150, 580, 900, 181,alpha = 200)
+    button2.update()
+    button2.draw(screen)
+
+    button2 = Button(player2.name,'', (0,0,0),250, 480, 300, 101,alpha = 200)
     button2.update()
     button2.draw(screen)
 

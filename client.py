@@ -33,7 +33,7 @@ s.connect((host,port))
 while 1:
 
     # Sending data
-    with open('connection_client.txt','r') as f:
+    with open('connection.txt','r') as f:
         f.seek(0)
         for line in f:
             if 'USER_NAME' in line:
@@ -45,7 +45,7 @@ while 1:
 
     time.sleep(0.3)
 
-    with open('connection_client.txt','r') as f:
+    with open('connection.txt','r') as f:
         f.seek(0)
         for line in f:
             if 'USER_NAME' in line:
@@ -77,14 +77,9 @@ while 1:
     if 'USER_NAME' in data:
         aaa = data[data.find('USER_NAME'):]
         bbb = aaa[:aaa.find('||')]
-        user_name = str(bbb.replace('USER_NAME = ', ''))
+        player_name = str(bbb.replace('USER_NAME = ', ''))
         print('USER_NAME---------: ' + user_name + '.')
 
-    if 'PLAYER_NAME' in data:
-        aaa = data[data.find('PLAYER_NAME'):]
-        bbb = aaa[:aaa.find('||')]
-        player_name = str(bbb.replace('PLAYER_NAME = ', ''))
-        print('PLAYER_NAME---------: ' + player_name + '.')
 
     if 'USER_CHARACTER_HP' in data:
         aaa = data[data.find('USER_CHARACTER_HP'):]
@@ -92,10 +87,16 @@ while 1:
         user_character_hp = str(bbb.replace('USER_CHARACTER_HP = ', ''))
         print('USER_CHARACTER_HP---------: ' + user_character_hp + '.')
 
+    if 'PLAYER_NAME' in data:
+        aaa = data[data.find('PLAYER_NAME'):]
+        bbb = aaa[:aaa.find('||')]
+        user_name = str(bbb.replace('PLAYER_NAME = ', ''))
+        print('PLAYER_NAME---------: ' + player_name + '.')
+
 
 
     # Writing into the file
-    with open('connection_client.txt','a+') as f:
+    with open('connection.txt','a+') as f:
         f.seek(0)
         x = f.readlines()
 
@@ -110,16 +111,7 @@ while 1:
                     break
             x[y-1] = 'USER_NAME = ' + user_name + '\n'
 
-        #write player_name
-        if player_name != '':
-            y = 1
-            f.seek(0)
-            for line in f:
-                if 'PLAYER_NAME' not in line:
-                    y += 1
-                else:
-                    break
-            x[y-1] = 'PLAYER_NAME = ' + player_name + '\n'
+
 
         #write user.character_card.health
         if user_character_hp != '':
@@ -132,8 +124,19 @@ while 1:
                     break
             x[y-1] = 'USER_CHARACTER_HP = ' + user_character_hp + '\n'
 
+        #write player_name
+        if player_name != '':
+            y = 1
+            f.seek(0)
+            for line in f:
+                if 'PLAYER_NAME' not in line:
+                    y += 1
+                else:
+                    break
+            x[y-1] = 'PLAYER_NAME = ' + player_name + '\n'
 
-    with open('connection_client.txt','w') as f:
+
+    with open('connection.txt','w') as f:
         f.writelines(x)
 
 
