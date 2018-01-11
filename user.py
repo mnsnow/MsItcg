@@ -16,6 +16,8 @@ class User():
                 if 'NAME' in line:
                     x1 = line.replace('NAME = ','')
         self.name = str(x1)[:-1]
+        self.name_copy = ''
+
         # find ip address for the local network
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect(("8.8.8.8", 80))

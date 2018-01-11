@@ -16,6 +16,7 @@ import time
 
 
 #------------------------------Networking------------------------------------------------------
+
 def read_network_variables(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ read variables for multiplayer form text file"""
     with open('connection.txt','r') as f:
@@ -23,10 +24,13 @@ def read_network_variables(ai_settings,grid, screen, buttons,screen_status, butt
         for line in f:
             if 'PLAYER_NAME' in line:
                 player2.name = str(line.replace('PLAYER_NAME = ', ''))[:-1]
+                player2.name_copy = str(line.replace('PLAYER_NAME = ', ''))[:-1]
             if 'USER_NAME' in line:
                 user.name = str(line.replace('USER_NAME = ', ''))[:-1]
+                user_name.copy = str(line.replace('USER_NAME = ', ''))[:-1]
             if 'USER_CHARACTER_HP' in line:
-                user.character_card.health = str(line.replace('USER_CHARACTER_HP = ', ''))[:-1]
+                if user.character_card != '':
+                    user.character_card.health = str(line.replace('USER_CHARACTER_HP = ', ''))[:-1]
 
 def write_network_variables(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ Write variables for multiplyaer from text file"""
@@ -35,34 +39,37 @@ def write_network_variables(ai_settings,grid, screen, buttons,screen_status, but
         x = f.readlines()
 
         #write user_name
-        y = 1
-        f.seek(0)
-        for line in f:
-            if 'USER_NAME' not in line:
-                y += 1
-            else:
-                break
-        x[y-1] = 'USER_NAME = ' + user.name + '\n'
+        if user.name != user.name_copy:
+            y = 1
+            f.seek(0)
+            for line in f:
+                if 'USER_NAME' not in line:
+                    y += 1
+                else:
+                    break
+            x[y-1] = 'USER_NAME = ' + user.name + '\n'
 
         #write player_name
-        y = 1
-        f.seek(0)
-        for line in f:
-            if 'PLAYER_NAME' not in line:
-                y += 1
-            else:
-                break
-        x[y-1] = 'PLAYER_NAME = ' + player2.name + '\n'
+        if player2.name != player2.name_copy:
+            y = 1
+            f.seek(0)
+            for line in f:
+                if 'PLAYER_NAME' not in line:
+                    y += 1
+                else:
+                    break
+            x[y-1] = 'PLAYER_NAME = ' + player2.name + '\n'
 
         #write user.character_card.health
-        y = 1
-        f.seek(0)
-        for line in f:
-            if 'USER_CHARACTER_HP' not in line:
-                y += 1
-            else:
-                break
-        x[y-1] = 'USER_CHARACTER_HP = ' + user.character_card.health + '\n'
+        if user.character_card != '':
+            y = 1
+            f.seek(0)
+            for line in f:
+                if 'USER_CHARACTER_HP' not in line:
+                    y += 1
+                else:
+                    break
+            x[y-1] = 'USER_CHARACTER_HP = ' + user.character_card.health + '\n'
 
 
     with open('connection.txt','w') as f:

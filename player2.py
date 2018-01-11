@@ -9,6 +9,7 @@ class Player2():
 
         self.identity = 'AI' #identify player2 is AI or a real person
         self.name = 'UNKNOWN'
+        self.name_copy = ''
 
         self.deck_list = [
             # # Set 1
