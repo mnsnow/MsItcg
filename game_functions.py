@@ -171,9 +171,6 @@ def check_events_lobby_screen(ai_settings, screen, buttons,screen_status, button
 
 
 
-
-
-
 def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ Check events in prepare screen"""
 

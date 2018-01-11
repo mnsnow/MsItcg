@@ -11,7 +11,7 @@ class Settings():
         self.bg_color = (100,3,3)
 
         self.sound_indicator = True
-        self.music_indicator = True
+        self.music_indicator = False
 
         self.theme_indicator = 'Lith Harbor'
 
