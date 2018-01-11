@@ -39,6 +39,9 @@ class Button_status():
 
         self.welcome_screen_settings_display = False
 
+        self.lobby_screen_room_detail_display = 'none'
+        self.lobby_screen_room_list_display = []
+
         self.prepare_screen_end_screen_warning_button_display = ''
 
         self.build_deck_screen_stable_button_backend = True

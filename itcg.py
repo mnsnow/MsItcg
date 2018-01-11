@@ -45,7 +45,7 @@ def main():
 
         gf.check_events(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
 
-        gf.update_screen(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2)
+        gf.update_screen(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user,action, player2)
 
         gf.write_network_variables(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
         clock.tick(25)

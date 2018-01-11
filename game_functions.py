@@ -24,15 +24,14 @@ def read_network_variables(ai_settings,grid, screen, buttons,screen_status, butt
             if 'PLAYER_NAME' in line:
                 player2.name = str(line.replace('PLAYER_NAME = ', ''))[:-1]
 
-
-
 def write_network_variables(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
-    """ Write variables for multiplyaer form text file"""
+    """ Write variables for multiplyaer from text file"""
     with open('connection.txt','a+') as f:
         f.seek(0)
         x = f.readlines()
-        y = 1
+
         #write user_name
+        y = 1
         f.seek(0)
         for line in f:
             if 'USER_NAME' not in line:
@@ -204,11 +203,15 @@ def check_events_lobby_screen(ai_settings, screen, buttons,screen_status, button
             elif Rect(780, 10, 110, 30).collidepoint(pygame.mouse.get_pos()):
                 button_status.text_input_box_display = True
 
-            # Create button
+            # Create/ready/start button
             elif Rect(920, 607, 100, 50).collidepoint(pygame.mouse.get_pos()):
-                #create_network_server(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
-                pass
-
+                if button_status.lobby_screen_room_detail_display == 'none':
+                    button_status.lobby_screen_room_detail_display = 'my'
+                    button_status.lobby_screen_room_list_display.append(user.name)
+                elif button_status.lobby_screen_room_detail_display == 'my':
+                    pass
+                elif button_status.lobby_screen_room_detail_display == 'other':
+                    pass
 
 
 
@@ -698,7 +701,7 @@ def check_events_text_input_box(ai_settings, screen, buttons,screen_status, butt
 
 
 #-----------------------------Update screens----------------------------------------------------
-def update_screen(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2):
+def update_screen(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user,action, player2):
     """ Update images on the screen and flip to the new screen"""
     screen.fill((250,250,250))
     # Theme filter
@@ -715,7 +718,7 @@ def update_screen(ai_settings,grid, screen, buttons, screen_status, button_statu
         welcome_screen_update(ai_settings,screen, buttons, screen_status, button_status)
 
     if screen_status.lobby_screen_display:
-        lobby_screen_update(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2)
+        lobby_screen_update(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user,action, player2)
 
     if screen_status.prepare_screen_display:
         prepare_screen_update(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2)
@@ -750,10 +753,14 @@ def welcome_screen_update(ai_settings,screen, buttons, screen_status,button_stat
 
     welcome_screen_settings_menu_display(ai_settings,screen, buttons, screen_status, button_status)
 
-def lobby_screen_update(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2):
+def lobby_screen_update(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user,action, player2):
     """ Update display for lobby screen"""
 
     lobby_screen_stable_button_display(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2)
+
+    lobby_screen_room_detail_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
+
+    lobby_screen_room_list_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
 
 def prepare_screen_update(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2):
     """ Update prepare screen"""
@@ -1203,21 +1210,65 @@ def lobby_screen_stable_button_display(ai_settings,grid, screen, buttons, screen
     button2.update()
     button2.draw(screen)
 
-    button5 = Button('Create a game:','', (0,0,0),400, 580, 400, 50, font_size = 20, alpha = 0)
-    button5.update()
-    button5.draw(screen)
+def lobby_screen_room_list_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
+    """ Display room list"""
+    if button_status.lobby_screen_room_list_display == []:
+        pass
+    else:
+        y = 0
+        for name in button_status.lobby_screen_room_list_display:
 
-    button3 = Button('CREATE','', (40,40,120),920, 607, 100, 50,alpha = 240)
-    button3.update()
-    button3.draw(screen)
+            button3 = Button(name + "'s game:" + '   1/2','', (100,30,130),240, 150+ 70 * y, 350, 50,alpha = 240)
+            button3.update()
+            button3.draw(screen)
 
-    button3 = Button('Ready','', (40,120,40),920, 684, 100, 50,alpha = 240)
-    button3.update()
-    button3.draw(screen)
+            if button_status.lobby_screen_room_detail_display == 'none':
+                button3 = Button('Join','', (40,120,40),530, 160 + 70 * y, 50, 30,alpha = 240)
+                button3.update()
+                button3.draw(screen)
 
-    button3 = Button(player2.name,'', (40,120,40),620, 684, 200, 50,alpha = 240)
-    button3.update()
-    button3.draw(screen)
+            y += 1
+
+def lobby_screen_room_detail_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
+    """ Display my room structure"""
+    if button_status.lobby_screen_room_detail_display == 'none':
+
+        button5 = Button('Create a game:','', (0,0,0),400, 580, 400, 50, font_size = 20, alpha = 0)
+        button5.update()
+        button5.draw(screen)
+
+        button3 = Button('CREATE','', (40,40,120),920, 607, 100, 50,alpha = 240)
+        button3.update()
+        button3.draw(screen)
+
+
+    elif button_status.lobby_screen_room_detail_display == 'my':
+
+        button5 = Button(user.name + "'s game:" + '   1/2','', (0,0,0),400, 580, 400, 50, font_size = 20, alpha = 0)
+        button5.update()
+        button5.draw(screen)
+
+        button3 = Button('START','', (40,120,40),920, 607, 100, 50,alpha = 240)
+        button3.update()
+        button3.draw(screen)
+
+        button3 = Button('QUIT','', (120,40,40),920, 684, 100, 50,alpha = 240)
+        button3.update()
+        button3.draw(screen)
+
+    elif button_status.lobby_screen_room_detail_display == 'other':
+
+        button5 = Button('Create a game:','', (0,0,0),400, 580, 400, 50, font_size = 20, alpha = 0)
+        button5.update()
+        button5.draw(screen)
+
+        button3 = Button('READY','', (40,120,40),920, 607, 100, 50,alpha = 240)
+        button3.update()
+        button3.draw(screen)
+
+        button3 = Button('QUIT','', (120,40,40),920, 684, 100, 50,alpha = 240)
+        button3.update()
+        button3.draw(screen)
 
 
 
@@ -5237,24 +5288,6 @@ def user_input_text_save(string_type, ai_settings, screen, buttons,screen_status
 
         with open('user_info.txt','w') as f:
             f.writelines(x)
-
-def create_network_server(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
-    """ Create network server"""
-    print(user.ip_address)
-
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-    host = ''
-    port = 5555
-
-    s.bind((host, port))
-    s.listen(5)
-    c, addr = s.accept()
-    print('socket created: '+'IP: '+ host + 'PORT: ' + str(port))
-    while 1:
-        pass
-
-    c.close()
 
 def enter_as_network_client(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user,action, player2):
     """ establish connection when entering multiplayer screen"""
