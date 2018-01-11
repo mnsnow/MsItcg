@@ -8,6 +8,7 @@ class Player2():
     def __init__(self):
 
         self.identity = 'AI' #identify player2 is AI or a real person
+        self.name = 'UNKNOWN'
 
         self.deck_list = [
             # # Set 1

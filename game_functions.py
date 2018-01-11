@@ -15,6 +15,47 @@ from builtins import any
 import time
 
 
+#------------------------------Networking------------------------------------------------------
+def read_network_variables(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
+    """ read variables for multiplayer form text file"""
+    with open('connection.txt','r') as f:
+        f.seek(0)
+        for line in f:
+            if 'PLAYER_NAME' in line:
+                player2.name = str(line.replace('PLAYER_NAME = ', ''))[:-1]
+
+
+
+def write_network_variables(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
+    """ Write variables for multiplyaer form text file"""
+    with open('connection.txt','a+') as f:
+        f.seek(0)
+        x = f.readlines()
+        y = 1
+        #write user_name
+        f.seek(0)
+        for line in f:
+            if 'USER_NAME' not in line:
+                y += 1
+            else:
+                break
+        x[y-1] = 'USER_NAME = ' + user.name + '\n'
+
+        #write user.character_card.health
+        y = 1
+        f.seek(0)
+        for line in f:
+            if 'USER_CHARACTER_HP' not in line:
+                y += 1
+            else:
+                break
+        x[y-1] = 'USER_CHARACTER_HP = ' + user.character_card.health + '\n'
+
+
+    with open('connection.txt','w') as f:
+        f.writelines(x)
+
+
 
 
 #-----------------------------Check events----------------------------------------------------
@@ -1171,6 +1212,10 @@ def lobby_screen_stable_button_display(ai_settings,grid, screen, buttons, screen
     button3.draw(screen)
 
     button3 = Button('Ready','', (40,120,40),920, 684, 100, 50,alpha = 240)
+    button3.update()
+    button3.draw(screen)
+
+    button3 = Button(player2.name,'', (40,120,40),620, 684, 200, 50,alpha = 240)
     button3.update()
     button3.draw(screen)
 
@@ -4095,8 +4140,6 @@ def battle_screen_instruction_bar_yes_skip_action(yes_skip_indicator, ai_setting
         screen_status.battle_screen_action_indicator = 'player2-stage-0'
         screen_status.battle_screen_player2_action_display_indicator = True
 
-
-
 def battle_screen_stage_2_action(position, ai_settings,screen,buttons, screen_status, button_status, card_database_filter, user,action,player2):
     """ Input position of the action, output action according to the type on specific card"""
 
@@ -5212,7 +5255,6 @@ def create_network_server(ai_settings, screen, buttons,screen_status, button_sta
         pass
 
     c.close()
-
 
 def enter_as_network_client(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user,action, player2):
     """ establish connection when entering multiplayer screen"""

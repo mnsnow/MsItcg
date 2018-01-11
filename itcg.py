@@ -1,8 +1,10 @@
 import sys
 import pygame, pygame.mixer
 from pygame.sprite import Group
-import game_functions as gf
+from multiprocessing import Process
+import socket
 
+import game_functions as gf
 from settings import Settings
 from button import Button
 from display import Screen_status, Button_status
@@ -11,6 +13,7 @@ import card_database_filter as cdf
 from user import User
 from action import Action
 from player2 import Player2
+
 
 
 def main():
@@ -38,16 +41,14 @@ def main():
 
 
     while True:
+        gf.read_network_variables(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
 
         gf.check_events(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
 
         gf.update_screen(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2)
 
-
-
+        gf.write_network_variables(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
         clock.tick(25)
-
-
 
 
 
@@ -55,3 +56,10 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+
+
+
+#---
