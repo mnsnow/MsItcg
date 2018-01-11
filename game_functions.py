@@ -5292,19 +5292,19 @@ def change_bg_music(string):
 def user_input_text_save(string_type, ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ save the informations user has typed in"""
     if string_type == 'user name':
-        with open('user_info.txt','a+') as f:
+        with open('connection.txt','a+') as f:
             f.seek(0)
             x = f.readlines()
             y = 1
             f.seek(0)
             for line in f:
-                if 'NAME' not in line:
+                if 'USER_NAME' not in line:
                     y += 1
                 else:
                     break
-            x[y-1] = 'NAME = ' + user.name + '\n'
+            x[y-1] = 'USER_NAME = ' + user.name + '\n'
 
-        with open('user_info.txt','w') as f:
+        with open('connection.txt','w') as f:
             f.writelines(x)
 
 def enter_as_network_client(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user,action, player2):
