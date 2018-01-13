@@ -113,7 +113,7 @@ def write_network_variables(ai_settings,grid, screen, buttons,screen_status, but
                     y += 1
                 else:
                     break
-            x[y-1] = 'LOBBY_PREPARE_TO_GO = ' + str(button_status.lobby_screen_prepare_to_go_display_copy) + '\n'
+            x[y-1] = 'LOBBY_PREPARE_TO_GO = ' + str(button_status.lobby_screen_prepare_to_go_display) + '\n'
 
 
     with open('connection.txt','w') as f:
@@ -323,7 +323,7 @@ def check_events_lobby_screen(ai_settings, screen, buttons,screen_status, button
                         button_status.lobby_screen_room_list_display = user.name
 
                 #next
-                elif button_status.lobby_screen_room_detail_display == 'my' and button_status.lobby_screen_room_status == '2/2':
+                elif button_status.lobby_screen_room_detail_display == 'my': #and button_status.lobby_screen_room_status == '2/2':
                     button_status.lobby_screen_prepare_to_go_display = True
 
                 elif button_status.lobby_screen_room_detail_display == 'my':
@@ -833,6 +833,8 @@ def check_events_text_input_box(ai_settings, screen, buttons,screen_status, butt
 def update_screen(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user,action, player2):
     """ Update images on the screen and flip to the new screen"""
     screen.fill((250,250,250))
+    print(button_status.lobby_screen_prepare_to_go_display)
+    print('copy: ' + str(button_status.lobby_screen_prepare_to_go_display_copy))
     # Theme filter
     if ai_settings.theme_indicator == 'Lith Harbor':
         screen.blit(pygame.image.load('static/bg_images/bg_02.png'), (0,0))
