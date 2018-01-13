@@ -44,6 +44,9 @@ class Button_status():
         self.lobby_screen_room_list_display_copy = 'N/A'
         self.lobby_screen_room_status = '0/2'
         self.lobby_screen_room_status_copy = '0/2'
+        self.lobby_screen_prepare_to_go_display = False
+        self.lobby_screen_prepare_to_go_display_copy = False
+
 
         self.prepare_screen_end_screen_warning_button_display = ''
 

@@ -45,6 +45,13 @@ def read_network_variables(ai_settings,grid, screen, buttons,screen_status, butt
                 elif str(line.replace('ROOM_PEOPLE_NUMBER = ', ''))[:-1] == '2':
                     button_status.lobby_screen_room_status = '2/2'
                     button_status.lobby_screen_room_status_copy = '2/2'
+            if 'LOBBY_PREPARE_TO_GO' in line:
+                if 'False' in line:
+                    button_status.lobby_screen_prepare_to_go_display = False
+                    button_status.lobby_screen_prepare_to_go_display_copy = False
+                elif 'True' in line:
+                    button_status.lobby_screen_prepare_to_go_display = True
+                    button_status.lobby_screen_prepare_to_go_display_copy = False
 
 def write_network_variables(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ Write variables for multiplyaer from text file"""
@@ -96,6 +103,17 @@ def write_network_variables(ai_settings,grid, screen, buttons,screen_status, but
                 else:
                     break
             x[y-1] = 'ROOM_PEOPLE_NUMBER = ' + str(button_status.lobby_screen_room_status[0]) + '\n'
+
+        #write number of people in room
+        if button_status.lobby_screen_prepare_to_go_display != button_status.lobby_screen_prepare_to_go_display_copy:
+            y = 1
+            f.seek(0)
+            for line in f:
+                if 'LOBBY_PREPARE_TO_GO' not in line:
+                    y += 1
+                else:
+                    break
+            x[y-1] = 'LOBBY_PREPARE_TO_GO = ' + button_status.lobby_screen_prepare_to_go_display_copy + '\n'
 
 
     with open('connection.txt','w') as f:
@@ -295,13 +313,18 @@ def check_events_lobby_screen(ai_settings, screen, buttons,screen_status, button
             elif Rect(780, 10, 110, 30).collidepoint(pygame.mouse.get_pos()):
                 button_status.text_input_box_display = True
 
-            # Create/ready/start button
+            # Create/next/start button
             elif Rect(920, 607, 100, 50).collidepoint(pygame.mouse.get_pos()):
+                # create
                 if button_status.lobby_screen_room_detail_display == 'none':
                     if button_status.lobby_screen_room_list_display == 'N/A':
                         button_status.lobby_screen_room_detail_display = 'my'
                         button_status.lobby_screen_room_status = '1/2'
                         button_status.lobby_screen_room_list_display = user.name
+
+                #next
+                elif button_status.lobby_screen_room_detail_display == 'my' and button_status.lobby_screen_room_status == '2/2':
+                    button_status.lobby_screen_prepare_to_go_display = True
 
                 elif button_status.lobby_screen_room_detail_display == 'my':
                     pass
@@ -312,6 +335,13 @@ def check_events_lobby_screen(ai_settings, screen, buttons,screen_status, button
                 if button_status.lobby_screen_room_detail_display == 'none':
                     button_status.lobby_screen_room_detail_display = 'other'
                     button_status.lobby_screen_room_status = '2/2'
+            # quit
+            elif Rect(920, 684, 100, 50).collidepoint(pygame.mouse.get_pos()):
+                if button_status.lobby_screen_room_detail_display == 'my' or button_status.lobby_screen_room_detail_display == 'other':
+                    clear_text_file()
+                    button_status.lobby_screen_room_detail_display = 'none'
+
+
 
 
 def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
@@ -1294,36 +1324,39 @@ def lobby_screen_stable_button_display(ai_settings,grid, screen, buttons, screen
     button_back = Button('Change Name','', (150,40,40),780, 10, 110, 30, font_size = 14,alpha = 200)
     button_back.update()
     button_back.draw(screen)
-    # Background for join existing game
-    button3 = Button('','', (0,0,0),150, 70, 900, 500,alpha = 200)
-    button3.update()
-    button3.draw(screen)
-
-    button4 = Button('Join an existing game:','', (0,0,0),400, 70, 400, 50, font_size = 20, alpha = 0)
-    button4.update()
-    button4.draw(screen)
     # background for create game
     button2 = Button('','', (0,0,0),150, 580, 900, 181,alpha = 200)
     button2.update()
     button2.draw(screen)
+    if button_status.lobby_screen_prepare_to_go_display == False:
+        # Background for join existing game
+        button3 = Button('','', (0,0,0),150, 70, 900, 500,alpha = 200)
+        button3.update()
+        button3.draw(screen)
+
+        button4 = Button('Join an existing game:','', (0,0,0),400, 70, 400, 50, font_size = 20, alpha = 0)
+        button4.update()
+        button4.draw(screen)
+
 
 
 def lobby_screen_room_list_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ Display room list"""
-    if button_status.lobby_screen_room_list_display == 'N/A':
-        pass
-    else:
-        if button_status.lobby_screen_room_status == '1/2':
-            name = button_status.lobby_screen_room_list_display
+    if button_status.lobby_screen_prepare_to_go_display == False:
+        if button_status.lobby_screen_room_list_display == 'N/A':
+            pass
+        else:
+            if button_status.lobby_screen_room_status == '1/2':
+                name = button_status.lobby_screen_room_list_display
 
-            button3 = Button(name + "'s game:" + '   1/2','', (100,30,130),240, 150+ 70, 350, 50,alpha = 240)
-            button3.update()
-            button3.draw(screen)
-
-            if button_status.lobby_screen_room_detail_display == 'none':
-                button3 = Button('Join','', (40,120,40),530, 230, 50, 30,alpha = 240)
+                button3 = Button(name + "'s game:" + '   1/2','', (100,30,130),240, 150+ 70, 350, 50,alpha = 240)
                 button3.update()
                 button3.draw(screen)
+
+                if button_status.lobby_screen_room_detail_display == 'none':
+                    button3 = Button('Join','', (40,120,40),530, 230, 50, 30,alpha = 240)
+                    button3.update()
+                    button3.draw(screen)
 
 
 def lobby_screen_room_detail_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
@@ -1372,11 +1405,11 @@ def lobby_screen_room_detail_display(ai_settings, screen, buttons,screen_status,
             button3.draw(screen)
 
         if button_status.lobby_screen_room_status == '1/2':
-            button3 = Button('START','', (120,120,120),920, 607, 100, 50,alpha = 240)
+            button3 = Button('NEXT','', (120,120,120),920, 607, 100, 50,alpha = 240)
             button3.update()
             button3.draw(screen)
         elif button_status.lobby_screen_room_status == '2/2':
-            button3 = Button('START','', (40,120,40),920, 607, 100, 50,alpha = 240)
+            button3 = Button('NEXT','', (40,120,40),920, 607, 100, 50,alpha = 240)
             button3.update()
             button3.draw(screen)
 
