@@ -308,7 +308,7 @@ def check_events_lobby_screen(ai_settings, screen, buttons,screen_status, button
                 elif button_status.lobby_screen_room_detail_display == 'other':
                     pass
             # Join
-            elif Rect(530, 160, 50, 30).collidepoint(pygame.mouse.get_pos()):
+            elif Rect(530, 230, 50, 30).collidepoint(pygame.mouse.get_pos()):
                 if button_status.lobby_screen_room_detail_display == 'none':
                     button_status.lobby_screen_room_detail_display = 'other'
                     button_status.lobby_screen_room_status = '2/2'
@@ -1313,21 +1313,24 @@ def lobby_screen_room_list_display(ai_settings, screen, buttons,screen_status, b
     if button_status.lobby_screen_room_list_display == 'N/A':
         pass
     else:
-        name = button_status.lobby_screen_room_list_display
+        if button_status.lobby_screen_room_status == '1/2':
+            name = button_status.lobby_screen_room_list_display
 
-        button3 = Button(name + "'s game:" + '   1/2','', (100,30,130),240, 150+ 70, 350, 50,alpha = 240)
-        button3.update()
-        button3.draw(screen)
-
-        if button_status.lobby_screen_room_detail_display == 'none':
-            button3 = Button('Join','', (40,120,40),530, 160 + 70, 50, 30,alpha = 240)
+            button3 = Button(name + "'s game:" + '   1/2','', (100,30,130),240, 150+ 70, 350, 50,alpha = 240)
             button3.update()
             button3.draw(screen)
+
+            if button_status.lobby_screen_room_detail_display == 'none':
+                button3 = Button('Join','', (40,120,40),530, 230, 50, 30,alpha = 240)
+                button3.update()
+                button3.draw(screen)
 
 
 def lobby_screen_room_detail_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ Display my room structure"""
+
     if button_status.lobby_screen_room_detail_display == 'none':
+
         if button_status.lobby_screen_room_list_display == 'N/A':
             button5 = Button('Create a game:','', (0,0,0),400, 580, 400, 50, font_size = 20, alpha = 0)
             button5.update()
@@ -1346,9 +1349,14 @@ def lobby_screen_room_detail_display(ai_settings, screen, buttons,screen_status,
 
     elif button_status.lobby_screen_room_detail_display == 'my':
 
-        button5 = Button(user.name + "'s game:" + '   1/2','', (0,0,0),400, 580, 400, 50, font_size = 20, alpha = 0)
-        button5.update()
-        button5.draw(screen)
+        if button_status.lobby_screen_room_status == '1/2':
+            button5 = Button(user.name + "'s game:" + '   1/2','', (0,0,0),400, 580, 400, 50, font_size = 20,font_color = (200,100,100), alpha = 0)
+            button5.update()
+            button5.draw(screen)
+        elif button_status.lobby_screen_room_status == '2/2':
+            button5 = Button(user.name + "'s game:" + '   2/2','', (0,0,0),400, 580, 400, 50, font_size = 20, alpha = 0)
+            button5.update()
+            button5.draw(screen)
 
         button3 = Button(user.name,'', (200,200,110),205, 635, 650, 35,alpha = 240)
         button3.update()
@@ -1378,13 +1386,15 @@ def lobby_screen_room_detail_display(ai_settings, screen, buttons,screen_status,
 
     elif button_status.lobby_screen_room_detail_display == 'other':
 
-        button5 = Button('Create a game:','', (0,0,0),400, 580, 400, 50, font_size = 20, alpha = 0)
-        button5.update()
-        button5.draw(screen)
+        if button_status.lobby_screen_room_status == '1/2':
+            button5 = Button(player2.name + "'s game:" + '   1/2','', (0,0,0),400, 580, 400, 50, font_size = 20,font_color = (200,100,100), alpha = 0)
+            button5.update()
+            button5.draw(screen)
+        elif button_status.lobby_screen_room_status == '2/2':
+            button5 = Button(player2.name + "'s game:" + '   2/2','', (0,0,0),400, 580, 400, 50, font_size = 20, alpha = 0)
+            button5.update()
+            button5.draw(screen)
 
-        button3 = Button('READY','', (40,120,40),920, 607, 100, 50,alpha = 240)
-        button3.update()
-        button3.draw(screen)
 
         button3 = Button('QUIT','', (120,40,40),920, 684, 100, 50,alpha = 240)
         button3.update()
