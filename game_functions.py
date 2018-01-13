@@ -134,7 +134,7 @@ def clear_text_file():
                 y += 1
             else:
                 break
-        x[y-1] = 'PLAYER_NAME = NONE' + '\n'
+        x[y-1] = 'PLAYER_NAME = Player' + '\n'
 
 
         #write esist room
@@ -156,6 +156,16 @@ def clear_text_file():
             else:
                 break
         x[y-1] = 'ROOM_PEOPLE_NUMBER = 0' + '\n'
+
+        #write number of people in room
+        y = 1
+        f.seek(0)
+        for line in f:
+            if 'LOBBY_PREPARE_TO_GO' not in line:
+                y += 1
+            else:
+                break
+        x[y-1] = 'LOBBY_PREPARE_TO_GO = False' + '\n'
 
     with open('connection.txt','w') as f:
         f.writelines(x)
@@ -833,8 +843,6 @@ def check_events_text_input_box(ai_settings, screen, buttons,screen_status, butt
 def update_screen(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user,action, player2):
     """ Update images on the screen and flip to the new screen"""
     screen.fill((250,250,250))
-    print(button_status.lobby_screen_prepare_to_go_display)
-    print('copy: ' + str(button_status.lobby_screen_prepare_to_go_display_copy))
     # Theme filter
     if ai_settings.theme_indicator == 'Lith Harbor':
         screen.blit(pygame.image.load('static/bg_images/bg_02.png'), (0,0))
