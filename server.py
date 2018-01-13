@@ -80,6 +80,7 @@ while 1:
     if 'EXIST_ROOM' in data:
         aaa = data[data.find('EXIST_ROOM'):]
         bbb = aaa[:aaa.find('||')]
+        player_name = str(bbb.replace('EXIST_ROOM = ', ''))
         exist_room = str(bbb.replace('EXIST_ROOM = ', ''))
         print('EXIST_ROOM---------: ' + exist_room + '.')
 

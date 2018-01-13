@@ -1395,6 +1395,19 @@ def lobby_screen_room_detail_display(ai_settings, screen, buttons,screen_status,
             button5.update()
             button5.draw(screen)
 
+        button3 = Button(player2.name,'', (200,200,110),205, 635, 650, 35,alpha = 240)
+        button3.update()
+        button3.draw(screen)
+
+        if button_status.lobby_screen_room_status == '1/2':
+            button3 = Button('Empty','', (250,250,250),205, 680, 650, 35,alpha = 100)
+            button3.update()
+            button3.draw(screen)
+        elif button_status.lobby_screen_room_status == '2/2':
+            button3 = Button(user.name,'', (200,200,110),205, 680, 650, 35,alpha = 240)
+            button3.update()
+            button3.draw(screen)
+
 
         button3 = Button('QUIT','', (120,40,40),920, 684, 100, 50,alpha = 240)
         button3.update()
