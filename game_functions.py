@@ -113,7 +113,7 @@ def write_network_variables(ai_settings,grid, screen, buttons,screen_status, but
                     y += 1
                 else:
                     break
-            x[y-1] = 'LOBBY_PREPARE_TO_GO = ' + button_status.lobby_screen_prepare_to_go_display_copy + '\n'
+            x[y-1] = 'LOBBY_PREPARE_TO_GO = ' + str(button_status.lobby_screen_prepare_to_go_display_copy) + '\n'
 
 
     with open('connection.txt','w') as f:
