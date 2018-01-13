@@ -32,6 +32,9 @@ def read_network_variables(ai_settings,grid, screen, buttons,screen_status, butt
                 if 'N/A' not in line:
                     button_status.lobby_screen_room_list_display = str(line.replace('EXIST_ROOM = ', ''))[:-1]
                     button_status.lobby_screen_room_list_display_copy = str(line.replace('EXIST_ROOM = ', ''))[:-1]
+                else:
+                    button_status.lobby_screen_room_list_display = 'N/A'
+                    button_status.lobby_screen_room_list_display_copy = 'N/A'
             if 'ROOM_PEOPLE_NUMBER' in line:
                 if str(line.replace('ROOM_PEOPLE_NUMBER = ', ''))[:-1] == '0':
                     button_status.lobby_screen_room_status = '0/2'
@@ -74,7 +77,6 @@ def write_network_variables(ai_settings,grid, screen, buttons,screen_status, but
 
         #write esist room
         if button_status.lobby_screen_room_list_display != button_status.lobby_screen_room_list_display_copy:
-            print('1111')
             y = 1
             f.seek(0)
             for line in f:
@@ -86,7 +88,6 @@ def write_network_variables(ai_settings,grid, screen, buttons,screen_status, but
 
         #write number of people in room
         if button_status.lobby_screen_room_status != button_status.lobby_screen_room_status_copy:
-            print('2222')
             y = 1
             f.seek(0)
             for line in f:
@@ -101,6 +102,45 @@ def write_network_variables(ai_settings,grid, screen, buttons,screen_status, but
         f.writelines(x)
 
 
+def clear_text_file():
+    """ clear text file each time restart the game"""
+    with open('connection.txt','a+') as f:
+        f.seek(0)
+        x = f.readlines()
+
+        #write player_name
+        y = 1
+        f.seek(0)
+        for line in f:
+            if 'PLAYER_NAME' not in line:
+                y += 1
+            else:
+                break
+        x[y-1] = 'PLAYER_NAME = NONE' + '\n'
+
+
+        #write esist room
+        y = 1
+        f.seek(0)
+        for line in f:
+            if 'EXIST_ROOM' not in line:
+                y += 1
+            else:
+                break
+        x[y-1] = 'EXIST_ROOM = N/A' + '\n'
+
+        #write number of people in room
+        y = 1
+        f.seek(0)
+        for line in f:
+            if 'ROOM_PEOPLE_NUMBER' not in line:
+                y += 1
+            else:
+                break
+        x[y-1] = 'ROOM_PEOPLE_NUMBER = 0' + '\n'
+
+    with open('connection.txt','w') as f:
+        f.writelines(x)
 
 
 #-----------------------------Check events----------------------------------------------------
@@ -234,15 +274,21 @@ def check_events_lobby_screen(ai_settings, screen, buttons,screen_status, button
     """ Check input events on lobby screen"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            clear_text_file()
+            button_status.lobby_screen_room_detail_display = 'none'
             sys.exit()
 
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
+                clear_text_file()
+                button_status.lobby_screen_room_detail_display = 'none'
                 sys.exit()
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             # Back button
             if Rect(0, 0, 50, 50).collidepoint(pygame.mouse.get_pos()):
+                clear_text_file()
+                button_status.lobby_screen_room_detail_display = 'none'
                 screen_status.lobby_screen_display = False
                 screen_status.welcome_screen_display = True
             # Change name button
@@ -266,7 +312,6 @@ def check_events_lobby_screen(ai_settings, screen, buttons,screen_status, button
                 if button_status.lobby_screen_room_detail_display == 'none':
                     button_status.lobby_screen_room_detail_display = 'other'
                     button_status.lobby_screen_room_status = '2/2'
-
 
 
 def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):

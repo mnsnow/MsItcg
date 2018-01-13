@@ -15,45 +15,6 @@ from action import Action
 from player2 import Player2
 
 
-def clear_text_file():
-    """ clear text file each time restart the game"""
-    with open('connection.txt','a+') as f:
-        f.seek(0)
-        x = f.readlines()
-
-        #write player_name
-        y = 1
-        f.seek(0)
-        for line in f:
-            if 'PLAYER_NAME' not in line:
-                y += 1
-            else:
-                break
-        x[y-1] = 'PLAYER_NAME = NONE' + '\n'
-
-
-        #write esist room
-        y = 1
-        f.seek(0)
-        for line in f:
-            if 'EXIST_ROOM' not in line:
-                y += 1
-            else:
-                break
-        x[y-1] = 'EXIST_ROOM = N/A' + '\n'
-
-        #write number of people in room
-        y = 1
-        f.seek(0)
-        for line in f:
-            if 'ROOM_PEOPLE_NUMBER' not in line:
-                y += 1
-            else:
-                break
-        x[y-1] = 'ROOM_PEOPLE_NUMBER = 0' + '\n'
-
-    with open('connection.txt','w') as f:
-        f.writelines(x)
 
 
 def main():
@@ -62,7 +23,6 @@ def main():
     clock = pygame.time.Clock()
     pygame.display.set_caption('Maplestory ITCG')
 
-    clear_text_file()
 
     # Global class instance controling all golbal variables
     ai_settings = Settings()
