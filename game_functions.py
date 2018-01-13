@@ -27,10 +27,21 @@ def read_network_variables(ai_settings,grid, screen, buttons,screen_status, butt
                 player2.name_copy = str(line.replace('PLAYER_NAME = ', ''))[:-1]
             if 'USER_NAME' in line:
                 user.name = str(line.replace('USER_NAME = ', ''))[:-1]
-                user_name.copy = str(line.replace('USER_NAME = ', ''))[:-1]
-            if 'USER_CHARACTER_HP' in line:
-                if user.character_card != '':
-                    user.character_card.health = str(line.replace('USER_CHARACTER_HP = ', ''))[:-1]
+                user.name_copy = str(line.replace('USER_NAME = ', ''))[:-1]
+            if 'EXIST_ROOM' in line:
+                if 'N/A' not in line:
+                    button_status.lobby_screen_room_list_display = str(line.replace('EXIST_ROOM = ', ''))[:-1]
+                    button_status.lobby_screen_room_list_display_copy = str(line.replace('EXIST_ROOM = ', ''))[:-1]
+            if 'ROOM_PEOPLE_NUMBER' in line:
+                if str(line.replace('ROOM_PEOPLE_NUMBER = ', ''))[:-1] == '0':
+                    button_status.lobby_screen_room_status = '0/2'
+                    button_status.lobby_screen_room_status_copy = '0/2'
+                elif str(line.replace('ROOM_PEOPLE_NUMBER = ', ''))[:-1] == '1':
+                    button_status.lobby_screen_room_status = '1/2'
+                    button_status.lobby_screen_room_status_copy = '1/2'
+                elif str(line.replace('ROOM_PEOPLE_NUMBER = ', ''))[:-1] == '2':
+                    button_status.lobby_screen_room_status = '2/2'
+                    button_status.lobby_screen_room_status_copy = '2/2'
 
 def write_network_variables(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ Write variables for multiplyaer from text file"""
@@ -60,16 +71,30 @@ def write_network_variables(ai_settings,grid, screen, buttons,screen_status, but
                     break
             x[y-1] = 'PLAYER_NAME = ' + player2.name + '\n'
 
-        #write user.character_card.health
-        if user.character_card != '':
+
+        #write esist room
+        if button_status.lobby_screen_room_list_display != button_status.lobby_screen_room_list_display_copy:
+            print('1111')
             y = 1
             f.seek(0)
             for line in f:
-                if 'USER_CHARACTER_HP' not in line:
+                if 'EXIST_ROOM' not in line:
                     y += 1
                 else:
                     break
-            x[y-1] = 'USER_CHARACTER_HP = ' + user.character_card.health + '\n'
+            x[y-1] = 'EXIST_ROOM = ' + button_status.lobby_screen_room_list_display + '\n'
+
+        #write number of people in room
+        if button_status.lobby_screen_room_status != button_status.lobby_screen_room_status_copy:
+            print('2222')
+            y = 1
+            f.seek(0)
+            for line in f:
+                if 'ROOM_PEOPLE_NUMBER' not in line:
+                    y += 1
+                else:
+                    break
+            x[y-1] = 'ROOM_PEOPLE_NUMBER = ' + str(button_status.lobby_screen_room_status[0]) + '\n'
 
 
     with open('connection.txt','w') as f:
@@ -227,12 +252,20 @@ def check_events_lobby_screen(ai_settings, screen, buttons,screen_status, button
             # Create/ready/start button
             elif Rect(920, 607, 100, 50).collidepoint(pygame.mouse.get_pos()):
                 if button_status.lobby_screen_room_detail_display == 'none':
-                    button_status.lobby_screen_room_detail_display = 'my'
-                    button_status.lobby_screen_room_list_display.append(user.name)
+                    if button_status.lobby_screen_room_list_display == 'N/A':
+                        button_status.lobby_screen_room_detail_display = 'my'
+                        button_status.lobby_screen_room_status = '1/2'
+                        button_status.lobby_screen_room_list_display = user.name
+
                 elif button_status.lobby_screen_room_detail_display == 'my':
                     pass
                 elif button_status.lobby_screen_room_detail_display == 'other':
                     pass
+            # Join
+            elif Rect(530, 160, 50, 30).collidepoint(pygame.mouse.get_pos()):
+                if button_status.lobby_screen_room_detail_display == 'none':
+                    button_status.lobby_screen_room_detail_display = 'other'
+                    button_status.lobby_screen_room_status = '2/2'
 
 
 
@@ -1035,8 +1068,6 @@ def text_input_box_display(ai_settings, screen, buttons,screen_status, button_st
 
 
 
-
-
 #-----------------------------Welcome screen display----------------------------------------------------
 def welcome_screen_stable_button_display(ai_settings,screen, buttons, screen_status, button_status):
     """ Display stable buttons on welcome screen"""
@@ -1231,40 +1262,41 @@ def lobby_screen_stable_button_display(ai_settings,grid, screen, buttons, screen
     button2.update()
     button2.draw(screen)
 
-    button2 = Button(player2.name,'', (0,0,0),250, 480, 300, 101,alpha = 200)
-    button2.update()
-    button2.draw(screen)
 
 def lobby_screen_room_list_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ Display room list"""
-    if button_status.lobby_screen_room_list_display == []:
+    if button_status.lobby_screen_room_list_display == 'N/A':
         pass
     else:
-        y = 0
-        for name in button_status.lobby_screen_room_list_display:
+        name = button_status.lobby_screen_room_list_display
 
-            button3 = Button(name + "'s game:" + '   1/2','', (100,30,130),240, 150+ 70 * y, 350, 50,alpha = 240)
+        button3 = Button(name + "'s game:" + '   1/2','', (100,30,130),240, 150+ 70, 350, 50,alpha = 240)
+        button3.update()
+        button3.draw(screen)
+
+        if button_status.lobby_screen_room_detail_display == 'none':
+            button3 = Button('Join','', (40,120,40),530, 160 + 70, 50, 30,alpha = 240)
             button3.update()
             button3.draw(screen)
 
-            if button_status.lobby_screen_room_detail_display == 'none':
-                button3 = Button('Join','', (40,120,40),530, 160 + 70 * y, 50, 30,alpha = 240)
-                button3.update()
-                button3.draw(screen)
-
-            y += 1
 
 def lobby_screen_room_detail_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ Display my room structure"""
     if button_status.lobby_screen_room_detail_display == 'none':
+        if button_status.lobby_screen_room_list_display == 'N/A':
+            button5 = Button('Create a game:','', (0,0,0),400, 580, 400, 50, font_size = 20, alpha = 0)
+            button5.update()
+            button5.draw(screen)
 
-        button5 = Button('Create a game:','', (0,0,0),400, 580, 400, 50, font_size = 20, alpha = 0)
-        button5.update()
-        button5.draw(screen)
+            button3 = Button('CREATE','', (40,40,120),920, 607, 100, 50,alpha = 240)
+            button3.update()
+            button3.draw(screen)
 
-        button3 = Button('CREATE','', (40,40,120),920, 607, 100, 50,alpha = 240)
-        button3.update()
-        button3.draw(screen)
+        else:
+            button5 = Button('Please join the existing game!','', (0,0,0),400, 580, 400, 50, font_size = 20, alpha = 0)
+            button5.update()
+            button5.draw(screen)
+
 
 
     elif button_status.lobby_screen_room_detail_display == 'my':
@@ -1273,9 +1305,27 @@ def lobby_screen_room_detail_display(ai_settings, screen, buttons,screen_status,
         button5.update()
         button5.draw(screen)
 
-        button3 = Button('START','', (40,120,40),920, 607, 100, 50,alpha = 240)
+        button3 = Button(user.name,'', (200,200,110),205, 635, 650, 35,alpha = 240)
         button3.update()
         button3.draw(screen)
+
+        if button_status.lobby_screen_room_status == '1/2':
+            button3 = Button('Empty','', (250,250,250),205, 680, 650, 35,alpha = 100)
+            button3.update()
+            button3.draw(screen)
+        elif button_status.lobby_screen_room_status == '2/2':
+            button3 = Button(player2.name,'', (200,200,110),205, 680, 650, 35,alpha = 240)
+            button3.update()
+            button3.draw(screen)
+
+        if button_status.lobby_screen_room_status == '1/2':
+            button3 = Button('START','', (120,120,120),920, 607, 100, 50,alpha = 240)
+            button3.update()
+            button3.draw(screen)
+        elif button_status.lobby_screen_room_status == '2/2':
+            button3 = Button('START','', (40,120,40),920, 607, 100, 50,alpha = 240)
+            button3.update()
+            button3.draw(screen)
 
         button3 = Button('QUIT','', (120,40,40),920, 684, 100, 50,alpha = 240)
         button3.update()
@@ -2202,10 +2252,6 @@ def build_deck_screen_save_deck_to_file(screen,buttons, screen_status, button_st
 
                     with open('user_deck_list_string.txt','w') as f:
                         f.writelines(x)
-
-
-
-
 
 
 

@@ -40,7 +40,10 @@ class Button_status():
         self.welcome_screen_settings_display = False
 
         self.lobby_screen_room_detail_display = 'none'
-        self.lobby_screen_room_list_display = []
+        self.lobby_screen_room_list_display = 'N/A'
+        self.lobby_screen_room_list_display_copy = 'N/A'
+        self.lobby_screen_room_status = '0/2'
+        self.lobby_screen_room_status_copy = '0/2'
 
         self.prepare_screen_end_screen_warning_button_display = ''
 
