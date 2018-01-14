@@ -1706,7 +1706,8 @@ def lobby_screen_to_other_ready_action(ai_settings, screen,buttons, screen_statu
 
 
     if save_pass:
-
+        if button_status.lobby_screen_room_detail_display == 'other':
+            button_status.lobby_screen_other_ready_to_go = True
         # Render user's deck
         with open('user_deck_list_string.txt','r') as f:
             f.seek(0)
