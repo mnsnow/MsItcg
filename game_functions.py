@@ -51,7 +51,7 @@ def read_network_variables(ai_settings,grid, screen, buttons,screen_status, butt
                     button_status.lobby_screen_prepare_to_go_display_copy = False
                 elif 'True' in line:
                     button_status.lobby_screen_prepare_to_go_display = True
-                    button_status.lobby_screen_prepare_to_go_display_copy = False
+                    button_status.lobby_screen_prepare_to_go_display_copy = True
 
 def write_network_variables(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ Write variables for multiplyaer from text file"""
@@ -106,6 +106,8 @@ def write_network_variables(ai_settings,grid, screen, buttons,screen_status, but
 
         #write number of people in room
         if button_status.lobby_screen_prepare_to_go_display != button_status.lobby_screen_prepare_to_go_display_copy:
+            print(button_status.lobby_screen_prepare_to_go_display)
+            print(button_status.lobby_screen_prepare_to_go_display_copy)
             y = 1
             f.seek(0)
             for line in f:
@@ -113,6 +115,7 @@ def write_network_variables(ai_settings,grid, screen, buttons,screen_status, but
                     y += 1
                 else:
                     break
+
             x[y-1] = 'LOBBY_PREPARE_TO_GO = ' + str(button_status.lobby_screen_prepare_to_go_display) + '\n'
 
 
@@ -120,7 +123,7 @@ def write_network_variables(ai_settings,grid, screen, buttons,screen_status, but
         f.writelines(x)
 
 
-def clear_text_file():
+def clear_text_file(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ clear text file each time restart the game"""
     with open('connection.txt','a+') as f:
         f.seek(0)
@@ -182,7 +185,7 @@ def check_events(ai_settings,grid, screen, buttons,screen_status, button_status,
         check_events_welcome_screen(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user,action, player2)
 
     elif screen_status.lobby_screen_display:
-        check_events_lobby_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
+        check_events_lobby_screen(ai_settings, grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
 
     elif screen_status.prepare_screen_display:
         check_events_prepare_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
@@ -298,24 +301,24 @@ def check_events_welcome_screen(ai_settings,grid, screen, buttons,screen_status,
                 elif Rect(541, 670, 119, 61).collidepoint(pygame.mouse.get_pos()):
                     sys.exit()
 
-def check_events_lobby_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
+def check_events_lobby_screen(ai_settings, grid,screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ Check input events on lobby screen"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            clear_text_file()
+            clear_text_file(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
             button_status.lobby_screen_room_detail_display = 'none'
             sys.exit()
 
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
-                clear_text_file()
+                clear_text_file(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
                 button_status.lobby_screen_room_detail_display = 'none'
                 sys.exit()
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             # Back button
             if Rect(0, 0, 50, 50).collidepoint(pygame.mouse.get_pos()):
-                clear_text_file()
+                clear_text_file(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
                 button_status.lobby_screen_room_detail_display = 'none'
                 screen_status.lobby_screen_display = False
                 screen_status.welcome_screen_display = True
@@ -323,7 +326,7 @@ def check_events_lobby_screen(ai_settings, screen, buttons,screen_status, button
             elif Rect(780, 10, 110, 30).collidepoint(pygame.mouse.get_pos()):
                 button_status.text_input_box_display = True
 
-            # Create/next/start button
+            # Create/next/ready/start button
             elif Rect(920, 607, 100, 50).collidepoint(pygame.mouse.get_pos()):
                 # create
                 if button_status.lobby_screen_room_detail_display == 'none':
@@ -332,14 +335,25 @@ def check_events_lobby_screen(ai_settings, screen, buttons,screen_status, button
                         button_status.lobby_screen_room_status = '1/2'
                         button_status.lobby_screen_room_list_display = user.name
 
-                #next
+                #next/start
                 elif button_status.lobby_screen_room_detail_display == 'my': #and button_status.lobby_screen_room_status == '2/2':
-                    button_status.lobby_screen_prepare_to_go_display = True
+                    if button_status.lobby_screen_prepare_to_go_display == False:
+                        button_status.lobby_screen_prepare_to_go_display = True
+                    elif button_status.lobby_screen_prepare_to_go_display == True:
+                        # Click on start
+                        lobby_screen_to_other_ready_action(ai_settings, screen,buttons, screen_status, button_status, card_database_filter, user, player2)
 
-                elif button_status.lobby_screen_room_detail_display == 'my':
-                    pass
-                elif button_status.lobby_screen_room_detail_display == 'other':
-                    pass
+
+
+                # Ready
+                elif button_status.lobby_screen_room_detail_display == 'other' and button_status.lobby_screen_prepare_to_go_display == True:
+                    lobby_screen_to_other_ready_action(ai_settings, screen,buttons, screen_status, button_status, card_database_filter, user, player2)
+
+
+            # click on ok on end screen warning sign
+            elif Rect(1100, 642, 40, 30).collidepoint(pygame.mouse.get_pos()):
+                button_status.lobby_screen_end_screen_warning_button_display = ''
+
             # Join
             elif Rect(530, 230, 50, 30).collidepoint(pygame.mouse.get_pos()):
                 if button_status.lobby_screen_room_detail_display == 'none':
@@ -348,11 +362,72 @@ def check_events_lobby_screen(ai_settings, screen, buttons,screen_status, button
             # quit
             elif Rect(920, 684, 100, 50).collidepoint(pygame.mouse.get_pos()):
                 if button_status.lobby_screen_room_detail_display == 'my' or button_status.lobby_screen_room_detail_display == 'other':
-                    clear_text_file()
+                    clear_text_file(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
                     button_status.lobby_screen_room_detail_display = 'none'
 
+            # When in lobby_prepare to go screen
+            for i in range(1,7):
+                # Display edit/delete buttons
+                if Rect(85 + 180* (i-1), 165, 130,110).collidepoint(pygame.mouse.get_pos()):
+                    with open('user_deck_list_string.txt','r') as f:
+                        f.seek(0)
+                        for line in f:
+                            if 'DECK_LIST_' + str(i) in line:
+                                user.deck_list_index = str(i)
 
+                # Click on Edit
+                elif Rect(85 + 180* (i-1), 282, 60, 30).collidepoint(pygame.mouse.get_pos()):
+                    with open('user_deck_list_string.txt','r') as f:
+                        f.seek(0)
+                        for line in f:
+                            if 'DECK_LIST_' + str(i) in line:
+                                user.deck_list = make_card_list_from_string(line.replace('DECK_LIST_' + str(i) + ' = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                            if 'CHARACTER_' + str(i) in line:
+                                user.character_card = eval('card_' + line.replace('CHARACTER_' + str(i) + ' = ', '')[7:12])
+                                screen_status.build_deck_screen_display = True
+                                screen_status.lobby_screen_display = False
 
+                # Click on Delete
+                elif Rect(155 + 180* (i-1), 282, 60, 30).collidepoint(pygame.mouse.get_pos()):
+                    with open('user_deck_list_string.txt','r') as f:
+                        f.seek(0)
+                        for line in f:
+                            if 'DECK_LIST_' + str(i) in line:
+
+                                with open('user_deck_list_string.txt','a+') as f:
+
+                                    f.seek(0)
+                                    x = f.readlines()
+                                    y = 1
+
+                                    f.seek(0)
+                                    for line in f:
+                                        if 'DECK_LIST_' + str(i) not in line:
+                                            y += 1
+                                        else:
+                                            break
+
+                                    del x[y-1] # Delete DECK_LIST_
+                                    del x[y-1] # Delete CHARACTER_
+
+                                with open('user_deck_list_string.txt','w') as f:
+                                    f.writelines(x)
+
+                                user.deck_list_index = 'new'
+
+            # create new deck
+            if Rect(1020, 110, 120, 35).collidepoint(pygame.mouse.get_pos()):
+                with open('user_deck_list_string.txt','r') as f:
+                    f.seek(0)
+                    if len(f.readlines()) >= 12:
+                        pass
+
+                    else:
+                        user.deck_list_index = 'new'
+                        user.deck_list = []
+                        user.character_card = ''
+                        screen_status.build_deck_screen_display = True
+                        screen_status.lobby_screen_display = False
 
 def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ Check events in prepare screen"""
@@ -448,7 +523,7 @@ def check_events_prepare_screen(ai_settings, screen, buttons,screen_status, butt
                     # user.remain_deck_list = user.random_deck_list[6:]
                     # user.hand_list = user.random_deck_list[0:6]
 
-            # click on ok
+            # click on ok on end screen warning sign
             elif Rect(1100, 62, 40, 30).collidepoint(pygame.mouse.get_pos()):
                 button_status.prepare_screen_end_screen_warning_button_display = ''
 
@@ -901,6 +976,11 @@ def lobby_screen_update(ai_settings,grid, screen, buttons, screen_status, button
 
     lobby_screen_room_list_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
 
+    lobby_screen_pick_deck_warning_button_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
+
+    if button_status.lobby_screen_prepare_to_go_display == True:
+        lobby_screen_pick_deck_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
+
 def prepare_screen_update(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2):
     """ Update prepare screen"""
 
@@ -1348,8 +1428,6 @@ def lobby_screen_stable_button_display(ai_settings,grid, screen, buttons, screen
         button4.update()
         button4.draw(screen)
 
-
-
 def lobby_screen_room_list_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ Display room list"""
     if button_status.lobby_screen_prepare_to_go_display == False:
@@ -1367,7 +1445,6 @@ def lobby_screen_room_list_display(ai_settings, screen, buttons,screen_status, b
                     button3 = Button('Join','', (40,120,40),530, 230, 50, 30,alpha = 240)
                     button3.update()
                     button3.draw(screen)
-
 
 def lobby_screen_room_detail_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ Display my room structure"""
@@ -1414,14 +1491,25 @@ def lobby_screen_room_detail_display(ai_settings, screen, buttons,screen_status,
             button3.update()
             button3.draw(screen)
 
-        if button_status.lobby_screen_room_status == '1/2':
-            button3 = Button('NEXT','', (120,120,120),920, 607, 100, 50,alpha = 240)
-            button3.update()
-            button3.draw(screen)
-        elif button_status.lobby_screen_room_status == '2/2':
-            button3 = Button('NEXT','', (40,120,40),920, 607, 100, 50,alpha = 240)
-            button3.update()
-            button3.draw(screen)
+        if button_status.lobby_screen_prepare_to_go_display == False:
+            if button_status.lobby_screen_room_status == '1/2':
+                button3 = Button('NEXT','', (120,120,120),920, 607, 100, 50,alpha = 240)
+                button3.update()
+                button3.draw(screen)
+            elif button_status.lobby_screen_room_status == '2/2':
+                button3 = Button('NEXT','', (40,120,40),920, 607, 100, 50,alpha = 240)
+                button3.update()
+                button3.draw(screen)
+        else:
+            if button_status.lobby_screen_room_status == '1/2':
+                button3 = Button('PLAY!','', (120,120,120),920, 607, 100, 50,alpha = 240)
+                button3.update()
+                button3.draw(screen)
+            elif button_status.lobby_screen_room_status == '2/2':
+                button3 = Button('PLAY!','', (40,120,40),920, 607, 100, 50,alpha = 240)
+                button3.update()
+                button3.draw(screen)
+
 
         button3 = Button('QUIT','', (120,40,40),920, 684, 100, 50,alpha = 240)
         button3.update()
@@ -1438,9 +1526,15 @@ def lobby_screen_room_detail_display(ai_settings, screen, buttons,screen_status,
             button5.update()
             button5.draw(screen)
 
-        button3 = Button(player2.name,'', (200,200,110),205, 635, 650, 35,alpha = 240)
-        button3.update()
-        button3.draw(screen)
+        if button_status.lobby_screen_other_ready_to_go == False:
+            button3 = Button(player2.name,'', (200,200,110),205, 635, 650, 35,alpha = 240)
+            button3.update()
+            button3.draw(screen)
+        elif button_status.lobby_screen_other_ready_to_go == True:
+            button3 = Button(player2.name,'', (110,200,110),205, 635, 650, 35,alpha = 240)
+            button3.update()
+            button3.draw(screen)
+
 
         if button_status.lobby_screen_room_status == '1/2':
             button3 = Button('Empty','', (250,250,250),205, 680, 650, 35,alpha = 100)
@@ -1451,10 +1545,305 @@ def lobby_screen_room_detail_display(ai_settings, screen, buttons,screen_status,
             button3.update()
             button3.draw(screen)
 
+        if button_status.lobby_screen_prepare_to_go_display == True:
+            if button_status.lobby_screen_other_ready_to_go == False:
+                button3 = Button('READY!','', (40,120,40),920, 607, 100, 50,alpha = 240)
+                button3.update()
+                button3.draw(screen)
+            elif button_status.lobby_screen_other_ready_to_go == True:
+                button3 = Button('WAIT...','', (40,40,120),920, 607, 100, 50,alpha = 240)
+                button3.update()
+                button3.draw(screen)
 
         button3 = Button('QUIT','', (120,40,40),920, 684, 100, 50,alpha = 240)
         button3.update()
         button3.draw(screen)
+
+def lobby_screen_pick_deck_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
+    """ Display the screen for picking a deck"""
+    # Pick deck text
+    button_text_1 = Button('Pick an exist deck or create a new one: ','', (250,250,250),400, 100, 400, 35, font_color = (0,0,0), alpha = 150)
+    button_text_1.update()
+    button_text_1.draw(screen)
+
+    # Deck list buttons
+    with open('user_deck_list_string.txt','r') as f:
+        f.seek(0)
+        if len(f.readlines()) >= 12:
+            pass
+        else:
+            button_new_deck = Button('+ New Deck','', (250,250,250),1020, 110, 120, 35, font_color = (0,0,0), alpha = 150)
+            button_new_deck.update()
+            button_new_deck.draw(screen)
+
+
+        f.seek(0)
+        x = len(f.readlines())
+        y = 0
+        deck_list_index = 0
+
+        for i in range(1,7):
+            f.seek(0)
+            for line in f:
+                if 'DECK_LIST_' + str(i) not in line:
+                    y += 1
+            if y < x: # DECK_LIST_i exist
+                f.seek(0)
+                for line in f:
+                    if 'DECK_LIST_' + str(i) in line:
+                        deck_length = len(make_card_list_from_string(line.replace('DECK_LIST_' + str(i) + ' = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2))
+                        # deck_length = int((len(line.replace('DECK_LIST_' + str(i) + ' = ', '')) -1)/14)
+                    if 'CHARACTER_' + str(i) in line:
+                        character_length = 1
+                        character_card = eval('card_' + line.replace('CHARACTER_' + str(i) + ' = ', '')[7:12])
+
+                if user.deck_list_index == str(i):
+
+                    button_top = Button(character_card.name + ': ','', (100,30,130),85 + 180* (i-1), 165, 130, 60)
+                    button_top.update()
+                    button_top.draw(screen)
+
+                    if deck_length < 40:
+                        button_bottom = Button(str(character_length) + '/1  |  ' + str(deck_length) +'/40','', (100,30,130),85 + 180* (i-1), 225, 130, 50, font_color = (250,0,0))
+                        button_bottom.update()
+                        button_bottom.draw(screen)
+                    else:
+                        button_bottom = Button(str(character_length) + '/1  |  ' + str(deck_length) +'/40','', (100,30,130),85 + 180* (i-1), 225, 130, 50)
+                        button_bottom.update()
+                        button_bottom.draw(screen)
+
+                else:
+
+                    button_top = Button(character_card.name + ': ','', (160,160,160),85 + 180* (i-1), 165, 130, 60, alpha = 240)
+                    button_top.update()
+                    button_top.draw(screen)
+
+                    if deck_length < 40:
+                        button_bottom = Button(str(character_length) + '/1  |  ' + str(deck_length) +'/40','', (160,160,160),85 + 180* (i-1), 225, 130, 50, font_color = (200,0,0), alpha = 240)
+                        button_bottom.update()
+                        button_bottom.draw(screen)
+                    else:
+                        button_bottom = Button(str(character_length) + '/1  |  ' + str(deck_length) +'/40','', (160,160,160),85 + 180* (i-1), 225, 130, 50, alpha = 240)
+                        button_bottom.update()
+                        button_bottom.draw(screen)
+
+                y = 0
+
+            else: # DECK_LIST_i not exist
+
+                button = Button('Empty','', (200,200,200),85 + 180* (i-1), 165, 130, 110, alpha = 80)
+                button.update()
+                button.draw(screen)
+
+                y = 0
+
+
+    for i in range(1,7):
+        if user.deck_list_index == str(i):
+            button_edit = Button('Edit','', (50,50,170),85 + 180* (i-1), 282, 60, 30)
+            button_edit.update()
+            button_edit.draw(screen)
+
+            button_delete = Button('Delete','', (160,30,30), 155 + 180* (i-1), 282, 60, 30)
+            button_delete.update()
+            button_delete.draw(screen)
+
+def lobby_screen_pick_deck_warning_button_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
+    """ Display the waring button when deck you pick is not right"""
+    if button_status.lobby_screen_end_screen_warning_button_display == 'deck less than 40 cards':
+        button = Button('You need at least 40','' ,(122,33,38),1050, 580, 150, 30,font_size = 13)
+        button.update()
+        button.draw(screen)
+
+        button = Button('cards in your deck!','' ,(122,33,38),1050, 610, 150, 30,font_size = 13)
+        button.update()
+        button.draw(screen)
+
+        button = Button('','' ,(122,33,38),1050, 640, 150, 40,font_size = 18)
+        button.update()
+        button.draw(screen)
+
+        button = Button('ok','' ,(22,143,78),1100, 642, 40, 30,font_size = 16)
+        button.update()
+        button.draw(screen)
+
+    elif button_status.lobby_screen_end_screen_warning_button_display == 'no deck':
+        button = Button('Please pick a deck','' ,(122,33,38),1050, 580, 150, 30,font_size = 13)
+        button.update()
+        button.draw(screen)
+
+        button = Button('or build a new one!','' ,(122,33,38),1050, 610, 150, 30,font_size = 13)
+        button.update()
+        button.draw(screen)
+
+        button = Button('','' ,(122,33,38),1050, 640, 150, 40,font_size = 18)
+        button.update()
+        button.draw(screen)
+
+        button = Button('ok','' ,(22,143,78),1100, 642, 40, 30,font_size = 16)
+        button.update()
+        button.draw(screen)
+
+def lobby_screen_to_other_ready_action(ai_settings, screen,buttons, screen_status, button_status, card_database_filter, user, player2):
+    """ lobby screen other view check ready"""
+    save_pass = True
+    # Clear dup number each call
+
+    with open('user_deck_list_string.txt','r') as f:
+        f.seek(0)
+        for line in f:
+            if 'DECK_LIST_' + user.deck_list_index in line:
+                list1 = make_deck_from_string(line.replace('DECK_LIST_' + user.deck_list_index + ' = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+
+    if user.deck_list_index == '0' or user.deck_list_index == 'new':
+        button_status.lobby_screen_end_screen_warning_button_display = 'no deck'
+        save_pass = False
+
+    elif len(list1) < 40:
+
+        button_status.lobby_screen_end_screen_warning_button_display = 'deck less than 40 cards'
+        save_pass = False
+
+
+    if save_pass:
+
+        # Render user's deck
+        with open('user_deck_list_string.txt','r') as f:
+            f.seek(0)
+            for line in f:
+                if 'DECK_LIST_' + user.deck_list_index in line:
+                    user.deck_list = make_deck_from_string(line.replace('DECK_LIST_' + user.deck_list_index + ' = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                if 'CHARACTER_' + user.deck_list_index in line:
+                    user.character_card = make_deck_from_string(line.replace('CHARACTER_' + user.deck_list_index + ' = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
+
+
+        user.random_deck_list = random.sample(user.deck_list, len(user.deck_list))
+        user.remain_deck_list = user.random_deck_list[6:]
+        user.hand_list = user.random_deck_list[0:6]
+
+
+        # Clear up and initiate all display/progress indicator on battle screen
+        # screen_status
+        screen_status.battle_screen_my_hand_page_id = 1
+        screen_status.battle_screen_action_indicator = 'stage-0'
+        screen_status.battle_screen_player2_action_display_indicator = False
+        # button_status
+        button_status.battle_screen_win_lost_display = False
+        button_status.battle_screen_win_lost_indicator = ''
+        button_status.battle_screen_instruction_bar_yes_display = True
+        button_status.battle_screen_instruction_bar_yes_backend = True
+        button_status.battle_screen_instruction_bar_skip_display = False
+        button_status.battle_screen_instruction_bar_skip_backend = False
+        button_status.battle_screen_stable_button_backend = True
+        button_status.battle_screen_my_hand_page_change_button_backend = True
+        button_status.battle_screen_menu_display = False
+        button_status.battle_screen_history_bar_detail_display = False
+        button_status.battle_screen_history_bar_text_dict = {
+            '1' : '',
+            '2' : '',
+            '3' : '',
+            '4' : '',
+            '5' : '',
+            '6' : '',
+            '7' : '',
+            '8' : '',
+            '9' : '',
+            '10' : '',
+            '11' : '',
+            '12' : '',
+            '13' : '',
+            '14' : '',
+            '15' : '',
+        }
+        button_status.battle_screen_my_hand_indicator_display = False
+        button_status.battle_screen_my_hand_indicator_position = '1'
+        button_status.battle_screen_player1_battleground_indicator_display = False
+        button_status.battle_screen_player1_battleground_indicator_position = '1'
+        button_status.battle_screen_player2_battleground_indicator_display = False
+        button_status.battle_screen_player2_battleground_indicator_position = '1'
+        button_status.card_zoom_active = False
+        button_status.card_zoom_screen_indicator = 'build_deck_screen'
+        button_status.card_zoom_part_indicator = ''
+        button_status.card_zoom_position_indicator = '1'
+        button_status.battle_screen_win_lost_indicator = ''
+
+        #user
+        user.monster_in_play_dict = {
+            '1' : '',
+            '2' : '',
+            '3' : '',
+            '4' : '',
+            '5' : '',
+            '6' : '',
+        }
+        user.monster_in_play_length = '0'
+        user.item_in_play_dict = {
+            '1' : '',
+            '2' : '',
+            '3' : '',
+            '4' : '',
+            '5' : '',
+            '6' : '',
+        }
+        user.item_in_play_length = '0'
+        user.character_under_card_by_level = {
+            '10' : '',
+            '20' : '',
+            '30' : '',
+            '40' : '',
+            '50' : '',
+            '60' : '',
+            '70' : '',
+            '80' : '',
+            '90' : '',
+            '100' : '',
+            '110' : '',
+            '120' : '',
+            '130' : '',
+            '140' : '',
+            '150' : '',
+        }
+        user.stage_2_other_card_usable_list = []
+
+        #player2
+        player2.character_under_card_by_level = {
+            '10' : '',
+            '20' : '',
+            '30' : '',
+            '40' : '',
+            '50' : '',
+            '60' : '',
+            '70' : '',
+            '80' : '',
+            '90' : '',
+            '100' : '',
+            '110' : '',
+            '120' : '',
+            '130' : '',
+            '140' : '',
+            '150' : '',
+        }
+        player2.monster_in_play_dict = {
+            '1' : '',
+            '2' : '',
+            '3' : '',
+            '4' : '',
+            '5' : '',
+            '6' : '',
+        }
+        player2.monster_in_play_length = '0'
+        player2.item_in_play_dict = {
+            '1' : '',
+            '2' : '',
+            '3' : '',
+            '4' : '',
+            '5' : '',
+            '6' : '',
+        }
+        player2.item_in_play_length = '0'
+        player2.stage_2_other_card_usable_list = []
+
+
 
 
 
