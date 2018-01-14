@@ -15,6 +15,25 @@ from action import Action
 from player2 import Player2
 
 
+def repair_text_file():
+    with open('connection.txt','a+') as f:
+        f.seek(0)
+        x = f.readlines()
+        if x == []:
+            x = [
+                'PLAYER_NAME = Player\n',
+                'USER_NAME = Mapler\n',
+                'EXIST_ROOM = N/A\n',
+                'ROOM_PEOPLE_NUMBER = 0\n',
+                'LOBBY_PREPARE_TO_GO = False\n',
+                'LOBBY_MY_READY_TO_GO = False\n',
+                'LOBBY_OTHER_READY_TO_GO = False\n',
+                'LOBBY_GAME_START = False\n',
+            ]
+
+    with open('connection.txt','w') as f:
+        f.writelines(x)
+
 
 
 def main():
@@ -23,6 +42,7 @@ def main():
     clock = pygame.time.Clock()
     pygame.display.set_caption('Maplestory ITCG')
 
+    repair_text_file()
 
     # Global class instance controling all golbal variables
     ai_settings = Settings()

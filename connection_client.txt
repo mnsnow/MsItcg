@@ -1,3 +1,2 @@
-PLAYER_NAME = worst em
-USER_NAME = Mnsnow
-USER_CHARACTER_HP = 240
+PLAYER_NAME = Player
+USER_NAME = Mapler
