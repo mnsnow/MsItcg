@@ -32,6 +32,8 @@ while 1:
                 lobby_my_ready_to_go_01 = str(line)
             if 'LOBBY_OTHER_READY_TO_GO' in line:
                 lobby_other_ready_to_go_01 = str(line)
+            if 'LOBBY_GAME_START' in line:
+                lobby_game_start_01 = str(line)
 
     time.sleep(0.5)
 
@@ -52,6 +54,8 @@ while 1:
                 lobby_my_ready_to_go_02 = str(line)
             if 'LOBBY_OTHER_READY_TO_GO' in line:
                 lobby_other_ready_to_go_02 = str(line)
+            if 'LOBBY_GAME_START' in line:
+                lobby_game_start_02 = str(line)
 
 
     if user_name_01 != user_name_02:
@@ -68,7 +72,8 @@ while 1:
         s.send(((str(lobby_my_ready_to_go_02)[:-1]+'||')*10).encode())
     if lobby_other_ready_to_go_01 != lobby_other_ready_to_go_02:
         s.send(((str(lobby_other_ready_to_go_02)[:-1]+'||')*10).encode())
-
+    if lobby_game_start_01 != lobby_game_start_02:
+        s.send(((str(lobby_game_start_02)[:-1]+'||')*10).encode())
 
     s.send(('lalala'*10).encode())
     # Reciving data
@@ -86,6 +91,7 @@ while 1:
     lobby_prepare_to_go = ''
     lobby_my_ready_to_go = ''
     lobby_other_ready_to_go = ''
+    lobby_game_start = ''
     # get variables from data
     if 'USER_NAME' in data:
         aaa = data[data.find('USER_NAME'):]
@@ -129,6 +135,12 @@ while 1:
         bbb = aaa[:aaa.find('||')]
         lobby_other_ready_to_go = str(bbb.replace('LOBBY_OTHER_READY_TO_GO = ', ''))
         print('LOBBY_OTHER_READY_TO_GO---------: ' + lobby_other_ready_to_go + '.')
+
+    if 'LOBBY_GAME_START' in data:
+        aaa = data[data.find('LOBBY_GAME_START'):]
+        bbb = aaa[:aaa.find('||')]
+        lobby_game_start = str(bbb.replace('LOBBY_GAME_START = ', ''))
+        print('LOBBY_GAME_START---------: ' + lobby_game_start + '.')
 
     # Writing into the file
     with open('connection.txt','a+') as f:
@@ -212,6 +224,17 @@ while 1:
                 else:
                     break
             x[y-1] = 'LOBBY_OTHER_READY_TO_GO = ' + lobby_other_ready_to_go + '\n'
+
+        #write player_name
+        if lobby_game_start != '':
+            y = 1
+            f.seek(0)
+            for line in f:
+                if 'LOBBY_GAME_START' not in line:
+                    y += 1
+                else:
+                    break
+            x[y-1] = 'LOBBY_GAME_START = ' + lobby_game_start + '\n'
 
 
 

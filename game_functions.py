@@ -66,8 +66,13 @@ def read_network_variables(ai_settings,grid, screen, buttons,screen_status, butt
                 elif 'True' in line:
                     button_status.lobby_screen_other_ready_to_go = True
                     button_status.lobby_screen_other_ready_to_go_copy = True
-
-
+            if 'LOBBY_GAME_START' in line:
+                if 'False' in line:
+                    button_status.lobby_screen_game_start = False
+                    button_status.lobby_screen_game_start_copy = False
+                elif 'True' in line:
+                    button_status.lobby_screen_game_start = True
+                    button_status.lobby_screen_game_start_copy = True
 
 
 def write_network_variables(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
@@ -157,6 +162,18 @@ def write_network_variables(ai_settings,grid, screen, buttons,screen_status, but
 
             x[y-1] = 'LOBBY_OTHER_READY_TO_GO = ' + str(button_status.lobby_screen_other_ready_to_go) + '\n'
 
+        #write number of people in room
+        if button_status.lobby_screen_game_start != button_status.lobby_screen_game_start_copy:
+            y = 1
+            f.seek(0)
+            for line in f:
+                if 'LOBBY_GAME_START' not in line:
+                    y += 1
+                else:
+                    break
+
+            x[y-1] = 'LOBBY_GAME_START = ' + str(button_status.lobby_screen_game_start) + '\n'
+
 
     with open('connection.txt','w') as f:
         f.writelines(x)
@@ -227,6 +244,16 @@ def clear_text_file(ai_settings,grid, screen, buttons,screen_status, button_stat
             else:
                 break
         x[y-1] = 'LOBBY_OTHER_READY_TO_GO = False' + '\n'
+
+        #write number of people in room
+        y = 1
+        f.seek(0)
+        for line in f:
+            if 'LOBBY_GAME_START' not in line:
+                y += 1
+            else:
+                break
+        x[y-1] = 'LOBBY_GAME_START = False' + '\n'
 
 
     with open('connection.txt','w') as f:
@@ -404,7 +431,9 @@ def check_events_lobby_screen(ai_settings, grid,screen, buttons,screen_status, b
                             lobby_screen_to_other_ready_action(ai_settings, screen,buttons, screen_status, button_status, card_database_filter, user, player2)
                         # Click on play
                         elif button_status.lobby_screen_my_ready_to_go == True and button_status.lobby_screen_other_ready_to_go == True:
-                            pass
+                            button_status.lobby_screen_game_start = True
+                            screen_status.lobby_screen_display = False
+                            screen_status.battle_screen_display = True
 
                 # other Ready
                 elif button_status.lobby_screen_room_detail_display == 'other' and button_status.lobby_screen_prepare_to_go_display == True:
