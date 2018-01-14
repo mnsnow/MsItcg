@@ -28,6 +28,10 @@ while 1:
                 room_people_number_01 = str(line)
             if 'LOBBY_PREPARE_TO_GO' in line:
                 lobby_prepare_to_go_01 = str(line)
+            if 'LOBBY_MY_READY_TO_GO' in line:
+                lobby_my_ready_to_go_01 = str(line)
+            if 'LOBBY_OTHER_READY_TO_GO' in line:
+                lobby_other_ready_to_go_01 = str(line)
 
     time.sleep(0.5)
 
@@ -44,6 +48,11 @@ while 1:
                 room_people_number_02 = str(line)
             if 'LOBBY_PREPARE_TO_GO' in line:
                 lobby_prepare_to_go_02 = str(line)
+            if 'LOBBY_MY_READY_TO_GO' in line:
+                lobby_my_ready_to_go_02 = str(line)
+            if 'LOBBY_OTHER_READY_TO_GO' in line:
+                lobby_other_ready_to_go_02 = str(line)
+
 
     if user_name_01 != user_name_02:
         s.send(((str(user_name_02)[:-1]+'||')*10).encode())
@@ -55,6 +64,10 @@ while 1:
         s.send(((str(room_people_number_02)[:-1]+'||')*10).encode())
     if lobby_prepare_to_go_01 != lobby_prepare_to_go_02:
         s.send(((str(lobby_prepare_to_go_02)[:-1]+'||')*10).encode())
+    if lobby_my_ready_to_go_01 != lobby_my_ready_to_go_02:
+        s.send(((str(lobby_my_ready_to_go_02)[:-1]+'||')*10).encode())
+    if lobby_other_ready_to_go_01 != lobby_other_ready_to_go_02:
+        s.send(((str(lobby_other_ready_to_go_02)[:-1]+'||')*10).encode())
 
 
     s.send(('lalala'*10).encode())
@@ -71,6 +84,8 @@ while 1:
     exist_room = ''
     room_people_number = ''
     lobby_prepare_to_go = ''
+    lobby_my_ready_to_go = ''
+    lobby_other_ready_to_go = ''
     # get variables from data
     if 'USER_NAME' in data:
         aaa = data[data.find('USER_NAME'):]
@@ -102,6 +117,18 @@ while 1:
         bbb = aaa[:aaa.find('||')]
         lobby_prepare_to_go = str(bbb.replace('LOBBY_PREPARE_TO_GO = ', ''))
         print('LOBBY_PREPARE_TO_GO---------: ' + lobby_prepare_to_go + '.')
+
+    if 'LOBBY_MY_READY_TO_GO' in data:
+        aaa = data[data.find('LOBBY_MY_READY_TO_GO'):]
+        bbb = aaa[:aaa.find('||')]
+        lobby_my_ready_to_go = str(bbb.replace('LOBBY_MY_READY_TO_GO = ', ''))
+        print('LOBBY_MY_READY_TO_GO---------: ' + lobby_my_ready_to_go + '.')
+
+    if 'LOBBY_OTHER_READY_TO_GO' in data:
+        aaa = data[data.find('LOBBY_OTHER_READY_TO_GO'):]
+        bbb = aaa[:aaa.find('||')]
+        lobby_other_ready_to_go = str(bbb.replace('LOBBY_OTHER_READY_TO_GO = ', ''))
+        print('LOBBY_OTHER_READY_TO_GO---------: ' + lobby_other_ready_to_go + '.')
 
     # Writing into the file
     with open('connection.txt','a+') as f:
@@ -163,6 +190,29 @@ while 1:
                 else:
                     break
             x[y-1] = 'LOBBY_PREPARE_TO_GO = ' + lobby_prepare_to_go + '\n'
+
+        #write player_name
+        if lobby_my_ready_to_go != '':
+            y = 1
+            f.seek(0)
+            for line in f:
+                if 'LOBBY_MY_READY_TO_GO' not in line:
+                    y += 1
+                else:
+                    break
+            x[y-1] = 'LOBBY_MY_READY_TO_GO = ' + lobby_my_ready_to_go + '\n'
+
+        #write player_name
+        if lobby_other_ready_to_go != '':
+            y = 1
+            f.seek(0)
+            for line in f:
+                if 'LOBBY_OTHER_READY_TO_GO' not in line:
+                    y += 1
+                else:
+                    break
+            x[y-1] = 'LOBBY_OTHER_READY_TO_GO = ' + lobby_other_ready_to_go + '\n'
+
 
 
     with open('connection.txt','w') as f:

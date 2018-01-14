@@ -52,6 +52,23 @@ def read_network_variables(ai_settings,grid, screen, buttons,screen_status, butt
                 elif 'True' in line:
                     button_status.lobby_screen_prepare_to_go_display = True
                     button_status.lobby_screen_prepare_to_go_display_copy = True
+            if 'LOBBY_MY_READY_TO_GO' in line:
+                if 'False' in line:
+                    button_status.lobby_screen_my_ready_to_go = False
+                    button_status.lobby_screen_my_ready_to_go_copy = False
+                elif 'True' in line:
+                    button_status.lobby_screen_my_ready_to_go = True
+                    button_status.lobby_screen_my_ready_to_go_copy = True
+            if 'LOBBY_OTHER_READY_TO_GO' in line:
+                if 'False' in line:
+                    button_status.lobby_screen_other_ready_to_go = False
+                    button_status.lobby_screen_other_ready_to_go_copy = False
+                elif 'True' in line:
+                    button_status.lobby_screen_other_ready_to_go = True
+                    button_status.lobby_screen_other_ready_to_go_copy = True
+
+
+
 
 def write_network_variables(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ Write variables for multiplyaer from text file"""
@@ -106,8 +123,6 @@ def write_network_variables(ai_settings,grid, screen, buttons,screen_status, but
 
         #write number of people in room
         if button_status.lobby_screen_prepare_to_go_display != button_status.lobby_screen_prepare_to_go_display_copy:
-            print(button_status.lobby_screen_prepare_to_go_display)
-            print(button_status.lobby_screen_prepare_to_go_display_copy)
             y = 1
             f.seek(0)
             for line in f:
@@ -118,10 +133,33 @@ def write_network_variables(ai_settings,grid, screen, buttons,screen_status, but
 
             x[y-1] = 'LOBBY_PREPARE_TO_GO = ' + str(button_status.lobby_screen_prepare_to_go_display) + '\n'
 
+        #write number of people in room
+        if button_status.lobby_screen_my_ready_to_go != button_status.lobby_screen_my_ready_to_go_copy:
+            y = 1
+            f.seek(0)
+            for line in f:
+                if 'LOBBY_MY_READY_TO_GO' not in line:
+                    y += 1
+                else:
+                    break
+
+            x[y-1] = 'LOBBY_MY_READY_TO_GO = ' + str(button_status.lobby_screen_my_ready_to_go) + '\n'
+
+        #write number of people in room
+        if button_status.lobby_screen_other_ready_to_go != button_status.lobby_screen_other_ready_to_go_copy:
+            y = 1
+            f.seek(0)
+            for line in f:
+                if 'LOBBY_OTHER_READY_TO_GO' not in line:
+                    y += 1
+                else:
+                    break
+
+            x[y-1] = 'LOBBY_OTHER_READY_TO_GO = ' + str(button_status.lobby_screen_other_ready_to_go) + '\n'
+
 
     with open('connection.txt','w') as f:
         f.writelines(x)
-
 
 def clear_text_file(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ clear text file each time restart the game"""
@@ -169,6 +207,27 @@ def clear_text_file(ai_settings,grid, screen, buttons,screen_status, button_stat
             else:
                 break
         x[y-1] = 'LOBBY_PREPARE_TO_GO = False' + '\n'
+
+        #write number of people in room
+        y = 1
+        f.seek(0)
+        for line in f:
+            if 'LOBBY_MY_READY_TO_GO' not in line:
+                y += 1
+            else:
+                break
+        x[y-1] = 'LOBBY_MY_READY_TO_GO = False' + '\n'
+
+        #write number of people in room
+        y = 1
+        f.seek(0)
+        for line in f:
+            if 'LOBBY_OTHER_READY_TO_GO' not in line:
+                y += 1
+            else:
+                break
+        x[y-1] = 'LOBBY_OTHER_READY_TO_GO = False' + '\n'
+
 
     with open('connection.txt','w') as f:
         f.writelines(x)
@@ -335,17 +394,19 @@ def check_events_lobby_screen(ai_settings, grid,screen, buttons,screen_status, b
                         button_status.lobby_screen_room_status = '1/2'
                         button_status.lobby_screen_room_list_display = user.name
 
-                #next/start
+                #my next/ready/start
                 elif button_status.lobby_screen_room_detail_display == 'my': #and button_status.lobby_screen_room_status == '2/2':
                     if button_status.lobby_screen_prepare_to_go_display == False:
                         button_status.lobby_screen_prepare_to_go_display = True
                     elif button_status.lobby_screen_prepare_to_go_display == True:
-                        # Click on start
-                        lobby_screen_to_other_ready_action(ai_settings, screen,buttons, screen_status, button_status, card_database_filter, user, player2)
+                        # Click on ready
+                        if button_status.lobby_screen_my_ready_to_go == False:
+                            lobby_screen_to_other_ready_action(ai_settings, screen,buttons, screen_status, button_status, card_database_filter, user, player2)
+                        # Click on play
+                        elif button_status.lobby_screen_my_ready_to_go == True and button_status.lobby_screen_other_ready_to_go == True:
+                            pass
 
-
-
-                # Ready
+                # other Ready
                 elif button_status.lobby_screen_room_detail_display == 'other' and button_status.lobby_screen_prepare_to_go_display == True:
                     lobby_screen_to_other_ready_action(ai_settings, screen,buttons, screen_status, button_status, card_database_filter, user, player2)
 
@@ -1478,18 +1539,28 @@ def lobby_screen_room_detail_display(ai_settings, screen, buttons,screen_status,
             button5.update()
             button5.draw(screen)
 
-        button3 = Button(user.name,'', (200,200,110),205, 635, 650, 35,alpha = 240)
-        button3.update()
-        button3.draw(screen)
+        if button_status.lobby_screen_my_ready_to_go == False:
+            button3 = Button(user.name,'', (200,200,110),205, 635, 650, 35,alpha = 240)
+            button3.update()
+            button3.draw(screen)
+        elif button_status.lobby_screen_my_ready_to_go == True:
+            button3 = Button(user.name,'', (110,200,110),205, 635, 650, 35,alpha = 240)
+            button3.update()
+            button3.draw(screen)
 
         if button_status.lobby_screen_room_status == '1/2':
             button3 = Button('Empty','', (250,250,250),205, 680, 650, 35,alpha = 100)
             button3.update()
             button3.draw(screen)
         elif button_status.lobby_screen_room_status == '2/2':
-            button3 = Button(player2.name,'', (200,200,110),205, 680, 650, 35,alpha = 240)
-            button3.update()
-            button3.draw(screen)
+            if button_status.lobby_screen_other_ready_to_go == False:
+                button3 = Button(player2.name,'', (200,200,110),205, 680, 650, 35,alpha = 240)
+                button3.update()
+                button3.draw(screen)
+            elif button_status.lobby_screen_other_ready_to_go == True:
+                button3 = Button(player2.name,'', (110,200,110),205, 680, 650, 35,alpha = 240)
+                button3.update()
+                button3.draw(screen)
 
         if button_status.lobby_screen_prepare_to_go_display == False:
             if button_status.lobby_screen_room_status == '1/2':
@@ -1501,14 +1572,21 @@ def lobby_screen_room_detail_display(ai_settings, screen, buttons,screen_status,
                 button3.update()
                 button3.draw(screen)
         else:
-            if button_status.lobby_screen_room_status == '1/2':
-                button3 = Button('PLAY!','', (120,120,120),920, 607, 100, 50,alpha = 240)
+            if button_status.lobby_screen_my_ready_to_go == False:
+
+                button3 = Button('READY!','', (40,120,40),920, 607, 100, 50,alpha = 240)
                 button3.update()
                 button3.draw(screen)
-            elif button_status.lobby_screen_room_status == '2/2':
-                button3 = Button('PLAY!','', (40,120,40),920, 607, 100, 50,alpha = 240)
-                button3.update()
-                button3.draw(screen)
+
+            elif button_status.lobby_screen_my_ready_to_go == True:
+                if button_status.lobby_screen_other_ready_to_go == True:
+                    button3 = Button('PLAY!','', (247, 201, 37),920, 607, 100, 50,alpha = 240)
+                    button3.update()
+                    button3.draw(screen)
+                elif button_status.lobby_screen_other_ready_to_go == False:
+                    button3 = Button('WAIT!','', (40, 40, 120),920, 607, 100, 50,alpha = 240)
+                    button3.update()
+                    button3.draw(screen)
 
 
         button3 = Button('QUIT','', (120,40,40),920, 684, 100, 50,alpha = 240)
@@ -1526,11 +1604,11 @@ def lobby_screen_room_detail_display(ai_settings, screen, buttons,screen_status,
             button5.update()
             button5.draw(screen)
 
-        if button_status.lobby_screen_other_ready_to_go == False:
+        if button_status.lobby_screen_my_ready_to_go == False:
             button3 = Button(player2.name,'', (200,200,110),205, 635, 650, 35,alpha = 240)
             button3.update()
             button3.draw(screen)
-        elif button_status.lobby_screen_other_ready_to_go == True:
+        elif button_status.lobby_screen_my_ready_to_go == True:
             button3 = Button(player2.name,'', (110,200,110),205, 635, 650, 35,alpha = 240)
             button3.update()
             button3.draw(screen)
@@ -1541,9 +1619,15 @@ def lobby_screen_room_detail_display(ai_settings, screen, buttons,screen_status,
             button3.update()
             button3.draw(screen)
         elif button_status.lobby_screen_room_status == '2/2':
-            button3 = Button(user.name,'', (200,200,110),205, 680, 650, 35,alpha = 240)
-            button3.update()
-            button3.draw(screen)
+
+            if button_status.lobby_screen_other_ready_to_go == False:
+                button3 = Button(user.name,'', (200,200,110),205, 680, 650, 35,alpha = 240)
+                button3.update()
+                button3.draw(screen)
+            elif button_status.lobby_screen_other_ready_to_go == True:
+                button3 = Button(user.name,'', (110,200,110),205, 680, 650, 35,alpha = 240)
+                button3.update()
+                button3.draw(screen)
 
         if button_status.lobby_screen_prepare_to_go_display == True:
             if button_status.lobby_screen_other_ready_to_go == False:
@@ -1708,6 +1792,8 @@ def lobby_screen_to_other_ready_action(ai_settings, screen,buttons, screen_statu
     if save_pass:
         if button_status.lobby_screen_room_detail_display == 'other':
             button_status.lobby_screen_other_ready_to_go = True
+        elif button_status.lobby_screen_room_detail_display == 'my':
+            button_status.lobby_screen_my_ready_to_go = True
         # Render user's deck
         with open('user_deck_list_string.txt','r') as f:
             f.seek(0)
