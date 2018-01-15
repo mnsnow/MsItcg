@@ -209,7 +209,7 @@ def write_network_variables(ai_settings,grid, screen, buttons,screen_status, but
             x[y-1] = 'USER_DECK_LIST = ' + str(deck_list_string) + '\n'
 
         #write number of people in room
-        if len(user.character_card) != len(user.deck_list_copy):
+        if type(user.character_card) != type(user.character_card_copy):
             y = 1
             f.seek(0)
             character_string = ['CARD_' + user.character_card.set_number + '_' + user.character_card.card_number]
@@ -237,7 +237,7 @@ def write_network_variables(ai_settings,grid, screen, buttons,screen_status, but
             x[y-1] = 'PLAYER_DECK_LIST = ' + str(deck_list_string) + '\n'
 
         #write number of people in room
-        if len(player2.character_card) != len(player2.deck_list_copy):
+        if type(player2.character_card) != type(player2.character_card_copy):
             y = 1
             f.seek(0)
             character_string = ['CARD_' + player2.character_card.set_number + '_' + player2.character_card.card_number]
@@ -1953,6 +1953,16 @@ def lobby_screen_to_other_ready_action(ai_settings, screen,buttons, screen_statu
         elif button_status.lobby_screen_room_detail_display == 'my':
             button_status.lobby_screen_my_ready_to_go = True
 
+        # Render user's deck
+        with open('user_deck_list_string.txt','r') as f:
+            f.seek(0)
+            for line in f:
+                if 'DECK_LIST_' + user.deck_list_index in line:
+                    user.deck_list = make_deck_from_string(line.replace('DECK_LIST_' + user.deck_list_index + ' = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                if 'CHARACTER_' + user.deck_list_index in line:
+                    user.character_card = make_deck_from_string(line.replace('CHARACTER_' + user.deck_list_index + ' = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
+
+
 
 
 def lobby_screen_game_start_action(ai_settings, grid,screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
@@ -1960,14 +1970,14 @@ def lobby_screen_game_start_action(ai_settings, grid,screen, buttons,screen_stat
 
     player2.identity = 'pvp'
 
-    # Render user's deck
-    with open('user_deck_list_string.txt','r') as f:
-        f.seek(0)
-        for line in f:
-            if 'DECK_LIST_' + user.deck_list_index in line:
-                user.deck_list = make_deck_from_string(line.replace('DECK_LIST_' + user.deck_list_index + ' = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-            if 'CHARACTER_' + user.deck_list_index in line:
-                user.character_card = make_deck_from_string(line.replace('CHARACTER_' + user.deck_list_index + ' = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
+    # # Render user's deck
+    # with open('user_deck_list_string.txt','r') as f:
+    #     f.seek(0)
+    #     for line in f:
+    #         if 'DECK_LIST_' + user.deck_list_index in line:
+    #             user.deck_list = make_deck_from_string(line.replace('DECK_LIST_' + user.deck_list_index + ' = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+    #         if 'CHARACTER_' + user.deck_list_index in line:
+    #             user.character_card = make_deck_from_string(line.replace('CHARACTER_' + user.deck_list_index + ' = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
 
 
     if button_status.lobby_screen_room_detail_display == 'my':
