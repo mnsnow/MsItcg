@@ -50,6 +50,7 @@ class Player2():
             # card_05_86,
 
             ]
+        self.deck_list_copy = []
 
         self.NIXIE_DECK = str(['CARD_01_03', 'CARD_01_03', 'CARD_01_03', 'CARD_03_01', 'CARD_03_01', 'CARD_03_01', 'CARD_03_01', 'CARD_03_09', 'CARD_03_09', 'CARD_03_09', 'CARD_03_09', 'CARD_04_04', 'CARD_04_04', 'CARD_04_04', 'CARD_04_04', 'CARD_04_12', 'CARD_04_12', 'CARD_04_12', 'CARD_04_12', 'CARD_01_61', 'CARD_01_61', 'CARD_01_61', 'CARD_01_61', 'CARD_03_38', 'CARD_03_38', 'CARD_03_38', 'CARD_03_38', 'CARD_04_41', 'CARD_04_41', 'CARD_04_41', 'CARD_04_41', 'CARD_01_03', 'CARD_05_77', 'CARD_05_77', 'CARD_05_77', 'CARD_05_77', 'CARD_04_51', 'CARD_04_51', 'CARD_04_51', 'CARD_04_51'])
         self.MAYA_DECK = str(['CARD_01_28', 'CARD_01_28', 'CARD_01_28', 'CARD_01_28', 'CARD_01_43', 'CARD_01_43', 'CARD_01_43', 'CARD_01_43', 'CARD_02_18', 'CARD_02_18', 'CARD_02_18', 'CARD_02_18', 'CARD_05_21', 'CARD_05_21', 'CARD_05_21', 'CARD_05_21', 'CARD_04_23', 'CARD_04_23', 'CARD_04_23', 'CARD_04_23', 'CARD_03_25', 'CARD_03_25', 'CARD_03_25', 'CARD_03_25', 'CARD_01_01', 'CARD_01_01', 'CARD_01_01', 'CARD_01_01', 'CARD_01_85', 'CARD_01_85', 'CARD_01_85', 'CARD_01_85', 'CARD_04_51', 'CARD_04_51', 'CARD_04_51', 'CARD_04_51', 'CARD_01_58', 'CARD_01_58', 'CARD_01_58', 'CARD_01_58'])
@@ -64,7 +65,8 @@ class Player2():
         self.character_ai_index = '0'
         self.ai_difficulty_index = '0'
 
-        self.character_card = card_01_16
+        self.character_card = []
+        self.character_card_copy = []
 
         self.character_under_card_by_level = {
             '10' : '',

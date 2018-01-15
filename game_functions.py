@@ -73,7 +73,26 @@ def read_network_variables(ai_settings,grid, screen, buttons,screen_status, butt
                 elif 'True' in line:
                     button_status.lobby_screen_game_start = True
                     button_status.lobby_screen_game_start_copy = True
-
+            if 'USER_DECK_LIST' in line:
+                user.deck_list = make_deck_from_string(line.replace('USER_DECK_LIST = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                user.deck_list_copy = make_deck_from_string(line.replace('USER_DECK_LIST = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            if 'PLAYER_DECK_LIST' in line:
+                player2.deck_list = make_deck_from_string(line.replace('PLAYER_DECK_LIST = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                player2.deck_list_copy = make_deck_from_string(line.replace('PLAYER_DECK_LIST = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            if 'USER_CHARACTER_CARD' in line:
+                if line.replace('USER_CHARACTER_CARD = ', '')[:-1] == '[]':
+                    user.character_card = []
+                    user.character_card_copy = []
+                else:
+                    user.character_card = make_deck_from_string(line.replace('USER_CHARACTER_CARD = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
+                    user.character_card_copy = make_deck_from_string(line.replace('USER_CHARACTER_CARD = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
+            if 'PLAYER_CHARACTER_CARD' in line:
+                if line.replace('PLAYER_CHARACTER_CARD = ', '')[:-1] == '[]':
+                    player2.character_card = []
+                    player2.character_card_copy = []
+                else:
+                    player2.character_card = make_deck_from_string(line.replace('PLAYER_CHARACTER_CARD = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
+                    player2.character_card_copy = make_deck_from_string(line.replace('PLAYER_CHARACTER_CARD = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
 
 def write_network_variables(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ Write variables for multiplyaer from text file"""
@@ -174,6 +193,64 @@ def write_network_variables(ai_settings,grid, screen, buttons,screen_status, but
 
             x[y-1] = 'LOBBY_GAME_START = ' + str(button_status.lobby_screen_game_start) + '\n'
 
+        #write number of people in room
+        if len(user.deck_list) != len(user.deck_list_copy):
+            y = 1
+            f.seek(0)
+            deck_list_string = []
+            for card in user.deck_list:
+                deck_list_string.append('CARD_' + card.set_number + '_' + card.card_number)
+            for line in f:
+                if 'USER_DECK_LIST' not in line:
+                    y += 1
+                else:
+                    break
+
+            x[y-1] = 'USER_DECK_LIST = ' + str(deck_list_string) + '\n'
+
+        #write number of people in room
+        if len(user.character_card) != len(user.deck_list_copy):
+            y = 1
+            f.seek(0)
+            character_string = ['CARD_' + user.character_card.set_number + '_' + user.character_card.card_number]
+            for line in f:
+                if 'USER_CHARACTER_CARD' not in line:
+                    y += 1
+                else:
+                    break
+
+            x[y-1] = 'USER_CHARACTER_CARD = ' + str(character_string) + '\n'
+
+        #write number of people in room
+        if len(player2.deck_list) != len(player2.deck_list_copy):
+            y = 1
+            f.seek(0)
+            deck_list_string = []
+            for card in player2.deck_list:
+                deck_list_string.append('CARD_' + card.set_number + '_' + card.card_number)
+            for line in f:
+                if 'PLAYER_DECK_LIST' not in line:
+                    y += 1
+                else:
+                    break
+
+            x[y-1] = 'PLAYER_DECK_LIST = ' + str(deck_list_string) + '\n'
+
+        #write number of people in room
+        if len(player2.character_card) != len(player2.deck_list_copy):
+            y = 1
+            f.seek(0)
+            character_string = ['CARD_' + player2.character_card.set_number + '_' + player2.character_card.card_number]
+            for line in f:
+                if 'PLAYER_CHARACTER_CARD' not in line:
+                    y += 1
+                else:
+                    break
+
+            x[y-1] = 'PLAYER_CHARACTER_CARD = ' + str(character_string) + '\n'
+
+
+
 
     with open('connection.txt','w') as f:
         f.writelines(x)
@@ -254,6 +331,46 @@ def clear_text_file(ai_settings,grid, screen, buttons,screen_status, button_stat
             else:
                 break
         x[y-1] = 'LOBBY_GAME_START = False' + '\n'
+
+        #write number of people in room
+        y = 1
+        f.seek(0)
+        for line in f:
+            if 'USER_DECK_LIST' not in line:
+                y += 1
+            else:
+                break
+        x[y-1] = 'USER_DECK_LIST = []' + '\n'
+
+        #write number of people in room
+        y = 1
+        f.seek(0)
+        for line in f:
+            if 'PLAYER_DECK_LIST' not in line:
+                y += 1
+            else:
+                break
+        x[y-1] = 'PLAYER_DECK_LIST = []' + '\n'
+
+        #write number of people in room
+        y = 1
+        f.seek(0)
+        for line in f:
+            if 'USER_CHARACTER_CARD' not in line:
+                y += 1
+            else:
+                break
+        x[y-1] = 'USER_CHARACTER_CARD = []' + '\n'
+
+        #write number of people in room
+        y = 1
+        f.seek(0)
+        for line in f:
+            if 'PLAYER_CHARACTER_CARD' not in line:
+                y += 1
+            else:
+                break
+        x[y-1] = 'PLAYER_CHARACTER_CARD = []' + '\n'
 
 
     with open('connection.txt','w') as f:
@@ -429,11 +546,14 @@ def check_events_lobby_screen(ai_settings, grid,screen, buttons,screen_status, b
                         # Click on ready
                         if button_status.lobby_screen_my_ready_to_go == False:
                             lobby_screen_to_other_ready_action(ai_settings, screen,buttons, screen_status, button_status, card_database_filter, user, player2)
+
+
                         # Click on play
                         elif button_status.lobby_screen_my_ready_to_go == True and button_status.lobby_screen_other_ready_to_go == True:
                             button_status.lobby_screen_game_start = True
-                            screen_status.lobby_screen_display = False
-                            screen_status.battle_screen_display = True
+                            lobby_screen_game_start_action(ai_settings, grid,screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
+
+
 
                 # other Ready
                 elif button_status.lobby_screen_room_detail_display == 'other' and button_status.lobby_screen_prepare_to_go_display == True:
@@ -1017,6 +1137,11 @@ def update_screen(ai_settings,grid, screen, buttons, screen_status, button_statu
         screen.blit(pygame.image.load('static/bg_images/bg_06.png'), (0,0))
     elif ai_settings.theme_indicator == 'Ellinia':
         screen.blit(pygame.image.load('static/bg_images/bg_04.jpeg'), (0,0))
+
+    if button_status.lobby_screen_game_start == True:
+        if screen_status.lobby_screen_display == True and screen_status.battle_screen_display == False:
+            screen_status.lobby_screen_display = False
+            screen_status.battle_screen_display = True
 
     if screen_status.welcome_screen_display:
         welcome_screen_update(ai_settings,screen, buttons, screen_status, button_status)
@@ -1819,148 +1944,174 @@ def lobby_screen_to_other_ready_action(ai_settings, screen,buttons, screen_statu
 
 
     if save_pass:
+
+        user.deck_list = []
+        user.character_card = ''
+
         if button_status.lobby_screen_room_detail_display == 'other':
             button_status.lobby_screen_other_ready_to_go = True
         elif button_status.lobby_screen_room_detail_display == 'my':
             button_status.lobby_screen_my_ready_to_go = True
-        # Render user's deck
-        with open('user_deck_list_string.txt','r') as f:
-            f.seek(0)
-            for line in f:
-                if 'DECK_LIST_' + user.deck_list_index in line:
-                    user.deck_list = make_deck_from_string(line.replace('DECK_LIST_' + user.deck_list_index + ' = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-                if 'CHARACTER_' + user.deck_list_index in line:
-                    user.character_card = make_deck_from_string(line.replace('CHARACTER_' + user.deck_list_index + ' = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
 
 
+
+def lobby_screen_game_start_action(ai_settings, grid,screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
+    """ lobby screen start action"""
+
+    player2.identity = 'pvp'
+
+    # Render user's deck
+    with open('user_deck_list_string.txt','r') as f:
+        f.seek(0)
+        for line in f:
+            if 'DECK_LIST_' + user.deck_list_index in line:
+                user.deck_list = make_deck_from_string(line.replace('DECK_LIST_' + user.deck_list_index + ' = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            if 'CHARACTER_' + user.deck_list_index in line:
+                user.character_card = make_deck_from_string(line.replace('CHARACTER_' + user.deck_list_index + ' = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
+
+
+    if button_status.lobby_screen_room_detail_display == 'my':
+        user.random_deck_list = random.sample(user.deck_list, len(user.deck_list))
+        user.remain_deck_list = user.random_deck_list[5:]
+        user.hand_list = user.random_deck_list[0:5]
+    elif button_status.lobby_screen_room_detail_display == 'other':
         user.random_deck_list = random.sample(user.deck_list, len(user.deck_list))
         user.remain_deck_list = user.random_deck_list[6:]
         user.hand_list = user.random_deck_list[0:6]
 
 
-        # Clear up and initiate all display/progress indicator on battle screen
-        # screen_status
-        screen_status.battle_screen_my_hand_page_id = 1
-        screen_status.battle_screen_action_indicator = 'stage-0'
-        screen_status.battle_screen_player2_action_display_indicator = False
-        # button_status
-        button_status.battle_screen_win_lost_display = False
-        button_status.battle_screen_win_lost_indicator = ''
-        button_status.battle_screen_instruction_bar_yes_display = True
-        button_status.battle_screen_instruction_bar_yes_backend = True
-        button_status.battle_screen_instruction_bar_skip_display = False
-        button_status.battle_screen_instruction_bar_skip_backend = False
-        button_status.battle_screen_stable_button_backend = True
-        button_status.battle_screen_my_hand_page_change_button_backend = True
-        button_status.battle_screen_menu_display = False
-        button_status.battle_screen_history_bar_detail_display = False
-        button_status.battle_screen_history_bar_text_dict = {
-            '1' : '',
-            '2' : '',
-            '3' : '',
-            '4' : '',
-            '5' : '',
-            '6' : '',
-            '7' : '',
-            '8' : '',
-            '9' : '',
-            '10' : '',
-            '11' : '',
-            '12' : '',
-            '13' : '',
-            '14' : '',
-            '15' : '',
-        }
-        button_status.battle_screen_my_hand_indicator_display = False
-        button_status.battle_screen_my_hand_indicator_position = '1'
-        button_status.battle_screen_player1_battleground_indicator_display = False
-        button_status.battle_screen_player1_battleground_indicator_position = '1'
-        button_status.battle_screen_player2_battleground_indicator_display = False
-        button_status.battle_screen_player2_battleground_indicator_position = '1'
-        button_status.card_zoom_active = False
-        button_status.card_zoom_screen_indicator = 'build_deck_screen'
-        button_status.card_zoom_part_indicator = ''
-        button_status.card_zoom_position_indicator = '1'
-        button_status.battle_screen_win_lost_indicator = ''
-
-        #user
-        user.monster_in_play_dict = {
-            '1' : '',
-            '2' : '',
-            '3' : '',
-            '4' : '',
-            '5' : '',
-            '6' : '',
-        }
-        user.monster_in_play_length = '0'
-        user.item_in_play_dict = {
-            '1' : '',
-            '2' : '',
-            '3' : '',
-            '4' : '',
-            '5' : '',
-            '6' : '',
-        }
-        user.item_in_play_length = '0'
-        user.character_under_card_by_level = {
-            '10' : '',
-            '20' : '',
-            '30' : '',
-            '40' : '',
-            '50' : '',
-            '60' : '',
-            '70' : '',
-            '80' : '',
-            '90' : '',
-            '100' : '',
-            '110' : '',
-            '120' : '',
-            '130' : '',
-            '140' : '',
-            '150' : '',
-        }
-        user.stage_2_other_card_usable_list = []
-
-        #player2
-        player2.character_under_card_by_level = {
-            '10' : '',
-            '20' : '',
-            '30' : '',
-            '40' : '',
-            '50' : '',
-            '60' : '',
-            '70' : '',
-            '80' : '',
-            '90' : '',
-            '100' : '',
-            '110' : '',
-            '120' : '',
-            '130' : '',
-            '140' : '',
-            '150' : '',
-        }
-        player2.monster_in_play_dict = {
-            '1' : '',
-            '2' : '',
-            '3' : '',
-            '4' : '',
-            '5' : '',
-            '6' : '',
-        }
-        player2.monster_in_play_length = '0'
-        player2.item_in_play_dict = {
-            '1' : '',
-            '2' : '',
-            '3' : '',
-            '4' : '',
-            '5' : '',
-            '6' : '',
-        }
-        player2.item_in_play_length = '0'
-        player2.stage_2_other_card_usable_list = []
+    if button_status.lobby_screen_room_detail_display == 'my':
+        player2.random_deck_list = random.sample(player2.deck_list, len(player2.deck_list))
+        player2.remain_deck_list = player2.random_deck_list[6:]
+        player2.hand_list = player2.random_deck_list[0:6]
+    elif button_status.lobby_screen_room_detail_display == 'other':
+        player2.random_deck_list = random.sample(player2.deck_list, len(player2.deck_list))
+        player2.remain_deck_list = player2.random_deck_list[5:]
+        player2.hand_list = player2.random_deck_list[0:5]
 
 
 
+
+    # Clear up and initiate all display/progress indicator on battle screen
+    # screen_status
+    screen_status.battle_screen_my_hand_page_id = 1
+    screen_status.battle_screen_action_indicator = 'stage-0'
+    screen_status.battle_screen_player2_action_display_indicator = False
+    # button_status
+    button_status.battle_screen_win_lost_display = False
+    button_status.battle_screen_win_lost_indicator = ''
+    button_status.battle_screen_instruction_bar_yes_display = True
+    button_status.battle_screen_instruction_bar_yes_backend = True
+    button_status.battle_screen_instruction_bar_skip_display = False
+    button_status.battle_screen_instruction_bar_skip_backend = False
+    button_status.battle_screen_stable_button_backend = True
+    button_status.battle_screen_my_hand_page_change_button_backend = True
+    button_status.battle_screen_menu_display = False
+    button_status.battle_screen_history_bar_detail_display = False
+    button_status.battle_screen_history_bar_text_dict = {
+        '1' : '',
+        '2' : '',
+        '3' : '',
+        '4' : '',
+        '5' : '',
+        '6' : '',
+        '7' : '',
+        '8' : '',
+        '9' : '',
+        '10' : '',
+        '11' : '',
+        '12' : '',
+        '13' : '',
+        '14' : '',
+        '15' : '',
+    }
+    button_status.battle_screen_my_hand_indicator_display = False
+    button_status.battle_screen_my_hand_indicator_position = '1'
+    button_status.battle_screen_player1_battleground_indicator_display = False
+    button_status.battle_screen_player1_battleground_indicator_position = '1'
+    button_status.battle_screen_player2_battleground_indicator_display = False
+    button_status.battle_screen_player2_battleground_indicator_position = '1'
+    button_status.card_zoom_active = False
+    button_status.card_zoom_screen_indicator = 'build_deck_screen'
+    button_status.card_zoom_part_indicator = ''
+    button_status.card_zoom_position_indicator = '1'
+    button_status.battle_screen_win_lost_indicator = ''
+
+    #user
+    user.monster_in_play_dict = {
+        '1' : '',
+        '2' : '',
+        '3' : '',
+        '4' : '',
+        '5' : '',
+        '6' : '',
+    }
+    user.monster_in_play_length = '0'
+    user.item_in_play_dict = {
+        '1' : '',
+        '2' : '',
+        '3' : '',
+        '4' : '',
+        '5' : '',
+        '6' : '',
+    }
+    user.item_in_play_length = '0'
+    user.character_under_card_by_level = {
+        '10' : '',
+        '20' : '',
+        '30' : '',
+        '40' : '',
+        '50' : '',
+        '60' : '',
+        '70' : '',
+        '80' : '',
+        '90' : '',
+        '100' : '',
+        '110' : '',
+        '120' : '',
+        '130' : '',
+        '140' : '',
+        '150' : '',
+    }
+    user.stage_2_other_card_usable_list = []
+
+    #player2
+    player2.character_under_card_by_level = {
+        '10' : '',
+        '20' : '',
+        '30' : '',
+        '40' : '',
+        '50' : '',
+        '60' : '',
+        '70' : '',
+        '80' : '',
+        '90' : '',
+        '100' : '',
+        '110' : '',
+        '120' : '',
+        '130' : '',
+        '140' : '',
+        '150' : '',
+    }
+    player2.monster_in_play_dict = {
+        '1' : '',
+        '2' : '',
+        '3' : '',
+        '4' : '',
+        '5' : '',
+        '6' : '',
+    }
+    player2.monster_in_play_length = '0'
+    player2.item_in_play_dict = {
+        '1' : '',
+        '2' : '',
+        '3' : '',
+        '4' : '',
+        '5' : '',
+        '6' : '',
+    }
+    player2.item_in_play_length = '0'
+    player2.stage_2_other_card_usable_list = []
 
 
 #-----------------------------Prepare screen display----------------------------------------------------
@@ -3064,6 +3215,8 @@ def battle_screen_stable_button_display(ai_settings,grid, screen, buttons, scree
         player2_AI = 'MISTMOON'
     elif player2.character_ai_index == '8':
         player2_AI = 'FANGBLADE'
+    elif player2.identity == 'pvp':
+        player2_AI = player2.name
     button2 = Button(player2_AI,'', (250,250,250),0, 570, 90, 30, font_color = (0,0,0), alpha = 150)
     button2.update()
     button2.draw(screen)

@@ -64,11 +64,12 @@ class User():
             # card_05_86,
 
             ]
-
+        self.deck_list_copy = []
 
         self.deck_list_index = '0' # indicate which deck list we are working on
 
-        self.character_card = card_01_64
+        self.character_card = []
+        self.character_card_copy = []
 
         self.random_deck_list = random.sample(self.deck_list, len(self.deck_list))
 

@@ -29,6 +29,11 @@ def repair_text_file():
                 'LOBBY_MY_READY_TO_GO = False\n',
                 'LOBBY_OTHER_READY_TO_GO = False\n',
                 'LOBBY_GAME_START = False\n',
+                'USER_DECK_LIST = []\n',
+                'PLAYER_DECK_LIST = []\n',
+                'USER_CHARACTER_CARD = []\n',
+                'PLAYER_CHARACTER_CARD = []\n',
+
             ]
 
     with open('connection.txt','w') as f:

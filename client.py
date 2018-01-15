@@ -29,6 +29,14 @@ while 1:
                 lobby_other_ready_to_go_01 = str(line)
             if 'LOBBY_GAME_START' in line:
                 lobby_game_start_01 = str(line)
+            if 'USER_DECK_LIST' in line:
+                user_deck_list_01 = str(line)
+            if 'PLAYER_DECK_LIST' in line:
+                player_deck_list_01 = str(line)
+            if 'USER_CHARACTER_CARD' in line:
+                user_character_card_01 = str(line)
+            if 'PLAYER_CHARACTER_CARD' in line:
+                player_character_card_01 = str(line)
 
     time.sleep(0.5)
 
@@ -51,6 +59,14 @@ while 1:
                 lobby_other_ready_to_go_02 = str(line)
             if 'LOBBY_GAME_START' in line:
                 lobby_game_start_02 = str(line)
+            if 'USER_DECK_LIST' in line:
+                user_deck_list_02 = str(line)
+            if 'PLAYER_DECK_LIST' in line:
+                player_deck_list_02 = str(line)
+            if 'USER_CHARACTER_CARD' in line:
+                user_character_card_02 = str(line)
+            if 'PLAYER_CHARACTER_CARD' in line:
+                player_character_card_02 = str(line)
 
 
     if user_name_01 != user_name_02:
@@ -69,6 +85,15 @@ while 1:
         s.send(((str(lobby_other_ready_to_go_02)[:-1]+'||')*10).encode())
     if lobby_game_start_01 != lobby_game_start_02:
         s.send(((str(lobby_game_start_02)[:-1]+'||')*10).encode())
+    if user_deck_list_01 != user_deck_list_02:
+        s.send(((str(user_deck_list_02)[:-1]+'||')*10).encode())
+    if player_deck_list_01 != player_deck_list_02:
+        s.send(((str(player_deck_list_02)[:-1]+'||')*10).encode())
+    if user_character_card_01 != user_character_card_02:
+        s.send(((str(user_character_card_02)[:-1]+'||')*10).encode())
+    if player_character_card_01 != player_character_card_02:
+        s.send(((str(player_character_card_02)[:-1]+'||')*10).encode())
+
 
     s.send(('lalala'*10).encode())
     # Reciving data
@@ -87,6 +112,11 @@ while 1:
     lobby_my_ready_to_go = ''
     lobby_other_ready_to_go = ''
     lobby_game_start = ''
+    user_deck_list = ''
+    player_deck_list = ''
+    user_character_card = ''
+    player_character_card = ''
+
     # get variables from data
     if 'USER_NAME' in data:
         aaa = data[data.find('USER_NAME'):]
@@ -136,6 +166,32 @@ while 1:
         bbb = aaa[:aaa.find('||')]
         lobby_game_start = str(bbb.replace('LOBBY_GAME_START = ', ''))
         print('LOBBY_GAME_START---------: ' + lobby_game_start + '.')
+
+    if 'USER_DECK_LIST' in data:
+        aaa = data[data.find('USER_DECK_LIST'):]
+        bbb = aaa[:aaa.find('||')]
+        player_deck_list = str(bbb.replace('USER_DECK_LIST = ', ''))
+        print('USER_DECK_LIST---------: ' + player_deck_list + '.')
+
+    if 'PLAYER_DECK_LIST' in data:
+        aaa = data[data.find('PLAYER_DECK_LIST'):]
+        bbb = aaa[:aaa.find('||')]
+        user_deck_list = str(bbb.replace('PLAYER_DECK_LIST = ', ''))
+        print('PLAYER_DECK_LIST---------: ' + user_deck_list + '.')
+
+    if 'USER_CHARACTER_CARD' in data:
+        aaa = data[data.find('USER_CHARACTER_CARD'):]
+        bbb = aaa[:aaa.find('||')]
+        player_character_card = str(bbb.replace('USER_CHARACTER_CARD = ', ''))
+        print('USER_CHARACTER_CARD---------: ' + player_character_card + '.')
+
+    if 'PLAYER_DECK_LIST' in data:
+        aaa = data[data.find('PLAYER_DECK_LIST'):]
+        bbb = aaa[:aaa.find('||')]
+        user_character_card = str(bbb.replace('PLAYER_DECK_LIST = ', ''))
+        print('PLAYER_DECK_LIST---------: ' + user_character_card + '.')
+
+
 
     # Writing into the file
     with open('connection.txt','a+') as f:
@@ -230,6 +286,50 @@ while 1:
                 else:
                     break
             x[y-1] = 'LOBBY_GAME_START = ' + lobby_game_start + '\n'
+
+        #write player_name
+        if user_deck_list != '':
+            y = 1
+            f.seek(0)
+            for line in f:
+                if 'USER_DECK_LIST' not in line:
+                    y += 1
+                else:
+                    break
+            x[y-1] = 'USER_DECK_LIST = ' + user_deck_list + '\n'
+
+        #write player_name
+        if player_deck_list != '':
+            y = 1
+            f.seek(0)
+            for line in f:
+                if 'PLAYER_DECK_LIST' not in line:
+                    y += 1
+                else:
+                    break
+            x[y-1] = 'PLAYER_DECK_LIST = ' + player_deck_list + '\n'
+
+        #write player_name
+        if user_character_card != '':
+            y = 1
+            f.seek(0)
+            for line in f:
+                if 'USER_CHARACTER_CARD' not in line:
+                    y += 1
+                else:
+                    break
+            x[y-1] = 'USER_CHARACTER_CARD = ' + user_character_card + '\n'
+
+        #write player_name
+        if player_character_card != '':
+            y = 1
+            f.seek(0)
+            for line in f:
+                if 'PLAYER_CHARACTER_CARD' not in line:
+                    y += 1
+                else:
+                    break
+            x[y-1] = 'PLAYER_CHARACTER_CARD = ' + player_character_card + '\n'
 
 
 
