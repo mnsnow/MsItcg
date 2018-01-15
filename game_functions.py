@@ -91,8 +91,11 @@ def read_network_variables(ai_settings,grid, screen, buttons,screen_status, butt
                     player2.character_card = []
                     player2.character_card_copy = []
                 else:
-                    player2.character_card = make_deck_from_string(line.replace('PLAYER_CHARACTER_CARD = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
-                    player2.character_card_copy = make_deck_from_string(line.replace('PLAYER_CHARACTER_CARD = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
+                    try:
+                        player2.character_card = make_deck_from_string(str(line.replace('PLAYER_CHARACTER_CARD = ', ''))[:-1], ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
+                        player2.character_card_copy = make_deck_from_string(line.replace('PLAYER_CHARACTER_CARD = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
+                    except IndexError:
+                        pass
 
 def write_network_variables(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ Write variables for multiplyaer from text file"""
@@ -1945,6 +1948,7 @@ def lobby_screen_to_other_ready_action(ai_settings, screen,buttons, screen_statu
 
     if save_pass:
 
+        player2.identity = 'pvp'
         user.deck_list = []
         user.character_card = ''
 
@@ -1968,7 +1972,6 @@ def lobby_screen_to_other_ready_action(ai_settings, screen,buttons, screen_statu
 def lobby_screen_game_start_action(ai_settings, grid,screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ lobby screen start action"""
 
-    player2.identity = 'pvp'
 
     # # Render user's deck
     # with open('user_deck_list_string.txt','r') as f:

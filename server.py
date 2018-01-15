@@ -176,25 +176,25 @@ while 1:
         aaa = data[data.find('USER_DECK_LIST'):]
         bbb = aaa[:aaa.find('||')]
         player_deck_list = str(bbb.replace('USER_DECK_LIST = ', ''))
-        print('USER_DECK_LIST---------: ' + player_deck_list + '.')
+        print('PLAYER_DECK_LIST---------: ' + player_deck_list + '.')
 
     if 'PLAYER_DECK_LIST' in data:
         aaa = data[data.find('PLAYER_DECK_LIST'):]
         bbb = aaa[:aaa.find('||')]
         user_deck_list = str(bbb.replace('PLAYER_DECK_LIST = ', ''))
-        print('PLAYER_DECK_LIST---------: ' + user_deck_list + '.')
+        print('USER_DECK_LIST---------: ' + user_deck_list + '.')
 
     if 'USER_CHARACTER_CARD' in data:
         aaa = data[data.find('USER_CHARACTER_CARD'):]
         bbb = aaa[:aaa.find('||')]
         player_character_card = str(bbb.replace('USER_CHARACTER_CARD = ', ''))
-        print('USER_CHARACTER_CARD---------: ' + player_character_card + '.')
+        print('PLAYER_CHARACTER_CARD---------: ' + player_character_card + '.')
 
     if 'PLAYER_DECK_LIST' in data:
         aaa = data[data.find('PLAYER_DECK_LIST'):]
         bbb = aaa[:aaa.find('||')]
         user_character_card = str(bbb.replace('PLAYER_DECK_LIST = ', ''))
-        print('PLAYER_DECK_LIST---------: ' + user_character_card + '.')
+        print('USER_DECK_LIST---------: ' + user_character_card + '.')
 
 
 
