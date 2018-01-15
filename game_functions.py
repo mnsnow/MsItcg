@@ -3230,9 +3230,12 @@ def battle_screen_stable_button_display(ai_settings,grid, screen, buttons, scree
         player2_AI = 'FANGBLADE'
     elif player2.identity == 'pvp':
         player2_AI = player2.name
-    button2 = Button(player2_AI,'', (250,250,250),0, 570, 90, 30, font_color = (0,0,0), alpha = 150)
-    button2.update()
-    button2.draw(screen)
+    try:
+        button2 = Button(player2_AI,'', (250,250,250),0, 570, 90, 30, font_color = (0,0,0), alpha = 150)
+        button2.update()
+        button2.draw(screen)
+    except UnboundLocalError:
+        pass 
     # add menu button to buttons group
     if button_status.battle_screen_stable_button_backend:
         buttons.append(button_menu)
