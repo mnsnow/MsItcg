@@ -67,6 +67,8 @@ class Player2():
 
         self.character_card = []
         self.character_card_copy = []
+        self.character_card_health_copy = 0
+        self.character_card_level_copy = 0
 
         self.character_under_card_by_level = {
             '10' : '',
@@ -111,6 +113,7 @@ class Player2():
 
         self.remain_deck_list = self.random_deck_list[6:]
         self.hand_list = self.random_deck_list[0:30]
+        self.hand_list_copy = self.random_deck_list[0:30]
 
         self.stage_2_other_card_usable_list = []
 

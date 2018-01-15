@@ -19,22 +19,29 @@ def repair_text_file():
     with open('connection.txt','a+') as f:
         f.seek(0)
         x = f.readlines()
-        if x == []:
-            x = [
-                'PLAYER_NAME = Player\n',
-                'USER_NAME = Mapler\n',
-                'EXIST_ROOM = N/A\n',
-                'ROOM_PEOPLE_NUMBER = 0\n',
-                'LOBBY_PREPARE_TO_GO = False\n',
-                'LOBBY_MY_READY_TO_GO = False\n',
-                'LOBBY_OTHER_READY_TO_GO = False\n',
-                'LOBBY_GAME_START = False\n',
-                'USER_DECK_LIST = []\n',
-                'PLAYER_DECK_LIST = []\n',
-                'USER_CHARACTER_CARD = []\n',
-                'PLAYER_CHARACTER_CARD = []\n',
 
-            ]
+        x = [
+            'PLAYER_NAME = Player\n',
+            'USER_NAME = Mapler\n',
+            'EXIST_ROOM = N/A\n',
+            'ROOM_PEOPLE_NUMBER = 0\n',
+            'LOBBY_PREPARE_TO_GO = False\n',
+            'LOBBY_MY_READY_TO_GO = False\n',
+            'LOBBY_OTHER_READY_TO_GO = False\n',
+            'LOBBY_GAME_START = False\n',
+            'USER_DECK_LIST = []\n',
+            'PLAYER_DECK_LIST = []\n',
+            'USER_CHARACTER_CARD = []\n',
+            'PLAYER_CHARACTER_CARD = []\n',
+            'USER_HAND_LIST = []\n',
+            'PLAYER_HAND_LIST = []\n',
+            'USER_HP = 0\n',
+            'PLAYER_HP = 0\n',
+            'USER_LV = 0\n',
+            'PLAYER_LV = 0\n',
+
+        ]
+
 
     with open('connection.txt','w') as f:
         f.writelines(x)

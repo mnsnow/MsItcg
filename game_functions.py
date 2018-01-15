@@ -96,6 +96,41 @@ def read_network_variables(ai_settings,grid, screen, buttons,screen_status, butt
                         player2.character_card_copy = make_deck_from_string(line.replace('PLAYER_CHARACTER_CARD = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
                     except IndexError:
                         pass
+            if 'USER_HAND_LIST' in line:
+                user.hand_list = make_deck_from_string(line.replace('USER_HAND_LIST = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                user.hand_list_copy = make_deck_from_string(line.replace('USER_HAND_LIST = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            if 'PLAYER_HAND_LIST' in line:
+                player2.hand_list = make_deck_from_string(line.replace('PLAYER_HAND_LIST = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+                player2.hand_list_copy = make_deck_from_string(line.replace('PLAYER_HAND_LIST = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            if 'USER_HP' in line:
+                try:
+                    user.character_card.health = str(line.replace('USER_HP = ', ''))[:-1]
+                    user.character_card_health_copy = str(line.replace('USER_HP = ', ''))[:-1]
+                except:
+                    pass
+            if 'PLAYER_HP' in line:
+                try:
+                    player2.character_card.health = str(line.replace('PLAYER_HP = ', ''))[:-1]
+                    player2.character_card_health_copy = str(line.replace('PLAYER_HP = ', ''))[:-1]
+                except:
+                    pass
+            if 'USER_LV' in line:
+                try:
+                    user.character_card.level = str(line.replace('USER_LV = ', ''))[:-1]
+                    user.character_card_level_copy = str(line.replace('USER_LV = ', ''))[:-1]
+                except:
+                    pass
+            if 'PLAYER_LV' in line:
+                try:
+                    player2.character_card.level = str(line.replace('PLAYER_LV = ', ''))[:-1]
+                    player2.character_card_level_copy = str(line.replace('PLAYER_LV = ', ''))[:-1]
+                except:
+                    pass
+
+
+
+
+
 
 def write_network_variables(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ Write variables for multiplyaer from text file"""
@@ -252,6 +287,83 @@ def write_network_variables(ai_settings,grid, screen, buttons,screen_status, but
 
             x[y-1] = 'PLAYER_CHARACTER_CARD = ' + str(character_string) + '\n'
 
+        #write number of people in room
+        if len(user.hand_list) != len(user.hand_list_copy):
+            y = 1
+            f.seek(0)
+            deck_list_string = []
+            for card in user.hand_list:
+                deck_list_string.append('CARD_' + card.set_number + '_' + card.card_number)
+            for line in f:
+                if 'USER_HAND_LIST' not in line:
+                    y += 1
+                else:
+                    break
+
+            x[y-1] = 'USER_HAND_LIST = ' + str(deck_list_string) + '\n'
+
+        #write number of people in room
+        if len(player2.hand_list) != len(player2.hand_list_copy):
+            y = 1
+            f.seek(0)
+            deck_list_string = []
+            for card in player2.hand_list:
+                deck_list_string.append('CARD_' + card.set_number + '_' + card.card_number)
+            for line in f:
+                if 'PLAYER_HAND_LIST' not in line:
+                    y += 1
+                else:
+                    break
+
+            x[y-1] = 'PLAYER_HAND_LIST = ' + str(deck_list_string) + '\n'
+
+        #write number of people in room
+        if user.character_card != [] and user.character_card.health != user.character_card_health_copy:
+            y = 1
+            f.seek(0)
+            for line in f:
+                if 'USER_HP' not in line:
+                    y += 1
+                else:
+                    break
+
+            x[y-1] = 'USER_HP = ' + str(user.character_card.health) + '\n'
+
+        #write number of people in room
+        if player2.character_card != [] and player2.character_card.health != player2.character_card_health_copy:
+            y = 1
+            f.seek(0)
+            for line in f:
+                if 'PLAYER_HP' not in line:
+                    y += 1
+                else:
+                    break
+
+            x[y-1] = 'PLAYER_HP = ' + str(player2.character_card.health) + '\n'
+
+        #write number of people in room
+        if user.character_card != [] and user.character_card.level != user.character_card_level_copy:
+            y = 1
+            f.seek(0)
+            for line in f:
+                if 'USER_LV' not in line:
+                    y += 1
+                else:
+                    break
+
+            x[y-1] = 'USER_LV = ' + str(user.character_card.level) + '\n'
+
+        #write number of people in room
+        if player2.character_card != [] and player2.character_card.level != player2.character_card_level_copy:
+            y = 1
+            f.seek(0)
+            for line in f:
+                if 'PLAYER_LV' not in line:
+                    y += 1
+                else:
+                    break
+
+            x[y-1] = 'PLAYER_LV = ' + str(player2.character_card.level) + '\n'
 
 
 
@@ -374,6 +486,66 @@ def clear_text_file(ai_settings,grid, screen, buttons,screen_status, button_stat
             else:
                 break
         x[y-1] = 'PLAYER_CHARACTER_CARD = []' + '\n'
+
+        #write number of people in room
+        y = 1
+        f.seek(0)
+        for line in f:
+            if 'USER_HAND_LIST' not in line:
+                y += 1
+            else:
+                break
+        x[y-1] = 'USER_HAND_LIST = []' + '\n'
+
+        #write number of people in room
+        y = 1
+        f.seek(0)
+        for line in f:
+            if 'PLAYER_HAND_LIST' not in line:
+                y += 1
+            else:
+                break
+        x[y-1] = 'PLAYER_HAND_LIST = []' + '\n'
+
+        #write number of people in room
+        y = 1
+        f.seek(0)
+        for line in f:
+            if 'USER_HP' not in line:
+                y += 1
+            else:
+                break
+        x[y-1] = 'USER_HP = 0' + '\n'
+
+        #write number of people in room
+        y = 1
+        f.seek(0)
+        for line in f:
+            if 'PLAYER_HP' not in line:
+                y += 1
+            else:
+                break
+        x[y-1] = 'PLAYER_HP = 0' + '\n'
+
+        #write number of people in room
+        y = 1
+        f.seek(0)
+        for line in f:
+            if 'USER_LV' not in line:
+                y += 1
+            else:
+                break
+        x[y-1] = 'USER_LV = 0' + '\n'
+
+        #write number of people in room
+        y = 1
+        f.seek(0)
+        for line in f:
+            if 'PLAYER_LV' not in line:
+                y += 1
+            else:
+                break
+        x[y-1] = 'PLAYER_LV = 0' + '\n'
 
 
     with open('connection.txt','w') as f:
@@ -1966,8 +2138,14 @@ def lobby_screen_to_other_ready_action(ai_settings, screen,buttons, screen_statu
                 if 'CHARACTER_' + user.deck_list_index in line:
                     user.character_card = make_deck_from_string(line.replace('CHARACTER_' + user.deck_list_index + ' = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
 
-
-
+        if button_status.lobby_screen_room_detail_display == 'my':
+            user.random_deck_list = random.sample(user.deck_list, len(user.deck_list))
+            user.remain_deck_list = user.random_deck_list[5:]
+            user.hand_list = user.random_deck_list[0:5]
+        elif button_status.lobby_screen_room_detail_display == 'other':
+            user.random_deck_list = random.sample(user.deck_list, len(user.deck_list))
+            user.remain_deck_list = user.random_deck_list[6:]
+            user.hand_list = user.random_deck_list[0:6]
 
 def lobby_screen_game_start_action(ai_settings, grid,screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ lobby screen start action"""
@@ -1983,24 +2161,24 @@ def lobby_screen_game_start_action(ai_settings, grid,screen, buttons,screen_stat
     #             user.character_card = make_deck_from_string(line.replace('CHARACTER_' + user.deck_list_index + ' = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
 
 
-    if button_status.lobby_screen_room_detail_display == 'my':
-        user.random_deck_list = random.sample(user.deck_list, len(user.deck_list))
-        user.remain_deck_list = user.random_deck_list[5:]
-        user.hand_list = user.random_deck_list[0:5]
-    elif button_status.lobby_screen_room_detail_display == 'other':
-        user.random_deck_list = random.sample(user.deck_list, len(user.deck_list))
-        user.remain_deck_list = user.random_deck_list[6:]
-        user.hand_list = user.random_deck_list[0:6]
-
-
-    if button_status.lobby_screen_room_detail_display == 'my':
-        player2.random_deck_list = random.sample(player2.deck_list, len(player2.deck_list))
-        player2.remain_deck_list = player2.random_deck_list[6:]
-        player2.hand_list = player2.random_deck_list[0:6]
-    elif button_status.lobby_screen_room_detail_display == 'other':
-        player2.random_deck_list = random.sample(player2.deck_list, len(player2.deck_list))
-        player2.remain_deck_list = player2.random_deck_list[5:]
-        player2.hand_list = player2.random_deck_list[0:5]
+    # if button_status.lobby_screen_room_detail_display == 'my':
+    #     user.random_deck_list = random.sample(user.deck_list, len(user.deck_list))
+    #     user.remain_deck_list = user.random_deck_list[5:]
+    #     user.hand_list = user.random_deck_list[0:5]
+    # elif button_status.lobby_screen_room_detail_display == 'other':
+    #     user.random_deck_list = random.sample(user.deck_list, len(user.deck_list))
+    #     user.remain_deck_list = user.random_deck_list[6:]
+    #     user.hand_list = user.random_deck_list[0:6]
+    #
+    #
+    # if button_status.lobby_screen_room_detail_display == 'my':
+    #     player2.random_deck_list = random.sample(player2.deck_list, len(player2.deck_list))
+    #     player2.remain_deck_list = player2.random_deck_list[6:]
+    #     player2.hand_list = player2.random_deck_list[0:6]
+    # elif button_status.lobby_screen_room_detail_display == 'other':
+    #     player2.random_deck_list = random.sample(player2.deck_list, len(player2.deck_list))
+    #     player2.remain_deck_list = player2.random_deck_list[5:]
+    #     player2.hand_list = player2.random_deck_list[0:5]
 
 
 
@@ -3235,7 +3413,7 @@ def battle_screen_stable_button_display(ai_settings,grid, screen, buttons, scree
         button2.update()
         button2.draw(screen)
     except UnboundLocalError:
-        pass 
+        pass
     # add menu button to buttons group
     if button_status.battle_screen_stable_button_backend:
         buttons.append(button_menu)
