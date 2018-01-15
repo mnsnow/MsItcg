@@ -73,19 +73,19 @@ def read_network_variables(ai_settings,grid, screen, buttons,screen_status, butt
                 elif 'True' in line:
                     button_status.lobby_screen_game_start = True
                     button_status.lobby_screen_game_start_copy = True
-            if 'USER_DECK_LIST' in line:
-                user.deck_list = make_deck_from_string(line.replace('USER_DECK_LIST = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-                user.deck_list_copy = make_deck_from_string(line.replace('USER_DECK_LIST = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            # if 'USER_DECK_LIST' in line:
+            #     user.deck_list = make_deck_from_string(line.replace('USER_DECK_LIST = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            #     user.deck_list_copy = make_deck_from_string(line.replace('USER_DECK_LIST = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
             if 'PLAYER_DECK_LIST' in line:
                 player2.deck_list = make_deck_from_string(line.replace('PLAYER_DECK_LIST = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
                 player2.deck_list_copy = make_deck_from_string(line.replace('PLAYER_DECK_LIST = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-            if 'USER_CHARACTER_CARD' in line:
-                if line.replace('USER_CHARACTER_CARD = ', '')[:-1] == '[]':
-                    user.character_card = []
-                    user.character_card_copy = []
-                else:
-                    user.character_card = make_deck_from_string(line.replace('USER_CHARACTER_CARD = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
-                    user.character_card_copy = make_deck_from_string(line.replace('USER_CHARACTER_CARD = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
+            # if 'USER_CHARACTER_CARD' in line:
+            #     if line.replace('USER_CHARACTER_CARD = ', '')[:-1] == '[]':
+            #         user.character_card = []
+            #         user.character_card_copy = []
+            #     else:
+            #         user.character_card = make_deck_from_string(line.replace('USER_CHARACTER_CARD = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
+            #         user.character_card_copy = make_deck_from_string(line.replace('USER_CHARACTER_CARD = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
             if 'PLAYER_CHARACTER_CARD' in line:
                 if line.replace('PLAYER_CHARACTER_CARD = ', '')[:-1] == '[]':
                     player2.character_card = []
@@ -96,9 +96,9 @@ def read_network_variables(ai_settings,grid, screen, buttons,screen_status, butt
                         player2.character_card_copy = make_deck_from_string(line.replace('PLAYER_CHARACTER_CARD = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
                     except IndexError:
                         pass
-            if 'USER_HAND_LIST' in line:
-                user.hand_list = make_deck_from_string(line.replace('USER_HAND_LIST = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-                user.hand_list_copy = make_deck_from_string(line.replace('USER_HAND_LIST = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            # if 'USER_HAND_LIST' in line:
+            #     user.hand_list = make_deck_from_string(line.replace('USER_HAND_LIST = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
+            #     user.hand_list_copy = make_deck_from_string(line.replace('USER_HAND_LIST = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
             if 'PLAYER_HAND_LIST' in line:
                 player2.hand_list = make_deck_from_string(line.replace('PLAYER_HAND_LIST = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
                 player2.hand_list_copy = make_deck_from_string(line.replace('PLAYER_HAND_LIST = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
@@ -127,7 +127,42 @@ def read_network_variables(ai_settings,grid, screen, buttons,screen_status, butt
                 except:
                     pass
 
-
+            if 'USER_MONSTER_LIST' in line:
+                ls = eval(str(line.replace('USER_MONSTER_LIST = ', ''))[:-1])
+                for i in range(6):
+                    if ls[i] != '':
+                        user.monster_in_play_dict[str(i+1)] = eval(ls[i])
+                        user.monster_in_play_dict_copy[str(i+1)] = eval(ls[i])
+            if 'PLAYER_MONSTER_LIST' in line:
+                ls = eval(str(line.replace('PLAYER_MONSTER_LIST = ', ''))[:-1])
+                for i in range(6):
+                    if ls[i] != '':
+                        player2.monster_in_play_dict[str(i+1)] = eval(ls[i])
+                        player2.monster_in_play_dict_copy[str(i+1)] = eval(ls[i])
+            if 'USER_ITEM_LIST' in line:
+                ls = eval(str(line.replace('USER_ITEM_LIST = ', ''))[:-1])
+                for i in range(6):
+                    if ls[i] != '':
+                        user.item_in_play_dict[str(i+1)] = eval(ls[i])
+                        user.item_in_play_dict_copy[str(i+1)] = eval(ls[i])
+            if 'PLAYER_ITEM_LIST' in line:
+                ls = eval(str(line.replace('PLAYER_ITEM_LIST = ', ''))[:-1])
+                for i in range(6):
+                    if ls[i] != '':
+                        player2.item_in_play_dict[str(i+1)] = eval(ls[i])
+                        player2.item_in_play_dict_copy[str(i+1)] = eval(ls[i])
+            if 'USER_MONSTER_HP' in line:
+                ls = eval(str(line.replace('USER_MONSTER_HP = ', ''))[:-1])
+                for i in range(6):
+                    if ls[i] != '':
+                        user.monster_in_play_dict[str(i+1)].health = ls[i]
+                        user.monster_in_play_dict_copy[str(i+1)].health = ls[i]
+            if 'PLAYER_MONSTER_HP' in line:
+                ls = eval(str(line.replace('PLAYER_MONSTER_HP = ', ''))[:-1])
+                for i in range(6):
+                    if ls[i] != '':
+                        player2.monster_in_play_dict[str(i+1)].health = ls[i]
+                        player2.monster_in_play_dict_copy[str(i+1)].health = ls[i]
 
 
 
@@ -365,7 +400,131 @@ def write_network_variables(ai_settings,grid, screen, buttons,screen_status, but
 
             x[y-1] = 'PLAYER_LV = ' + str(player2.character_card.level) + '\n'
 
+        #write number of people in room
+        for i in range(5):
+            if user.monster_in_play_dict[str(i+1)] != user.monster_in_play_dict_copy[str(i+1)]:
+                y = 1
+                f.seek(0)
+                deck_list_string = []
+                for i in range(5):
+                    card = user.monster_in_play_dict[str(i+1)]
+                    if card != '':
+                        deck_list_string.append('card_' + card.set_number + '_' + card.card_number)
+                    else:
+                        deck_list_string.append('')
+                for line in f:
+                    if 'USER_MONSTER_LIST' not in line:
+                        y += 1
+                    else:
+                        break
 
+                x[y-1] = 'USER_MONSTER_LIST = ' + str(deck_list_string) + '\n'
+                break
+
+        #write number of people in room
+        for i in range(5):
+            if player2.monster_in_play_dict[str(i+1)] != player2.monster_in_play_dict_copy[str(i+1)]:
+                y = 1
+                f.seek(0)
+                deck_list_string = []
+                for i in range(5):
+                    card = player2.monster_in_play_dict[str(i+1)]
+                    if card != '':
+                        deck_list_string.append('card_' + card.set_number + '_' + card.card_number)
+                    else:
+                        deck_list_string.append('')
+                for line in f:
+                    if 'PLAYER_MONSTER_LIST' not in line:
+                        y += 1
+                    else:
+                        break
+
+                x[y-1] = 'PLAYER_MONSTER_LIST = ' + str(deck_list_string) + '\n'
+                break
+
+        #write number of people in room
+        for i in range(5):
+            if user.item_in_play_dict[str(i+1)] != user.item_in_play_dict_copy[str(i+1)]:
+                y = 1
+                f.seek(0)
+                deck_list_string = []
+                for i in range(5):
+                    card = user.item_in_play_dict[str(i+1)]
+                    if card != '':
+                        deck_list_string.append('card_' + card.set_number + '_' + card.card_number)
+                    else:
+                        deck_list_string.append('')
+                for line in f:
+                    if 'USER_ITEM_LIST' not in line:
+                        y += 1
+                    else:
+                        break
+
+                x[y-1] = 'USER_ITEM_LIST = ' + str(deck_list_string) + '\n'
+                break
+
+        #write number of people in room
+        for i in range(5):
+            if player2.item_in_play_dict[str(i+1)] != player2.item_in_play_dict_copy[str(i+1)]:
+                y = 1
+                f.seek(0)
+                deck_list_string = []
+                for i in range(5):
+                    card = player2.item_in_play_dict[str(i+1)]
+                    if card != '':
+                        deck_list_string.append('card_' + card.set_number + '_' + card.card_number)
+                    else:
+                        deck_list_string.append('')
+                for line in f:
+                    if 'PLAYER_ITEM_LIST' not in line:
+                        y += 1
+                    else:
+                        break
+
+                x[y-1] = 'PLAYER_ITEM_LIST = ' + str(deck_list_string) + '\n'
+                break
+
+        #write number of people in room
+        for i in range(5):
+            if user.monster_in_play_dict[str(i+1)] != '' and user.monster_in_play_dict[str(i+1)].health != user.monster_in_play_dict_copy[str(i+1)].health:
+                y = 1
+                f.seek(0)
+                deck_list_string = []
+                for i in range(5):
+                    card = user.monster_in_play_dict[str(i+1)]
+                    if card != '':
+                        deck_list_string.append("'" + card.health +"'")
+                    else:
+                        deck_list_string.append('')
+                for line in f:
+                    if 'USER_MONSTER_HP' not in line:
+                        y += 1
+                    else:
+                        break
+
+                x[y-1] = 'USER_MONSTER_HP = ' + str(deck_list_string) + '\n'
+                break
+
+        #write number of people in room
+        for i in range(5):
+            if player2.monster_in_play_dict[str(i+1)] != '' and player2.monster_in_play_dict[str(i+1)].health != player2.monster_in_play_dict_copy[str(i+1)].health:
+                y = 1
+                f.seek(0)
+                deck_list_string = []
+                for i in range(5):
+                    card = player2.monster_in_play_dict[str(i+1)]
+                    if card != '':
+                        deck_list_string.append("'" + card.health +"'")
+                    else:
+                        deck_list_string.append('')
+                for line in f:
+                    if 'PLAYER_MONSTER_HP' not in line:
+                        y += 1
+                    else:
+                        break
+
+                x[y-1] = 'PLAYER_MONSTER_HP = ' + str(deck_list_string) + '\n'
+                break
 
     with open('connection.txt','w') as f:
         f.writelines(x)
@@ -546,6 +705,66 @@ def clear_text_file(ai_settings,grid, screen, buttons,screen_status, button_stat
             else:
                 break
         x[y-1] = 'PLAYER_LV = 0' + '\n'
+
+        #write number of people in room
+        y = 1
+        f.seek(0)
+        for line in f:
+            if 'USER_MONSTER_LIST' not in line:
+                y += 1
+            else:
+                break
+        x[y-1] = "USER_MONSTER_LIST = ['','','','','','']" + '\n'
+
+        #write number of people in room
+        y = 1
+        f.seek(0)
+        for line in f:
+            if 'PLAYER_MONSTER_LIST' not in line:
+                y += 1
+            else:
+                break
+        x[y-1] = "PLAYER_MONSTER_LIST = ['','','','','','']" + '\n'
+
+        #write number of people in room
+        y = 1
+        f.seek(0)
+        for line in f:
+            if 'USER_ITEM_LIST' not in line:
+                y += 1
+            else:
+                break
+        x[y-1] = "USER_ITEM_LIST = ['','','','','','']" + '\n'
+
+        #write number of people in room
+        y = 1
+        f.seek(0)
+        for line in f:
+            if 'PLAYER_ITEM_LIST' not in line:
+                y += 1
+            else:
+                break
+        x[y-1] = "PLAYER_ITEM_LIST = ['','','','','','']" + '\n'
+
+        #write number of people in room
+        y = 1
+        f.seek(0)
+        for line in f:
+            if 'USER_MONSTER_HP' not in line:
+                y += 1
+            else:
+                break
+        x[y-1] = "USER_MONSTER_HP = ['','','','','','']" + '\n'
+
+        #write number of people in room
+        y = 1
+        f.seek(0)
+        for line in f:
+            if 'PLAYER_MONSTER_HP' not in line:
+                y += 1
+            else:
+                break
+        x[y-1] = "PLAYER_MONSTER_HP = ['','','','','','']" + '\n'
 
 
     with open('connection.txt','w') as f:
@@ -3926,7 +4145,6 @@ def battle_screen_menu_display(ai_settings, screen, buttons,screen_status, butto
         button_1 = Button('Concede and Quit!','', (170,70,70), 700, 310, 180, 40)
         button_1.update()
         button_1.draw(screen)
-
 
 
 

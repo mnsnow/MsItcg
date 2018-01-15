@@ -39,6 +39,12 @@ def repair_text_file():
             'PLAYER_HP = 0\n',
             'USER_LV = 0\n',
             'PLAYER_LV = 0\n',
+            "USER_MONSTER_LIST = ['','','','','','']\n",
+            "PLAYER_MONSTER_LIST = ['','','','','','']\n",
+            "USER_ITEM_LIST = ['','','','','','']\n",
+            "PLAYER_ITEM_LIST = ['','','','','','']\n",
+            "USER_MONSTER_HP = ['','','','','','']\n",
+            "PLAYER_MONSTER_HP = ['','','','','','']\n",
 
         ]
 

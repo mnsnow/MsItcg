@@ -49,6 +49,18 @@ while 1:
                 user_lv_01 = str(line)
             if 'PLAYER_LV' in line:
                 player_lv_01 = str(line)
+            if 'USER_MONSTER_LIST' in line:
+                user_monster_list_01 = str(line)
+            if 'PLAYER_MONSTER_LIST' in line:
+                player_monster_list_01 = str(line)
+            if 'USER_ITEM_LIST' in line:
+                user_item_list_01 = str(line)
+            if 'PLAYER_ITEM_LIST' in line:
+                player_item_list_01 = str(line)
+            if 'USER_MONSTER_HP' in line:
+                user_monster_hp_01 = str(line)
+            if 'PLAYER_MONSTER_HP' in line:
+                player_monster_hp_01 = str(line)
 
 
 
@@ -93,6 +105,19 @@ while 1:
                 user_lv_02 = str(line)
             if 'PLAYER_LV' in line:
                 player_lv_02 = str(line)
+            if 'USER_MONSTER_LIST' in line:
+                user_monster_list_02 = str(line)
+            if 'PLAYER_MONSTER_LIST' in line:
+                player_monster_list_02 = str(line)
+            if 'USER_ITEM_LIST' in line:
+                user_item_list_02 = str(line)
+            if 'PLAYER_ITEM_LIST' in line:
+                player_item_list_02 = str(line)
+            if 'USER_MONSTER_HP' in line:
+                user_monster_hp_02 = str(line)
+            if 'PLAYER_MONSTER_HP' in line:
+                player_monster_hp_02 = str(line)
+
 
 
     if user_name_01 != user_name_02:
@@ -131,6 +156,18 @@ while 1:
         s.send(((str(user_hp_02)[:-1]+'||')*10).encode())
     if player_lv_01 != player_lv_02:
         s.send(((str(player_lv_02)[:-1]+'||')*10).encode())
+    if user_monster_list_01 != user_monster_list_02:
+        s.send(((str(user_monster_list_02)[:-1]+'||')*10).encode())
+    if player_monster_list_01 != player_monster_list_02:
+        s.send(((str(player_monster_list_02)[:-1]+'||')*10).encode())
+    if user_item_list_01 != user_item_list_02:
+        s.send(((str(user_item_list_02)[:-1]+'||')*10).encode())
+    if player_item_list_01 != player_item_list_02:
+        s.send(((str(player_item_list_02)[:-1]+'||')*10).encode())
+    if user_monster_hp_01 != user_monster_hp_02:
+        s.send(((str(user_monster_hp_02)[:-1]+'||')*10).encode())
+    if player_monster_hp_01 != player_monster_hp_02:
+        s.send(((str(player_monster_hp_02)[:-1]+'||')*10).encode())
 
 
     s.send(('lalala'*10).encode())
@@ -160,6 +197,12 @@ while 1:
     player_hp = ''
     user_lv = ''
     player_lv = ''
+    user_monster_list = ''
+    player_monster_list = ''
+    user_item_list = ''
+    player_item_list = ''
+    user_monster_hp = ''
+    player_monster_hp = ''
 
     # get variables from data
     if 'USER_NAME' in data:
@@ -270,6 +313,42 @@ while 1:
         bbb = aaa[:aaa.find('||')]
         user_lv = str(bbb.replace('PLAYER_LV = ', ''))
         print('USER_LV---------: ' + user_lv + '.')
+
+    if 'USER_MONSTER_LIST' in data:
+        aaa = data[data.find('USER_MONSTER_LIST'):]
+        bbb = aaa[:aaa.find('||')]
+        player_monster_list = str(bbb.replace('USER_MONSTER_LIST = ', ''))
+        print('PLAYER_MONSTER_LIST---------: ' + player_monster_list + '.')
+
+    if 'PLAYER_MONSTER_LIST' in data:
+        aaa = data[data.find('PLAYER_MONSTER_LIST'):]
+        bbb = aaa[:aaa.find('||')]
+        user_monster_list = str(bbb.replace('PLAYER_MONSTER_LIST = ', ''))
+        print('USER_MONSTER_LIST---------: ' + user_monster_list + '.')
+
+    if 'USER_ITEM_LIST' in data:
+        aaa = data[data.find('USER_ITEM_LIST'):]
+        bbb = aaa[:aaa.find('||')]
+        player_item_list = str(bbb.replace('USER_ITEM_LIST = ', ''))
+        print('PLAYER_ITEM_LIST---------: ' + player_item_list + '.')
+
+    if 'PLAYER_ITEM_LIST' in data:
+        aaa = data[data.find('PLAYER_ITEM_LIST'):]
+        bbb = aaa[:aaa.find('||')]
+        user_item_list = str(bbb.replace('PLAYER_ITEM_LIST = ', ''))
+        print('USER_ITEM_LIST---------: ' + user_item_list + '.')
+
+    if 'USER_MONSTER_HP' in data:
+        aaa = data[data.find('USER_MONSTER_HP'):]
+        bbb = aaa[:aaa.find('||')]
+        player_monster_hp = str(bbb.replace('USER_MONSTER_HP = ', ''))
+        print('PLAYER_MONSTER_HP---------: ' + player_monster_hp + '.')
+
+    if 'PLAYER_MONSTER_HP' in data:
+        aaa = data[data.find('PLAYER_MONSTER_HP'):]
+        bbb = aaa[:aaa.find('||')]
+        user_monster_hp = str(bbb.replace('PLAYER_MONSTER_HP = ', ''))
+        print('USER_MONSTER_HP---------: ' + user_monster_hp + '.')
 
 
 
@@ -476,6 +555,72 @@ while 1:
                 else:
                     break
             x[y-1] = 'PLAYER_LV = ' + player_lv+ '\n'
+
+        #write player_name
+        if user_monster_list != '':
+            y = 1
+            f.seek(0)
+            for line in f:
+                if 'USER_MONSTER_LIST' not in line:
+                    y += 1
+                else:
+                    break
+            x[y-1] = 'USER_MONSTER_LIST = ' + user_monster_list + '\n'
+
+        #write player_name
+        if player_monster_list != '':
+            y = 1
+            f.seek(0)
+            for line in f:
+                if 'PLAYER_MONSTER_LIST' not in line:
+                    y += 1
+                else:
+                    break
+            x[y-1] = 'PLAYER_MONSTER_LIST = ' + player_monster_list + '\n'
+
+        #write player_name
+        if user_item_list != '':
+            y = 1
+            f.seek(0)
+            for line in f:
+                if 'USER_ITEM_LIST' not in line:
+                    y += 1
+                else:
+                    break
+            x[y-1] = 'USER_ITEM_LIST = ' + user_item_list + '\n'
+
+        #write player_name
+        if player_item_list != '':
+            y = 1
+            f.seek(0)
+            for line in f:
+                if 'PLAYER_ITEM_LIST' not in line:
+                    y += 1
+                else:
+                    break
+            x[y-1] = 'PLAYER_ITEM_LIST = ' + player_item_list + '\n'
+
+        #write player_name
+        if user_monster_hp != '':
+            y = 1
+            f.seek(0)
+            for line in f:
+                if 'USER_MONSTER_HP' not in line:
+                    y += 1
+                else:
+                    break
+            x[y-1] = 'USER_MONSTER_HP = ' + user_monster_hp + '\n'
+
+        #write player_name
+        if player_monster_hp != '':
+            y = 1
+            f.seek(0)
+            for line in f:
+                if 'PLAYER_MONSTER_HP' not in line:
+                    y += 1
+                else:
+                    break
+            x[y-1] = 'PLAYER_MONSTER_HP = ' + player_monster_hp + '\n'
 
 
 
