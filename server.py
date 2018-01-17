@@ -66,6 +66,10 @@ while 1:
                 user_monster_hp_01 = str(line)
             if 'PLAYER_MONSTER_HP' in line:
                 player_monster_hp_01 = str(line)
+            if 'USER_CHARACTER_UNDER' in line:
+                user_character_under_01 = str(line)
+            if 'PLAYER_CHARACTER_UNDER' in line:
+                player_character_under_01 = str(line)
 
 
 
@@ -122,6 +126,10 @@ while 1:
                 user_monster_hp_02 = str(line)
             if 'PLAYER_MONSTER_HP' in line:
                 player_monster_hp_02 = str(line)
+            if 'USER_CHARACTER_UNDER' in line:
+                user_character_under_02 = str(line)
+            if 'PLAYER_CHARACTER_UNDER' in line:
+                player_character_under_02 = str(line)
 
 
 
@@ -173,6 +181,10 @@ while 1:
         s.send(((str(user_monster_hp_02)[:-1]+'||')*10).encode())
     if player_monster_hp_01 != player_monster_hp_02:
         s.send(((str(player_monster_hp_02)[:-1]+'||')*10).encode())
+    if user_character_under_01 != user_character_under_02:
+        s.send(((str(user_character_under_02)[:-1]+'||')*10).encode())
+    if player_character_under_01 != player_character_under_02:
+        s.send(((str(player_character_under_02)[:-1]+'||')*10).encode())
 
 
     s.send(('lalala'*10).encode())
@@ -208,6 +220,8 @@ while 1:
     player_item_list = ''
     user_monster_hp = ''
     player_monster_hp = ''
+    user_character_under = ''
+    player_character_under = ''
 
     # get variables from data
     if 'USER_NAME' in data:
@@ -354,6 +368,18 @@ while 1:
         bbb = aaa[:aaa.find('||')]
         user_monster_hp = str(bbb.replace('PLAYER_MONSTER_HP = ', ''))
         print('USER_MONSTER_HP---------: ' + user_monster_hp + '.')
+
+    if 'USER_CHARACTER_UNDER' in data:
+        aaa = data[data.find('USER_CHARACTER_UNDER'):]
+        bbb = aaa[:aaa.find('||')]
+        player_character_under = str(bbb.replace('USER_CHARACTER_UNDER = ', ''))
+        print('PLAYER_CHARACTER_UNDER---------: ' + player_character_under + '.')
+
+    if 'PLAYER_CHARACTER_UNDER' in data:
+        aaa = data[data.find('PLAYER_CHARACTER_UNDER'):]
+        bbb = aaa[:aaa.find('||')]
+        user_character_under = str(bbb.replace('PLAYER_CHARACTER_UNDER = ', ''))
+        print('USER_CHARACTER_UNDER---------: ' + user_character_under + '.')
 
 
 
@@ -626,6 +652,28 @@ while 1:
                 else:
                     break
             x[y-1] = 'PLAYER_MONSTER_HP = ' + player_monster_hp + '\n'
+
+        #write player_name
+        if user_character_under != '':
+            y = 1
+            f.seek(0)
+            for line in f:
+                if 'USER_CHARACTER_UNDER' not in line:
+                    y += 1
+                else:
+                    break
+            x[y-1] = 'USER_CHARACTER_UNDER = ' + user_character_under + '\n'
+
+        #write player_name
+        if player_character_under != '':
+            y = 1
+            f.seek(0)
+            for line in f:
+                if 'PLAYER_CHARACTER_UNDER' not in line:
+                    y += 1
+                else:
+                    break
+            x[y-1] = 'PLAYER_CHARACTER_UNDER = ' + player_character_under + '\n'
 
 
 

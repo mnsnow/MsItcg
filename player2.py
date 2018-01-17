@@ -7,7 +7,7 @@ from card import Monster, Character
 class Player2():
     def __init__(self):
 
-        self.identity = 'AI' #identify player2 is AI or a real person
+        self.identity = 'AI' #identify player2 is AI or a real person (pvp)
         self.name = 'UNKNOWN'
         self.name_copy = ''
 
@@ -71,6 +71,23 @@ class Player2():
         self.character_card_level_copy = 0
 
         self.character_under_card_by_level = {
+            '10' : '',
+            '20' : '',
+            '30' : '',
+            '40' : '',
+            '50' : '',
+            '60' : '',
+            '70' : '',
+            '80' : '',
+            '90' : '',
+            '100' : '',
+            '110' : '',
+            '120' : '',
+            '130' : '',
+            '140' : '',
+            '150' : '',
+        }
+        self.character_under_card_by_level_copy = {
             '10' : '',
             '20' : '',
             '30' : '',

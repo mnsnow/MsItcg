@@ -163,7 +163,18 @@ def read_network_variables(ai_settings,grid, screen, buttons,screen_status, butt
                     if ls[i] != '':
                         player2.monster_in_play_dict[str(i+1)].health = ls[i]
                         player2.monster_in_play_dict_copy[str(i+1)].health = ls[i]
-
+            if 'USER_CHARACTER_UNDER' in line:
+                ls = eval(str(line.replace('USER_CHARACTER_UNDER = ', ''))[:-1])
+                for i in range(15):
+                    if ls[i] != '':
+                        user.character_under_card_by_level[str(10*(i+1))] = eval(ls[i])
+                        user.character_under_card_by_level_copy[str(10*i+1)] = eval(ls[i])
+            if 'PLAYER_CHARACTER_UNDER' in line:
+                ls = eval(str(line.replace('PLAYER_CHARACTER_UNDER = ', ''))[:-1])
+                for i in range(15):
+                    if ls[i] != '':
+                        player2.character_under_card_by_level[str(10*(i+1))] = eval(ls[i])
+                        player2.character_under_card_by_level_copy[str(10*i+1)] = eval(ls[i])
 
 
 
@@ -401,12 +412,12 @@ def write_network_variables(ai_settings,grid, screen, buttons,screen_status, but
             x[y-1] = 'PLAYER_LV = ' + str(player2.character_card.level) + '\n'
 
         #write number of people in room
-        for i in range(5):
+        for i in range(6):
             if user.monster_in_play_dict[str(i+1)] != user.monster_in_play_dict_copy[str(i+1)]:
                 y = 1
                 f.seek(0)
                 deck_list_string = []
-                for i in range(5):
+                for i in range(6):
                     card = user.monster_in_play_dict[str(i+1)]
                     if card != '':
                         deck_list_string.append('card_' + card.set_number + '_' + card.card_number)
@@ -422,12 +433,12 @@ def write_network_variables(ai_settings,grid, screen, buttons,screen_status, but
                 break
 
         #write number of people in room
-        for i in range(5):
+        for i in range(6):
             if player2.monster_in_play_dict[str(i+1)] != player2.monster_in_play_dict_copy[str(i+1)]:
                 y = 1
                 f.seek(0)
                 deck_list_string = []
-                for i in range(5):
+                for i in range(6):
                     card = player2.monster_in_play_dict[str(i+1)]
                     if card != '':
                         deck_list_string.append('card_' + card.set_number + '_' + card.card_number)
@@ -443,12 +454,12 @@ def write_network_variables(ai_settings,grid, screen, buttons,screen_status, but
                 break
 
         #write number of people in room
-        for i in range(5):
+        for i in range(6):
             if user.item_in_play_dict[str(i+1)] != user.item_in_play_dict_copy[str(i+1)]:
                 y = 1
                 f.seek(0)
                 deck_list_string = []
-                for i in range(5):
+                for i in range(6):
                     card = user.item_in_play_dict[str(i+1)]
                     if card != '':
                         deck_list_string.append('card_' + card.set_number + '_' + card.card_number)
@@ -464,12 +475,12 @@ def write_network_variables(ai_settings,grid, screen, buttons,screen_status, but
                 break
 
         #write number of people in room
-        for i in range(5):
+        for i in range(6):
             if player2.item_in_play_dict[str(i+1)] != player2.item_in_play_dict_copy[str(i+1)]:
                 y = 1
                 f.seek(0)
                 deck_list_string = []
-                for i in range(5):
+                for i in range(6):
                     card = player2.item_in_play_dict[str(i+1)]
                     if card != '':
                         deck_list_string.append('card_' + card.set_number + '_' + card.card_number)
@@ -485,12 +496,12 @@ def write_network_variables(ai_settings,grid, screen, buttons,screen_status, but
                 break
 
         #write number of people in room
-        for i in range(5):
+        for i in range(6):
             if user.monster_in_play_dict[str(i+1)] != '' and user.monster_in_play_dict[str(i+1)].health != user.monster_in_play_dict_copy[str(i+1)].health:
                 y = 1
                 f.seek(0)
                 deck_list_string = []
-                for i in range(5):
+                for i in range(6):
                     card = user.monster_in_play_dict[str(i+1)]
                     if card != '':
                         deck_list_string.append("'" + card.health +"'")
@@ -506,12 +517,12 @@ def write_network_variables(ai_settings,grid, screen, buttons,screen_status, but
                 break
 
         #write number of people in room
-        for i in range(5):
+        for i in range(6):
             if player2.monster_in_play_dict[str(i+1)] != '' and player2.monster_in_play_dict[str(i+1)].health != player2.monster_in_play_dict_copy[str(i+1)].health:
                 y = 1
                 f.seek(0)
                 deck_list_string = []
-                for i in range(5):
+                for i in range(6):
                     card = player2.monster_in_play_dict[str(i+1)]
                     if card != '':
                         deck_list_string.append("'" + card.health +"'")
@@ -525,6 +536,49 @@ def write_network_variables(ai_settings,grid, screen, buttons,screen_status, but
 
                 x[y-1] = 'PLAYER_MONSTER_HP = ' + str(deck_list_string) + '\n'
                 break
+
+        #write number of people in room
+        for i in range(15):
+            if user.character_under_card_by_level[str(10*(i+1))] != user.character_under_card_by_level_copy[str(10*(i+1))]:
+                y = 1
+                f.seek(0)
+                deck_list_string = []
+                for i in range(15):
+                    card = user.character_under_card_by_level[str(i+1)]
+                    if card != '':
+                        deck_list_string.append('card_' + card.set_number + '_' + card.card_number)
+                    else:
+                        deck_list_string.append('')
+                for line in f:
+                    if 'USER_CHARACTER_UNDER' not in line:
+                        y += 1
+                    else:
+                        break
+
+                x[y-1] = 'USER_CHARACTER_UNDER = ' + str(deck_list_string) + '\n'
+                break
+
+        #write number of people in room
+        for i in range(15):
+            if player2.character_under_card_by_level[str(10*(i+1))] != player2.character_under_card_by_level_copy[str(10*(i+1))]:
+                y = 1
+                f.seek(0)
+                deck_list_string = []
+                for i in range(15):
+                    card = player2.character_under_card_by_level[str(i+1)]
+                    if card != '':
+                        deck_list_string.append('card_' + card.set_number + '_' + card.card_number)
+                    else:
+                        deck_list_string.append('')
+                for line in f:
+                    if 'PLAYER_CHARACTER_UNDER' not in line:
+                        y += 1
+                    else:
+                        break
+
+                x[y-1] = 'PLAYER_CHARACTER_UNDER = ' + str(deck_list_string) + '\n'
+                break
+
 
     with open('connection.txt','w') as f:
         f.writelines(x)
@@ -765,6 +819,26 @@ def clear_text_file(ai_settings,grid, screen, buttons,screen_status, button_stat
             else:
                 break
         x[y-1] = "PLAYER_MONSTER_HP = ['','','','','','']" + '\n'
+
+        #write number of people in room
+        y = 1
+        f.seek(0)
+        for line in f:
+            if 'USER_CHARACTER_UNDER' not in line:
+                y += 1
+            else:
+                break
+        x[y-1] = "USER_CHARACTER_UNDER = ['','','','','','','','','','','','','','','']" + '\n'
+
+        #write number of people in room
+        y = 1
+        f.seek(0)
+        for line in f:
+            if 'PLAYER_CHARACTER_UNDER' not in line:
+                y += 1
+            else:
+                break
+        x[y-1] = "PLAYER_CHARACTER_UNDER = ['','','','','','','','','','','','','','','']" + '\n'
 
 
     with open('connection.txt','w') as f:
@@ -1513,8 +1587,6 @@ def check_events_text_input_box(ai_settings, screen, buttons,screen_status, butt
             if Rect(567, 410, 66, 30).collidepoint(pygame.mouse.get_pos()):
                 user_input_text_save('user name',ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
                 button_status.text_input_box_display = False
-
-
 
 
 

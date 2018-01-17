@@ -45,6 +45,8 @@ def repair_text_file():
             "PLAYER_ITEM_LIST = ['','','','','','']\n",
             "USER_MONSTER_HP = ['','','','','','']\n",
             "PLAYER_MONSTER_HP = ['','','','','','']\n",
+            "USER_CHARACTER_UNDER = ['','','','','','','','','','','','','','','']\n",
+            "PLAYER_CHARACTER_UNDER = ['','','','','','','','','','','','','','','']\n"
 
         ]
 
