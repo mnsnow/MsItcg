@@ -168,13 +168,13 @@ def read_network_variables(ai_settings,grid, screen, buttons,screen_status, butt
                 for i in range(15):
                     if ls[i] != '':
                         user.character_under_card_by_level[str(10*(i+1))] = eval(ls[i])
-                        user.character_under_card_by_level_copy[str(10*i+1)] = eval(ls[i])
+                        user.character_under_card_by_level_copy[str(10*(i+1))] = eval(ls[i])
             if 'PLAYER_CHARACTER_UNDER' in line:
                 ls = eval(str(line.replace('PLAYER_CHARACTER_UNDER = ', ''))[:-1])
                 for i in range(15):
                     if ls[i] != '':
                         player2.character_under_card_by_level[str(10*(i+1))] = eval(ls[i])
-                        player2.character_under_card_by_level_copy[str(10*i+1)] = eval(ls[i])
+                        player2.character_under_card_by_level_copy[str(10*(i+1))] = eval(ls[i])
             if 'TURN_INDICATOR' in line:
                     button_status.battle_screen_pvp_turn_indicator = str(line.replace('USER_CHARACTER_UNDER = ', ''))[:-1]
                     button_status.battle_screen_pvp_turn_indicator_copy = str(line.replace('USER_CHARACTER_UNDER = ', ''))[:-1]
@@ -3516,13 +3516,13 @@ def battle_screen_grid_display(grid, screen):
 
 def battle_screen_instruction_bar_display(screen,buttons, screen_status, button_status, card_database_filter, user,player2):
     """ Display instruction bar"""
+    print(button_status.battle_screen_pvp_turn_indicator)
     # pvp
     if player2.identity == 'pvp':
         if button_status.battle_screen_pvp_turn_indicator == 'my' and screen_status.battle_screen_action_indicator != 'stage-0':
             screen_status.battle_screen_action_indicator = 'stage-1'
             button_status.battle_screen_pvp_turn_indicator = 'my-ing'
-            print('lala')
-            print(button_status.battle_screen_pvp_turn_indicator)
+
         elif button_status.battle_screen_pvp_turn_indicator == 'other':
             screen_status.battle_screen_action_indicator = 'stage-1'
             button_status.battle_screen_pvp_turn_indicator = 'other-ing'
@@ -5534,6 +5534,11 @@ def battle_screen_instruction_bar_yes_skip_action(yes_skip_indicator, ai_setting
             screen_status.battle_screen_action_indicator = 'player2-stage-0'
             screen_status.battle_screen_player2_action_display_indicator = True
         elif player2.identity == 'pvp':
+            button_status.battle_screen_instruction_bar_text = "Now it's your opponent's turn"
+            button_status.battle_screen_instruction_bar_yes_display = False
+            button_status.battle_screen_instruction_bar_yes_backend = False
+            button_status.battle_screen_instruction_bar_skip_display = False
+            button_status.battle_screen_instruction_bar_skip_backend = False
             if button_status.battle_screen_pvp_turn_indicator == 'my-ing':
                 button_status.battle_screen_pvp_turn_indicator = 'other'
             elif button_status.battle_screen_pvp_turn_indicator == 'other-ing':
