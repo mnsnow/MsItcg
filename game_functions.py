@@ -3997,9 +3997,12 @@ def battle_screen_player2_display(ai_settings, screen, buttons,screen_status, bu
     # Display cards under character card
     for i in range(1,16):
         if int(player2.character_card.level) >= 10 * i:
-            player2.character_under_card_by_level[str(10 * i)].bottom_rect.x = 20
-            player2.character_under_card_by_level[str(10 * i)].bottom_rect.y = 220 + 23 * (i-1)
-            screen.blit(player2.character_under_card_by_level[str(10 * i)].bottom_image, player2.character_under_card_by_level[str(10 * i)].bottom_rect)
+            try:
+                player2.character_under_card_by_level[str(10 * i)].bottom_rect.x = 20
+                player2.character_under_card_by_level[str(10 * i)].bottom_rect.y = 220 + 23 * (i-1)
+                screen.blit(player2.character_under_card_by_level[str(10 * i)].bottom_image, player2.character_under_card_by_level[str(10 * i)].bottom_rect)
+            except:
+                pass
 
     # Display the arrow when doing actions
     if screen_status.battle_screen_action_indicator == 'player2-stage-2-character-action-1':
