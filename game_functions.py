@@ -176,12 +176,9 @@ def read_network_variables(ai_settings,grid, screen, buttons,screen_status, butt
                         player2.character_under_card_by_level[str(10*(i+1))] = eval(ls[i])
                         player2.character_under_card_by_level_copy[str(10*i+1)] = eval(ls[i])
             if 'TURN_INDICATOR' in line:
-                if 'my' in line:
-                    button_status.battle_screen_pvp_turn_indicator = 'my'
-                    button_status.battle_screen_pvp_turn_indicator_copy = 'my'
-                elif 'other' in line:
-                    button_status.battle_screen_pvp_turn_indicator = 'other'
-                    button_status.battle_screen_pvp_turn_indicator_copy = 'other'
+                    button_status.battle_screen_pvp_turn_indicator = str(line.replace('USER_CHARACTER_UNDER = ', ''))[:-1]
+                    button_status.battle_screen_pvp_turn_indicator_copy = str(line.replace('USER_CHARACTER_UNDER = ', ''))[:-1]
+
 
 def write_network_variables(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ Write variables for multiplyaer from text file"""
@@ -1871,7 +1868,7 @@ def rules_display(ai_settings, screen, buttons,screen_status, button_status, car
         button = Button('','', (0,0,0), 0, 0, 1200, 800, alpha = 100)
         button.update()
         button.draw(screen)
-        
+
         button = Button('','', (255,255,255), 200, 35, 800, 730)
         button.update()
         button.draw(screen)
@@ -3524,6 +3521,8 @@ def battle_screen_instruction_bar_display(screen,buttons, screen_status, button_
         if button_status.battle_screen_pvp_turn_indicator == 'my' and screen_status.battle_screen_action_indicator != 'stage-0':
             screen_status.battle_screen_action_indicator = 'stage-1'
             button_status.battle_screen_pvp_turn_indicator = 'my-ing'
+            print('lala')
+            print(button_status.battle_screen_pvp_turn_indicator)
         elif button_status.battle_screen_pvp_turn_indicator == 'other':
             screen_status.battle_screen_action_indicator = 'stage-1'
             button_status.battle_screen_pvp_turn_indicator = 'other-ing'
