@@ -175,6 +175,13 @@ def read_network_variables(ai_settings,grid, screen, buttons,screen_status, butt
                     if ls[i] != '':
                         player2.character_under_card_by_level[str(10*(i+1))] = eval(ls[i])
                         player2.character_under_card_by_level_copy[str(10*i+1)] = eval(ls[i])
+            if 'TURN_INDICATOR' in line:
+                if 'my' in line:
+                    button_status.battle_screen_pvp_turn_indicator = 'my'
+                    button_status.battle_screen_pvp_turn_indicator_copy = 'my'
+                elif 'other' in line:
+                    button_status.battle_screen_pvp_turn_indicator = 'other'
+                    button_status.battle_screen_pvp_turn_indicator_copy = 'other'
 
 
 
@@ -579,6 +586,18 @@ def write_network_variables(ai_settings,grid, screen, buttons,screen_status, but
                 x[y-1] = 'PLAYER_CHARACTER_UNDER = ' + str(deck_list_string) + '\n'
                 break
 
+        #write number of people in room
+        if button_status.battle_screen_pvp_turn_indicator != button_status.battle_screen_pvp_turn_indicator_copy:
+            y = 1
+            f.seek(0)
+            for line in f:
+                if 'TURN_INDICATOR' not in line:
+                    y += 1
+                else:
+                    break
+
+            x[y-1] = 'TURN_INDICATOR = ' + str(button_status.battle_screen_pvp_turn_indicator) + '\n'
+
 
     with open('connection.txt','w') as f:
         f.writelines(x)
@@ -839,6 +858,16 @@ def clear_text_file(ai_settings,grid, screen, buttons,screen_status, button_stat
             else:
                 break
         x[y-1] = "PLAYER_CHARACTER_UNDER = ['','','','','','','','','','','','','','','']" + '\n'
+
+        #write number of people in room
+        y = 1
+        f.seek(0)
+        for line in f:
+            if 'TURN_INDICATOR' not in line:
+                y += 1
+            else:
+                break
+        x[y-1] = "TURN_INDICATOR = my" + '\n'
 
 
     with open('connection.txt','w') as f:

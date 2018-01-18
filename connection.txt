@@ -24,3 +24,4 @@ USER_MONSTER_HP = ['','','','','','']
 PLAYER_MONSTER_HP = ['','','','','','']
 USER_CHARACTER_UNDER = ['','','','','','','','','','','','','','','']
 PLAYER_CHARACTER_UNDER = ['','','','','','','','','','','','','','','']
+TURN_INDICATOR = my

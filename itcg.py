@@ -46,7 +46,8 @@ def repair_text_file():
             "USER_MONSTER_HP = ['','','','','','']\n",
             "PLAYER_MONSTER_HP = ['','','','','','']\n",
             "USER_CHARACTER_UNDER = ['','','','','','','','','','','','','','','']\n",
-            "PLAYER_CHARACTER_UNDER = ['','','','','','','','','','','','','','','']\n"
+            "PLAYER_CHARACTER_UNDER = ['','','','','','','','','','','','','','','']\n",
+            'TURN_INDICATOR = my'
 
         ]
 

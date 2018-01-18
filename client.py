@@ -65,6 +65,8 @@ while 1:
                 user_character_under_01 = str(line)
             if 'PLAYER_CHARACTER_UNDER' in line:
                 player_character_under_01 = str(line)
+            if 'TURN_INDICATOR' in line:
+                turn_indicator_01 = str(line)
 
 
 
@@ -125,6 +127,8 @@ while 1:
                 user_character_under_02 = str(line)
             if 'PLAYER_CHARACTER_UNDER' in line:
                 player_character_under_02 = str(line)
+            if 'TURN_INDICATOR' in line:
+                turn_indicator_02 = str(line)
 
 
 
@@ -180,6 +184,8 @@ while 1:
         s.send(((str(user_character_under_02)[:-1]+'||')*10).encode())
     if player_character_under_01 != player_character_under_02:
         s.send(((str(player_character_under_02)[:-1]+'||')*10).encode())
+    if turn_indicator_01 != turn_indicator_02:
+        s.send(((str(turn_indicator_02)[:-1]+'||')*10).encode())
 
 
     s.send(('lalala'*10).encode())
@@ -217,6 +223,7 @@ while 1:
     player_monster_hp = ''
     user_character_under = ''
     player_character_under = ''
+    turn_indicator = ''
 
     # get variables from data
     if 'USER_NAME' in data:
@@ -375,6 +382,12 @@ while 1:
         bbb = aaa[:aaa.find('||')]
         user_character_under = str(bbb.replace('PLAYER_CHARACTER_UNDER = ', ''))
         print('USER_CHARACTER_UNDER---------: ' + user_character_under + '.')
+
+    if 'TURN_INDICATOR' in data:
+        aaa = data[data.find('TURN_INDICATOR'):]
+        bbb = aaa[:aaa.find('||')]
+        turn_indicator = str(bbb.replace('TURN_INDICATOR = ', ''))
+        print('TURN_INDICATOR---------: ' + turn_indicator + '.')
 
 
 
@@ -669,6 +682,17 @@ while 1:
                 else:
                     break
             x[y-1] = 'PLAYER_CHARACTER_UNDER = ' + player_character_under + '\n'
+
+        #write player_name
+        if turn_indicator != '':
+            y = 1
+            f.seek(0)
+            for line in f:
+                if 'TURN_INDICATOR' not in line:
+                    y += 1
+                else:
+                    break
+            x[y-1] = 'TURN_INDICATOR = ' + turn_indicator + '\n'
 
 
 
