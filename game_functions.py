@@ -176,8 +176,8 @@ def read_network_variables(ai_settings,grid, screen, buttons,screen_status, butt
                         player2.character_under_card_by_level[str(10*(i+1))] = eval(ls[i])
                         player2.character_under_card_by_level_copy[str(10*(i+1))] = eval(ls[i])
             if 'TURN_INDICATOR' in line:
-                    button_status.battle_screen_pvp_turn_indicator = str(line.replace('USER_CHARACTER_UNDER = ', ''))[:-1]
-                    button_status.battle_screen_pvp_turn_indicator_copy = str(line.replace('USER_CHARACTER_UNDER = ', ''))[:-1]
+                    button_status.battle_screen_pvp_turn_indicator = str(line.replace('TURN_INDICATOR = ', ''))[:-1]
+                    button_status.battle_screen_pvp_turn_indicator_copy = str(line.replace('TURN_INDICATOR = ', ''))[:-1]
 
 
 def write_network_variables(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
