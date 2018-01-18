@@ -183,8 +183,6 @@ def read_network_variables(ai_settings,grid, screen, buttons,screen_status, butt
                     button_status.battle_screen_pvp_turn_indicator = 'other'
                     button_status.battle_screen_pvp_turn_indicator_copy = 'other'
 
-
-
 def write_network_variables(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ Write variables for multiplyaer from text file"""
     with open('connection.txt','a+') as f:
@@ -551,7 +549,7 @@ def write_network_variables(ai_settings,grid, screen, buttons,screen_status, but
                 f.seek(0)
                 deck_list_string = []
                 for i in range(15):
-                    card = user.character_under_card_by_level[str(i+1)]
+                    card = user.character_under_card_by_level[str(10*(i+1))]
                     if card != '':
                         deck_list_string.append('card_' + card.set_number + '_' + card.card_number)
                     else:
@@ -572,7 +570,7 @@ def write_network_variables(ai_settings,grid, screen, buttons,screen_status, but
                 f.seek(0)
                 deck_list_string = []
                 for i in range(15):
-                    card = player2.character_under_card_by_level[str(i+1)]
+                    card = player2.character_under_card_by_level[str(10*(i+1))]
                     if card != '':
                         deck_list_string.append('card_' + card.set_number + '_' + card.card_number)
                     else:
@@ -604,6 +602,7 @@ def write_network_variables(ai_settings,grid, screen, buttons,screen_status, but
 
 def clear_text_file(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ clear text file each time restart the game"""
+    player2.identity = 'AI'
     with open('connection.txt','a+') as f:
         f.seek(0)
         x = f.readlines()
@@ -984,6 +983,7 @@ def check_events_welcome_screen(ai_settings,grid, screen, buttons,screen_status,
                 elif Rect(434, 370, 333, 61).collidepoint(pygame.mouse.get_pos()):
                     screen_status.welcome_screen_display = False
                     screen_status.lobby_screen_display = True
+                    player2.identity = 'pvp'
                     if user.name == '':
                         button_status.text_input_box_display = True
                     else:
@@ -1720,7 +1720,7 @@ def battle_screen_update(ai_settings,grid, screen, buttons, screen_status, butto
 
     #battle_screen_grid_display(grid, screen)
 
-    battle_screen_instruction_bar_display(screen,buttons, screen_status, button_status, card_database_filter, user)
+    battle_screen_instruction_bar_display(screen,buttons, screen_status, button_status, card_database_filter, user, player2)
 
     battle_screen_stable_button_display(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user, player2)
 
@@ -1868,7 +1868,10 @@ def card_zoom_update(ai_settings, screen, buttons,screen_status, button_status, 
 def rules_display(ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2):
     """ Display rules for the game"""
     if button_status.rules_display == True:
-
+        button = Button('','', (0,0,0), 0, 0, 1200, 800, alpha = 100)
+        button.update()
+        button.draw(screen)
+        
         button = Button('','', (255,255,255), 200, 35, 800, 730)
         button.update()
         button.draw(screen)
@@ -2469,38 +2472,6 @@ def lobby_screen_to_other_ready_action(ai_settings, screen,buttons, screen_statu
 
 def lobby_screen_game_start_action(ai_settings, grid,screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ lobby screen start action"""
-
-
-    # # Render user's deck
-    # with open('user_deck_list_string.txt','r') as f:
-    #     f.seek(0)
-    #     for line in f:
-    #         if 'DECK_LIST_' + user.deck_list_index in line:
-    #             user.deck_list = make_deck_from_string(line.replace('DECK_LIST_' + user.deck_list_index + ' = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)
-    #         if 'CHARACTER_' + user.deck_list_index in line:
-    #             user.character_card = make_deck_from_string(line.replace('CHARACTER_' + user.deck_list_index + ' = ', ''), ai_settings, screen, buttons,screen_status, button_status, card_database_filter, user, player2)[0]
-
-
-    # if button_status.lobby_screen_room_detail_display == 'my':
-    #     user.random_deck_list = random.sample(user.deck_list, len(user.deck_list))
-    #     user.remain_deck_list = user.random_deck_list[5:]
-    #     user.hand_list = user.random_deck_list[0:5]
-    # elif button_status.lobby_screen_room_detail_display == 'other':
-    #     user.random_deck_list = random.sample(user.deck_list, len(user.deck_list))
-    #     user.remain_deck_list = user.random_deck_list[6:]
-    #     user.hand_list = user.random_deck_list[0:6]
-    #
-    #
-    # if button_status.lobby_screen_room_detail_display == 'my':
-    #     player2.random_deck_list = random.sample(player2.deck_list, len(player2.deck_list))
-    #     player2.remain_deck_list = player2.random_deck_list[6:]
-    #     player2.hand_list = player2.random_deck_list[0:6]
-    # elif button_status.lobby_screen_room_detail_display == 'other':
-    #     player2.random_deck_list = random.sample(player2.deck_list, len(player2.deck_list))
-    #     player2.remain_deck_list = player2.random_deck_list[5:]
-    #     player2.hand_list = player2.random_deck_list[0:5]
-
-
 
 
     # Clear up and initiate all display/progress indicator on battle screen
@@ -3546,17 +3517,37 @@ def battle_screen_grid_display(grid, screen):
     screen.blit(grid.battle_screen_item_2_grid, grid.battle_screen_item_2_grid_rect)
     screen.blit(grid.battle_screen_instruction_bar_grid, grid.battle_screen_instruction_bar_grid_rect)
 
-def battle_screen_instruction_bar_display(screen,buttons, screen_status, button_status, card_database_filter, user):
+def battle_screen_instruction_bar_display(screen,buttons, screen_status, button_status, card_database_filter, user,player2):
     """ Display instruction bar"""
-
+    # pvp
+    if player2.identity == 'pvp':
+        if button_status.battle_screen_pvp_turn_indicator == 'my' and screen_status.battle_screen_action_indicator != 'stage-0':
+            screen_status.battle_screen_action_indicator = 'stage-1'
+            button_status.battle_screen_pvp_turn_indicator = 'my-ing'
+        elif button_status.battle_screen_pvp_turn_indicator == 'other':
+            screen_status.battle_screen_action_indicator = 'stage-1'
+            button_status.battle_screen_pvp_turn_indicator = 'other-ing'
     # Instruction bar control according to which stage
 
     if screen_status.battle_screen_action_indicator == 'stage-0':
-        button_status.battle_screen_instruction_bar_text = "Let's play!"
-        button_status.battle_screen_instruction_bar_yes_display = True
-        button_status.battle_screen_instruction_bar_yes_backend = True
-        button_status.battle_screen_instruction_bar_skip_display = False
-        button_status.battle_screen_instruction_bar_skip_backend = False
+        if player2.identity == 'pvp' and button_status.lobby_screen_room_detail_display == 'my':
+            button_status.battle_screen_instruction_bar_text = "Let's play! You go first!"
+            button_status.battle_screen_instruction_bar_yes_display = True
+            button_status.battle_screen_instruction_bar_yes_backend = True
+            button_status.battle_screen_instruction_bar_skip_display = False
+            button_status.battle_screen_instruction_bar_skip_backend = False
+        elif player2.identity == 'pvp' and button_status.lobby_screen_room_detail_display == 'other':
+            button_status.battle_screen_instruction_bar_text = "Let's play! Your opponent will go first!"
+            button_status.battle_screen_instruction_bar_yes_display = False
+            button_status.battle_screen_instruction_bar_yes_backend = False
+            button_status.battle_screen_instruction_bar_skip_display = False
+            button_status.battle_screen_instruction_bar_skip_backend = False
+        elif player2.identity == 'AI':
+            button_status.battle_screen_instruction_bar_text = "Let's play! You go first!"
+            button_status.battle_screen_instruction_bar_yes_display = True
+            button_status.battle_screen_instruction_bar_yes_backend = True
+            button_status.battle_screen_instruction_bar_skip_display = False
+            button_status.battle_screen_instruction_bar_skip_backend = False
 
     elif screen_status.battle_screen_action_indicator == 'stage-1':
         button_status.battle_screen_instruction_bar_text = 'Do you want to level up this turn?'
@@ -5540,9 +5531,15 @@ def battle_screen_instruction_bar_yes_skip_action(yes_skip_indicator, ai_setting
         button_status.battle_screen_instruction_bar_skip_display = False
         button_status.battle_screen_instruction_bar_skip_backend = False
 
+        if player2.identity == 'AI':
+            screen_status.battle_screen_action_indicator = 'player2-stage-0'
+            screen_status.battle_screen_player2_action_display_indicator = True
+        elif player2.identity == 'pvp':
+            if button_status.battle_screen_pvp_turn_indicator == 'my-ing':
+                button_status.battle_screen_pvp_turn_indicator = 'other'
+            elif button_status.battle_screen_pvp_turn_indicator == 'other-ing':
+                button_status.battle_screen_pvp_turn_indicator = 'my'
 
-        screen_status.battle_screen_action_indicator = 'player2-stage-0'
-        screen_status.battle_screen_player2_action_display_indicator = True
 
 def battle_screen_stage_2_action(position, ai_settings,screen,buttons, screen_status, button_status, card_database_filter, user,action,player2):
     """ Input position of the action, output action according to the type on specific card"""

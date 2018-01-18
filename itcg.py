@@ -84,15 +84,22 @@ def main():
 
 
     while True:
+        # Play against another player
 
-        gf.read_network_variables(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
+        if player2.identity == 'pvp':
+            gf.read_network_variables(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
 
-        gf.check_events(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
+            gf.check_events(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
 
-        gf.update_screen(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user,action, player2)
+            gf.update_screen(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user,action, player2)
 
-        gf.write_network_variables(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
+            gf.write_network_variables(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
 
+        # Play against AI
+        elif player2.identity == 'AI':
+            gf.check_events(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
+
+            gf.update_screen(ai_settings,grid, screen, buttons, screen_status, button_status, card_database_filter, user,action, player2)
 
         clock.tick(25)
 
