@@ -3529,15 +3529,14 @@ def battle_screen_grid_display(grid, screen):
 def battle_screen_instruction_bar_display(screen,buttons, screen_status, button_status, card_database_filter, user,player2):
     """ Display instruction bar"""
     print(button_status.battle_screen_pvp_turn_indicator)
-    print(user.character_under_card_by_level)
-    print(player2.character_under_card_by_level)
+
     # pvp
     if player2.identity == 'pvp':
-        if button_status.battle_screen_pvp_turn_indicator == 'my' and screen_status.battle_screen_action_indicator != 'stage-0':
+        if button_status.battle_screen_pvp_turn_indicator == 'my' and button_status.lobby_screen_room_detail_display == 'my' and screen_status.battle_screen_action_indicator != 'stage-0':
             screen_status.battle_screen_action_indicator = 'stage-1'
             button_status.battle_screen_pvp_turn_indicator = 'my-ing'
 
-        elif button_status.battle_screen_pvp_turn_indicator == 'other':
+        elif button_status.battle_screen_pvp_turn_indicator == 'other' and button_status.lobby_screen_room_detail_display == 'other':
             screen_status.battle_screen_action_indicator = 'stage-1'
             button_status.battle_screen_pvp_turn_indicator = 'other-ing'
     # Instruction bar control according to which stage
