@@ -176,8 +176,20 @@ def read_network_variables(ai_settings,grid, screen, buttons,screen_status, butt
                         player2.character_under_card_by_level[str(10*(i+1))] = eval(ls[i])
                         player2.character_under_card_by_level_copy[str(10*(i+1))] = eval(ls[i])
             if 'TURN_INDICATOR' in line:
-                    button_status.battle_screen_pvp_turn_indicator = str(line.replace('TURN_INDICATOR = ', ''))[:-1]
-                    button_status.battle_screen_pvp_turn_indicator_copy = str(line.replace('TURN_INDICATOR = ', ''))[:-1]
+                if 'my' in line:
+                    if 'my-ing' in line:
+                        button_status.battle_screen_pvp_turn_indicator = 'my-ing'
+                        button_status.battle_screen_pvp_turn_indicator_copy = 'my-ing'
+                    else:
+                        button_status.battle_screen_pvp_turn_indicator = 'my'
+                        button_status.battle_screen_pvp_turn_indicator_copy = 'my'
+                elif 'other' in line:
+                    if 'other-ing' in line:
+                        button_status.battle_screen_pvp_turn_indicator = 'other-ing'
+                        button_status.battle_screen_pvp_turn_indicator_copy = 'other-ing'
+                    else:
+                        button_status.battle_screen_pvp_turn_indicator = 'other'
+                        button_status.battle_screen_pvp_turn_indicator_copy = 'other'
 
 
 def write_network_variables(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
@@ -3605,11 +3617,19 @@ def battle_screen_instruction_bar_display(screen,buttons, screen_status, button_
         button_status.battle_screen_instruction_bar_skip_backend = True
 
     elif screen_status.battle_screen_action_indicator == 'stage-4-end-turn':
-        button_status.battle_screen_instruction_bar_text = "Your turn has end with " + user.item_in_play_length + " item. Deal " + str(int(user.item_in_play_length)*10) + ' damage. Gain ' + str(int(user.item_in_play_length)*10) + ' hp.'
-        button_status.battle_screen_instruction_bar_yes_display = True
-        button_status.battle_screen_instruction_bar_yes_backend = True
-        button_status.battle_screen_instruction_bar_skip_display = False
-        button_status.battle_screen_instruction_bar_skip_backend = False
+        if (('other' in button_status.battle_screen_pvp_turn_indicator and button_status.lobby_screen_room_detail_display == 'my')
+            or ('my' in button_status.battle_screen_pvp_turn_indicator and button_status.lobby_screen_room_detail_display == 'other')):
+            button_status.battle_screen_instruction_bar_text = "Now it's your opponent's turn"
+            button_status.battle_screen_instruction_bar_yes_display = False
+            button_status.battle_screen_instruction_bar_yes_backend = False
+            button_status.battle_screen_instruction_bar_skip_display = False
+            button_status.battle_screen_instruction_bar_skip_backend = False
+        else:
+            button_status.battle_screen_instruction_bar_text = "Your turn has end with " + user.item_in_play_length + " item. Deal " + str(int(user.item_in_play_length)*10) + ' damage. Gain ' + str(int(user.item_in_play_length)*10) + ' hp.'
+            button_status.battle_screen_instruction_bar_yes_display = True
+            button_status.battle_screen_instruction_bar_yes_backend = True
+            button_status.battle_screen_instruction_bar_skip_display = False
+            button_status.battle_screen_instruction_bar_skip_backend = False
 
 
     # instruction bar draw
@@ -5536,11 +5556,7 @@ def battle_screen_instruction_bar_yes_skip_action(yes_skip_indicator, ai_setting
             screen_status.battle_screen_action_indicator = 'player2-stage-0'
             screen_status.battle_screen_player2_action_display_indicator = True
         elif player2.identity == 'pvp':
-            button_status.battle_screen_instruction_bar_text = "Now it's your opponent's turn"
-            button_status.battle_screen_instruction_bar_yes_display = False
-            button_status.battle_screen_instruction_bar_yes_backend = False
-            button_status.battle_screen_instruction_bar_skip_display = False
-            button_status.battle_screen_instruction_bar_skip_backend = False
+
             if button_status.battle_screen_pvp_turn_indicator == 'my-ing':
                 button_status.battle_screen_pvp_turn_indicator = 'other'
             elif button_status.battle_screen_pvp_turn_indicator == 'other-ing':

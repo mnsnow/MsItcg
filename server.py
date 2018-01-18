@@ -170,7 +170,7 @@ while 1:
     if player_hp_01 != player_hp_02:
         s.send(((str(player_hp_02)[:-1]+'||')*10).encode())
     if user_lv_01 != user_lv_02:
-        s.send(((str(user_hp_02)[:-1]+'||')*10).encode())
+        s.send(((str(user_lv_02)[:-1]+'||')*10).encode())
     if player_lv_01 != player_lv_02:
         s.send(((str(player_lv_02)[:-1]+'||')*10).encode())
     if user_monster_list_01 != user_monster_list_02:
