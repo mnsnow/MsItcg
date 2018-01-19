@@ -1045,7 +1045,7 @@ def check_events_lobby_screen(ai_settings, grid,screen, buttons,screen_status, b
                         button_status.lobby_screen_room_list_display = user.name
 
                 #my next/ready/start
-                elif button_status.lobby_screen_room_detail_display == 'my': #and button_status.lobby_screen_room_status == '2/2':
+                elif button_status.lobby_screen_room_detail_display == 'my' and button_status.lobby_screen_room_status == '2/2':
                     if button_status.lobby_screen_prepare_to_go_display == False:
                         button_status.lobby_screen_prepare_to_go_display = True
                     elif button_status.lobby_screen_prepare_to_go_display == True:
@@ -1080,6 +1080,8 @@ def check_events_lobby_screen(ai_settings, grid,screen, buttons,screen_status, b
                 if button_status.lobby_screen_room_detail_display == 'my' or button_status.lobby_screen_room_detail_display == 'other':
                     clear_text_file(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2)
                     button_status.lobby_screen_room_detail_display = 'none'
+                    button_status.lobby_screen_room_list_display = 'N/A'
+                    #button_status.lobby_screen_room_status = '0/2'
 
             # When in lobby_prepare to go screen
             for i in range(1,7):
@@ -3528,7 +3530,6 @@ def battle_screen_grid_display(grid, screen):
 
 def battle_screen_instruction_bar_display(screen,buttons, screen_status, button_status, card_database_filter, user,player2):
     """ Display instruction bar"""
-    print(button_status.battle_screen_pvp_turn_indicator)
 
     # pvp
     if player2.identity == 'pvp':

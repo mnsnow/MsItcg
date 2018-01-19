@@ -507,7 +507,7 @@ card_05_53 = Monster(name = '',set_number='05',card_number='53',card_type='monst
 attack='30',health='10',lv_type='lalalala',lv_active_level='30',special_effect='')
 
 card_05_56 = Monster(name = '',set_number='05',card_number='56',card_type='monster',job='warrior',level='88',
-attack='80',health='80',lv_type='lalalala',lv_active_level='70',special_effect='')
+attack='80',health='80',lv_type='Spawn/Equip 100',lv_active_level='70',special_effect='')
 
 card_05_57 = Monster(name = '',set_number='05',card_number='57',card_type='monster',job='warrior',level='32',
 attack='20',health='30',lv_type='lalalala',lv_active_level='30',special_effect='')
