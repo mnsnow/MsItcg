@@ -22,7 +22,7 @@ def repair_text_file():
 
         x = [
             'PLAYER_NAME = Player\n',
-            'USER_NAME = Mapler\n',
+            'USER_NAME = \n',
             'EXIST_ROOM = N/A\n',
             'ROOM_PEOPLE_NUMBER = 0\n',
             'LOBBY_PREPARE_TO_GO = False\n',
