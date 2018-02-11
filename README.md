@@ -1,12 +1,12 @@
 # Maplestory ITCG #
 ## Rebuilding the Maplestory's paper-based ITCG card game into a digital version on PC. ##
 
-## Run itcg.py to play the game. ##
+### Run itcg.py to play the game. ###
 
 <img width="600" alt="screen shot 2018-02-10 at 9 09 25 pm" src="https://user-images.githubusercontent.com/32648899/36069120-30a27638-0ea9-11e8-948e-609cbdb35be8.png">
 
 ## ##
-## You can build your own deck to play againest AI with various difficulties or play againest other player ##
+### You can build your own deck to play againest AI with various difficulties or play againest other player ###
 ## ##
 
 <img width="600" alt="screen shot 2018-02-10 at 9 03 16 pm" src="https://user-images.githubusercontent.com/32648899/36069132-a47ee816-0ea9-11e8-852f-1f9e429e098b.png">
