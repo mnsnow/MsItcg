@@ -1,6 +1,12 @@
 import socket
 import time
-host = '192.168.1.34'
+ss = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+ss.connect(("8.8.8.8", 80))
+x2 = ss.getsockname()[0]
+ss.close()
+ip_address = x2
+
+host = ip_address
 port = 5555
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
