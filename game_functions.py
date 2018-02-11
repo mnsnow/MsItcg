@@ -191,7 +191,6 @@ def read_network_variables(ai_settings,grid, screen, buttons,screen_status, butt
                         button_status.battle_screen_pvp_turn_indicator = 'other'
                         button_status.battle_screen_pvp_turn_indicator_copy = 'other'
 
-
 def write_network_variables(ai_settings,grid, screen, buttons,screen_status, button_status, card_database_filter, user, action, player2):
     """ Write variables for multiplyaer from text file"""
     with open('connection.txt','a+') as f:

@@ -3,7 +3,6 @@ import pygame
 
 
 
-
 class Screen_status():
     """ Control active status of all screens"""
     def __init__(self):
@@ -25,8 +24,6 @@ class Screen_status():
         self.battle_screen_action_indicator = 'stage-0'
 
         self.battle_screen_player2_action_display_indicator = False
-
-
 
 
 
