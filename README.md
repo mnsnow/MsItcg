@@ -1,5 +1,5 @@
 # Maplestory ITCG #
-## Rebuilding the Maplestory's paper-based ITCG card game into a digital version on PC. Check out the rules menu in the game if you are not familiar with the original card game. ##
+## Rebuilding the Maplestory's paper-based trading card game into a digital version on PC. Check out the rules menu in the game if you are not familiar with the original card game. ##
 ## ##
 Run itcg.py to play the game. The game only requires pygame >= 1.9.3 and python >= 3.6. There are totally 4 different background themes/musics at the moment. 
 ## ##
