@@ -1,5 +1,5 @@
 # Maplestory ITCG #
-## Rebuilding the Maplestory's paper-based ITCG card game into a digital version on PC. There is rules menu in the game if you are not familiar with the original paper-based card game. ##
+## Rebuilding the Maplestory's paper-based ITCG card game into a digital version on PC. Check out the rules menu in the game if you are not familiar with the original card game. ##
 ## ##
 Run itcg.py to play the game. The game only requires pygame >= 1.9.3 and python >= 3.6. There are totally 4 different background themes/musics at the moment. 
 ## ##
@@ -17,6 +17,13 @@ You can also play againest other players in a local network. One computer runs s
 <img width="600" alt="screen shot 2018-02-10 at 9 11 42 pm" src="https://user-images.githubusercontent.com/32648899/36069137-b04d4b74-0ea9-11e8-9107-42e28faa7fa9.png">
 
 
+## ##
+MapleStory is copyright ©2003-2017 by Nexon corporation. Informations obtained from this game are applies to Nexon's Terms of Use. This is a not-for-profit game.
 
+
+
+A game by Wenchang Li
+
+Contact: sastwdnoz@gmail.com
 
 
